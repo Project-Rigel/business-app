@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-align-items-center ion-justify-content-center">
+    <div *ngIf="!(user$ | async); else loggedOut">
+      <ion-row>
+        <ion-col [offset]="4">
+          <form [formGroup]="userForm" class="login-form">
+            <ion-item>
+              <ion-label position="floating">Name</ion-label>
+              <ion-input
+                type="text"
+                formControlName="fullName"
+                required
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Email/Username</ion-label>
+              <ion-input
+                type="text"
+                formControlName="email"
+                required
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Password</ion-label>
+              <ion-input
+                type="password"
+                formControlName="password"
+                required
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Repeat Password</ion-label>
+              <ion-input
+                type="password"
+                formControlName="password"
+                required
+              ></ion-input>
+            </ion-item>
+
+            <ion-button
+              color="primary"
+              expand="block"
+              [disabled]="!userForm.valid"
+              (click)="registerUser()"
+              >Register</ion-button
+            >
+          </form>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" class="ion-padding-top ion-text-center">
+          <span>OR</span>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" class="ion-padding-top ion-text-center">
+          <ion-chip color="danger" (click)="loginWithGoogle()">
+            <ion-icon name="logo-google"></ion-icon>
+            <ion-label>Login with Google</ion-label>
+          </ion-chip>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ng-template #loggedOut>
+      <pre> {{user$ | async | json}}</pre>
+      <ion-button color="danger" expand="block" (click)="logOut()"
+        >Log Out</ion-button
+      >
+    </ng-template>
+  </ion-grid>
+</ion-content>

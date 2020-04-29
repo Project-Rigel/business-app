@@ -13,7 +13,8 @@ export class FolderPage implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute) {
     // @ts-ignore
-    this.version = require("../../../package.json").version;
+    // this.version = require("../../../package.json").version;
+    this.version = "PAPUCHI";
   }
 
   ngOnInit() {

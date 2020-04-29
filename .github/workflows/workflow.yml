@@ -1,8 +1,8 @@
-name: Node Continuous Integration
+name: Build App
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ master, dev ]
 
 
 jobs:

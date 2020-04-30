@@ -1,12 +1,14 @@
 <ion-content>
   <ion-grid>
     <div *ngIf="!(user$ | async); else loggedOut">
-      <ion-row  class="ion-align-items-center ion-justify-content-evenly ion-text-center">
+      <ion-row
+        class="ion-align-items-center ion-justify-content-evenly ion-text-center"
+      >
         <ion-col size="12">
-          <h1>PROJECT RIGEL</h1>
+          <h1 class="login-title">PROJECT RIGEL</h1>
         </ion-col>
       </ion-row>
-      <ion-row class="ion-align-items-center ion-justify-content-evenly" >
+      <ion-row class="ion-align-items-center ion-justify-content-evenly">
         <ion-col size-xs="12" size-sm="8" size-lg="6">
           <lottie-player
             src="https://assets10.lottiefiles.com/packages/lf20_u41SFE.json"
@@ -16,8 +18,13 @@
             autoplay
           ></lottie-player>
         </ion-col>
-        <ion-col size-xs="12" size-sm="8" size-lg="6" class="ion-padding ion-align-self-center">
-          <form [formGroup]="userForm">
+        <ion-col
+          size-xs="12"
+          size-sm="8"
+          size-lg="6"
+          class="ion-padding ion-align-self-center"
+        >
+          <form [formGroup]="userForm" class="ion-padding">
             <ion-item>
               <ion-label position="floating">Name</ion-label>
               <ion-input
@@ -53,22 +60,24 @@
             </ion-item>
 
             <ion-button
-              color="primary"
+              class="login-button register-button"
+              color="light"
               expand="block"
+              shape="round"
               [disabled]="!userForm.valid"
               (click)="registerUser()"
               >Register</ion-button
             >
           </form>
-          <div class="ion-padding ion-text-center">OR</div>
-            <ion-chip
-              class="ion-padding google-button"
-              color="danger"
-              (click)="loginWithGoogle()"
-            >
-              <ion-icon name="logo-google"></ion-icon>
-              <ion-label>Login with Google</ion-label>
-            </ion-chip>
+          <div class="ion-padding ion-text-center login-title">OR</div>
+          <ion-chip
+            class="ion-padding login-button"
+            color="danger"
+            (click)="loginWithGoogle()"
+          >
+            <ion-icon name="logo-google"></ion-icon>
+            <ion-label>Login with Google</ion-label>
+          </ion-chip>
         </ion-col>
       </ion-row>
     </div>

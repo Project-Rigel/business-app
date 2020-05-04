@@ -1,9 +1,19 @@
-.google-button{
+.login-button{
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 200px;
+  margin: 0 auto;
+
+  &.register-button{
+    margin-top: 18px;
+  }
 }
 
 .login-window-margin{
   margin-top: 50px;
+}
+
+.login-title{
+  font-weight: bold;
 }

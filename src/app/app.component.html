@@ -1,6 +1,6 @@
 <ion-app [class.dark-theme]="dark">
   <ion-split-pane contentId="main-content">
-    <ion-menu *ngIf="authService.isAuthenticated" contentId="main-content">
+    <ion-menu *ngIf="auth.isAuthenticated" contentId="main-content">
       <ion-content>
         <ion-list lines="none">
           <ion-list-header>

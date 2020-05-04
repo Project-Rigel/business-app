@@ -4,7 +4,7 @@ import { AuthGuard } from './auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/app/tabs/profile',
+    redirectTo: 'app',
     pathMatch: 'full',
   },
   {
@@ -20,6 +20,10 @@ const routes: Routes = [
   {
     path: '**',
     loadChildren: () => import('./error/error.module').then( m => m.ErrorPageModule)
+  },
+  {
+    path: 'customers',
+    loadChildren: () => import('./customers/customers.module').then( m => m.CustomersPageModule)
   },
 ];
 

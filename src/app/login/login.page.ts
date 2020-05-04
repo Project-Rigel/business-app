@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import * as firebase from 'firebase';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +9,15 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  user$: Observable<firebase.User>;
+
   userForm;
+
   constructor(
-    private afAuth: AngularFireAuth,
     private formBuilder: FormBuilder,
-    private toastController: ToastController,
-  ) {}
+    private router: Router,
+    public authService: AuthService,
+  ) {
+  }
 
   ngOnInit() {
     this.userForm = this.formBuilder.group({
@@ -25,52 +25,22 @@ export class LoginPage implements OnInit {
       password: '',
       fullName: '',
     });
-    this.user$ = this.afAuth.authState;
   }
 
   async registerUser() {
-    try {
-      await this.afAuth.createUserWithEmailAndPassword(
-        this.userForm.value.email,
-        this.userForm.value.password,
-      );
-    } catch (e) {
-      const toast = await this.toastController.create({
-        message: e.message,
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-      throw e;
-    }
+    await this.authService.createUser(
+      this.userForm.value.email,
+      this.userForm.value.password,
+    );
   }
 
   async logOut() {
-    try {
-      await this.afAuth.signOut();
-    } catch (e) {
-      const toast = await this.toastController.create({
-        message: e.message,
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-      throw e;
-    }
+    await this.authService.logOut();
   }
 
   async loginWithGoogle() {
-    try {
-      await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    } catch (e) {
-      const toast = await this.toastController.create({
-        message: e.message,
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-      throw e;
-    }
+    await this.authService.loginWithGoogle();
+    await this.router.navigate(['app','tabs']);
   }
 
 }

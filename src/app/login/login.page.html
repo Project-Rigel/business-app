@@ -1,6 +1,6 @@
 <ion-content>
   <ion-grid>
-    <div *ngIf="!(user$ | async); else loggedOut">
+    <div *ngIf="!(authService.user$ | async); else loggedOut">
       <ion-row  class="ion-align-items-center ion-justify-content-evenly ion-text-center">
         <ion-col size="12">
           <h1>PROJECT RIGEL</h1>
@@ -72,7 +72,6 @@
         </ion-col>
       </ion-row>
     </div>
-
     <ng-template #loggedOut>
       <pre> {{user$ | async | json}}</pre>
       <ion-button color="danger" expand="block" (click)="logOut()"

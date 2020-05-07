@@ -14,19 +14,22 @@ export class ErrorToastService {
     duration?: number;
     color?: string;
   }) {
-    await this.dismiss();
-    this.toast = await this.toastController.create({
-      message: options.message,
-      duration: !options.duration ? 2000 : options.duration,
-      color: !options.color ? 'danger' : options.color,
-    });
-    await this.toast.present();
+    try {
+      this.toast = await this.toastController.create({
+        message: options.message,
+        duration: !options.duration ? 2000 : options.duration,
+        color: !options.color ? 'danger' : options.color,
+      });
+      await this.toast.present();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async dismiss() {
     if (this.toast) {
       await this.toastController.dismiss();
-      this.toast = undefined;
+      await this.toast.onDidDismiss();
     }
   }
 }

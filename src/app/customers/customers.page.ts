@@ -80,6 +80,8 @@ export class CustomersPage implements OnInit, OnDestroy {
       this.ionInfiniteScrollElement.disabled = false;
     }
     this.paginationService.reset();
+    this.paginationService.more();
+
   }
 
   async search(event) {
@@ -87,7 +89,11 @@ export class CustomersPage implements OnInit, OnDestroy {
 
     inputs = inputs.filter(val => val !== '' && val !== ' ');
 
-    if (inputs[0]) {
+    if (inputs.length === 0) {
+      this.searching = false;
+    }
+    if (inputs.length > 0) {
+      this.searching = true;
       this.search$ = this.auth.user$.pipe(
         switchMap(user => {
           if (user) {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Form, FormBuilder, FormGroup } from '@angular/forms';
+import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
 import { AuthService } from '../../services/auth.service';
@@ -23,11 +23,11 @@ export class AddCustomerPage implements OnInit {
 
   ngOnInit() {
     this.customerForm = this.formBuilder.group({
-      name: '',
-      firstSurname: '',
-      secondSurname: '',
-      phone: '',
-      email: '',
+      name: ['', [Validators.minLength(3)]],
+      firstSurname: ['', [Validators.minLength(3)]],
+      secondSurname: ['', [Validators.minLength(3)]],
+      phone: ['', [Validators.maxLength(9), Validators.minLength(9)]],
+      email: ['', [Validators.email]],
     });
   }
 
@@ -37,7 +37,6 @@ export class AddCustomerPage implements OnInit {
   }
 
   async submitForm(value: any, clientId: string) {
-    console.log(this.customerForm.errors);
     if (!this.customerForm.valid) {
       await this.errorToastService.present({
         message: 'Rellene los campos obligatorios.',
@@ -51,7 +50,26 @@ export class AddCustomerPage implements OnInit {
         value.email,
         value.phone,
       );
-      await this.ctrl.dismiss({ done: true, values: this.customerForm.value });
     }
+  }
+
+  get email() {
+    return this.customerForm.get('email');
+  }
+
+  get phone() {
+    return this.customerForm.get('phone');
+  }
+
+  get firstSurname() {
+    return this.customerForm.get('firstSurname');
+  }
+
+  get secondSurname() {
+    return this.customerForm.get('secondSurname');
+  }
+
+  get name() {
+    return this.customerForm.get('name');
   }
 }

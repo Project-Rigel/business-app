@@ -7,7 +7,9 @@ import {
   Router,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
+import { map, take, tap } from 'rxjs/operators';
+import { loggedIn } from '@angular/fire/auth-guard';
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +18,19 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     private router: Router,
-  ) {}
-  async canActivate(
+  ) {
+  }
+
+  canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
-  ): Promise<boolean | UrlTree> {
-    if (this.authService.isAuthenticated) {
-      return true;
-    }
+  ): Observable<boolean> {
 
-    await this.router.navigate(['login']);
-    return false;
+    return this.authService.user$.pipe(take(1), map(user => !!user), tap(loggedIn => {
+      if (!loggedIn) {
+        console.log('access denied');
+        this.router.navigate(['login']);
+      }
+    }));
   }
 }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 import * as firebase from 'firebase';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -11,5 +12,6 @@ import * as firebase from 'firebase';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage {
-
+  constructor(public readonly auth: AuthService) {
+  }
 }

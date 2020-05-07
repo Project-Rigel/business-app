@@ -14,6 +14,8 @@ import {AngularFirestoreModule} from "@angular/fire/firestore";
 import {AngularFireAuthModule} from "@angular/fire/auth";
 import {AngularFireStorageModule} from "@angular/fire/storage";
 import { FormsModule } from '@angular/forms';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { PaginationService } from './services/pagination-service.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +32,9 @@ import { FormsModule } from '@angular/forms';
   ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     StatusBar,
+    GooglePlus,
     SplashScreen,
+    PaginationService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

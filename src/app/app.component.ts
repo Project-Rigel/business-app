@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MenuController, Platform, ToastController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authService: AuthService
+    public auth: AuthService
   ) {
     this.initializeApp();
   }

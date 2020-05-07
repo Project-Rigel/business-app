@@ -1,0 +1,85 @@
+<ng-container *ngIf="auth.user$ | async as user">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button>
+          <ion-label color="primary" (click)="cancel()">Cancelar</ion-label>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Añadir cliente</ion-title>
+
+      <ion-buttons slot="end">
+        <ion-button type="submit" (click)="submitForm(customerForm.value, user.id)">
+          <ion-label color="primary">OK</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="bg-list">
+      <form [formGroup]="customerForm">
+        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
+          <ion-item>
+            <ion-label position="stacked">
+              Nombre
+              <ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-input
+              required
+              type="text"
+              minlength="3"
+              formControlName="name"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">
+              Primer Apellido
+              <ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-input
+              required
+              type="text"
+              minlength="3"
+              formControlName="firstSurname"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">
+              Segundo Apellido
+              <ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-input
+              required
+              type="text"
+              minlength="3"
+              formControlName="secondSurname"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">
+              Email
+            </ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">
+              Teléfono
+              <ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-input
+              required
+              type="text"
+              minlength="9"
+              formControlName="phone"
+            ></ion-input>
+          </ion-item>
+        </ion-list>
+      </form>
+    </div>
+  </ion-content>
+</ng-container>

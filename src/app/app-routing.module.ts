@@ -20,11 +20,7 @@ const routes: Routes = [
   {
     path: '**',
     loadChildren: () => import('./error/error.module').then( m => m.ErrorPageModule)
-  },
-  {
-    path: 'customers',
-    loadChildren: () => import('./customers/customers.module').then( m => m.CustomersPageModule)
-  },
+  }
 ];
 
 @NgModule({

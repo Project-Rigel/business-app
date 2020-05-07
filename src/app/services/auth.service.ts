@@ -70,6 +70,9 @@ export class AuthService {
 
   async logOut() {
     try {
+      if(this.platform.is("cordova")){
+        await this.googlePlus.logout();
+      }
       await this.fireAuth.signOut();
       await this.router.navigate(['/']);
     } catch (e) {
@@ -87,6 +90,7 @@ export class AuthService {
       email: user.email,
       displayName: user.displayName,
       avatar: user.photoURL,
+      customers: [],
     };
 
     return userRef.set(data, { merge: true });

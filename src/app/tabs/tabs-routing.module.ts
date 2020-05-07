@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/app/tabs/profile',
+        redirectTo: 'customers',
         pathMatch: 'full',
       },
     ],

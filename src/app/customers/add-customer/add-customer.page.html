@@ -25,62 +25,38 @@
       <form [formGroup]="customerForm">
         <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
           <ion-item lines="none">
-            <ion-label position="stacked">
-              Nombre
-              <ion-text color="danger">*</ion-text>
-            </ion-label>
             <ion-input
               #inputNombre
               enterkeyhint="enter"
+              [color]="isInputInvalid(name) ? 'danger' : 'undefined'"
+              placeholder="Nombre (Obligatorio)"
               (keyup.enter)="goToNext(primerApellido)"
               required
               type="text"
               formControlName="name"
             ></ion-input>
           </ion-item>
-          <ion-text color="danger">
-            <p
-              *ngIf="name.invalid && name.touched"
-              class="error-msg-text ion-text-center
-"
-            >
-              El nombre debe contener al menos 3 caracteres.
-            </p>
-          </ion-text>
 
           <ion-item>
-            <ion-label position="stacked">
-              Primer Apellido
-              <ion-text color="danger">*</ion-text>
-            </ion-label>
             <ion-input
               #primerApellido
               enterkeyhint="enter"
+              placeholder="Primer Apellido (Obligatorio)"
               required
+              [color]="isInputInvalid(firstSurname) ? 'danger' : 'undefined'"
               type="text"
               formControlName="firstSurname"
               (keyup.enter)="goToNext(segundoApellido)"
             ></ion-input>
           </ion-item>
 
-          <ion-text color="danger">
-            <p
-              *ngIf="firstSurname.invalid && firstSurname.touched"
-              class=" error-msg-text ion-text-center"
-            >
-              El apellido debe contener al menos 3 caracteres.
-            </p>
-          </ion-text>
-
           <ion-item>
-            <ion-label position="stacked">
-              Segundo Apellido
-              <ion-text color="danger">*</ion-text>
-            </ion-label>
             <ion-input
               #segundoApellido
+              placeholder="Segundo Apellido (Obligatorio)"
               enterkeyhint="enter"
               required
+              [color]="isInputInvalid(secondSurname) ? 'danger' : 'undefined'"
               type="text"
               formControlName="secondSurname"
               (keyup.enter)="goToNext(emailField)"
@@ -88,62 +64,32 @@
           </ion-item>
         </ion-list>
 
-        <ion-text color="danger">
-          <p
-            *ngIf="secondSurname.invalid && secondSurname.touched"
-            class="error-msg-text ion-text-center"
-          >
-            El apellido debe contener al menos 3 caracteres.
-          </p>
-        </ion-text>
-
         <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
           <ion-item>
-            <ion-label position="stacked">
-              Email
-            </ion-label>
             <ion-input
               #emailField
               enterkeyhint="enter"
+              placeholder="Email"
+              [color]="isInputInvalid(email) ? 'danger' : 'undefined'"
               type="email"
               formControlName="email"
               (keyup.enter)="goToNext(phoneInput)"
             ></ion-input> </ion-item
         ></ion-list>
 
-        <ion-text color="danger">
-          <p
-            *ngIf="email.invalid && email.touched"
-            class="error-msg-text ion-text-center"
-          >
-            Introduce un email válido.
-          </p>
-        </ion-text>
-
         <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
           <ion-item>
-            <ion-label position="stacked">
-              Teléfono
-              <ion-text color="danger">*</ion-text>
-            </ion-label>
             <ion-input
               #phoneInput
               enterkeyhint="enter"
+              placeholder="Teléfono (Obligatorio)"
+              [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
               required
               type="text"
               formControlName="phone"
             ></ion-input>
           </ion-item>
         </ion-list>
-
-        <ion-text color="danger">
-          <p
-            *ngIf="phone.invalid && phone.touched"
-            class="error-msg-text  ion-text-center"
-          >
-            El teléfono debe contener 9 dígitos.
-          </p>
-        </ion-text>
       </form>
     </div>
   </ion-content>

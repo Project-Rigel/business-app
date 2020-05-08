@@ -15,9 +15,12 @@ export class ErrorToastService {
     color?: string;
   }) {
     try {
+      await this.dismiss();
+    } catch (e) {}
+    try {
       this.toast = await this.toastController.create({
         message: options.message,
-        duration: !options.duration ? 2000 : options.duration,
+        duration: !options.duration ? 1000 : options.duration,
         color: !options.color ? 'danger' : options.color,
       });
       await this.toast.present();
@@ -27,9 +30,8 @@ export class ErrorToastService {
   }
 
   async dismiss() {
-    if (this.toast) {
+    try {
       await this.toastController.dismiss();
-      await this.toast.onDidDismiss();
-    }
+    } catch (e) {}
   }
 }

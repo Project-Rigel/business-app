@@ -1,6 +1,6 @@
 {
 	"name": "test-pwa",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"author": "Ionic Framework",
 	"homepage": "https://ionicframework.com/",
 	"scripts": {
@@ -10,7 +10,7 @@
 		"test": "ng test",
 		"lint": "ng lint",
 		"e2e": "ng e2e",
-		"prettify" : "prettier src/**/**.{ts,json,html,css} --write"
+		"prettify": "prettier src/**/**.{ts,json,html,css} --write"
 	},
 	"private": true,
 	"dependencies": {

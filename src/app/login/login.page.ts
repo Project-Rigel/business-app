@@ -9,15 +9,13 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
   userForm;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     public authService: AuthService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.userForm = this.formBuilder.group({
@@ -40,7 +38,6 @@ export class LoginPage implements OnInit {
 
   async loginWithGoogle() {
     await this.authService.loginWithGoogle();
-    await this.router.navigate(['app','tabs']);
+    await this.router.navigate(['app', 'tabs']);
   }
-
 }

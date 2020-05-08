@@ -1,6 +1,6 @@
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { scan, take, tap } from 'rxjs/operators';
 
 
@@ -62,6 +62,9 @@ export class PaginationService {
 
   public reset(){
     this._data.next([]);
+    this._done.next(false);
+    this._loading.next(false);
+    this.data = of(null);
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
@@ -126,6 +129,7 @@ export class PaginationService {
           // If prepending, reverse the batch order
           values = this.query.prepend ? values.reverse() : values;
 
+          console.log("values", values);
           // update source with new values, done loading
           this._data.next(values);
           this._loading.next(false);

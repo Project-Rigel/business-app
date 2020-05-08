@@ -9,19 +9,19 @@ import { AuthService } from './services/auth.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
   appPages = [
     {
       title: 'Agenda',
       url: '/app/tabs/agenda',
-      icon: 'calendar'
+      icon: 'calendar',
     },
     {
       title: 'Profile',
       url: '/app/tabs/profile',
-      icon: 'person-circle'
+      icon: 'person-circle',
     },
   ];
   loggedIn = false;
@@ -33,13 +33,12 @@ export class AppComponent implements OnInit {
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    public auth: AuthService
+    public auth: AuthService,
   ) {
     this.initializeApp();
   }
 
-  async ngOnInit() {
-  }
+  async ngOnInit() {}
 
   initializeApp() {
     this.platform.ready().then(() => {
@@ -47,5 +46,4 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
     });
   }
-
 }

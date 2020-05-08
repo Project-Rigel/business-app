@@ -11,16 +11,18 @@ const routes: Routes = [
     path: 'app',
     loadChildren: () =>
       import('./tabs/tabs.module').then(m => m.TabsPageModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule),
+    loadChildren: () =>
+      import('./login/login.module').then(m => m.LoginPageModule),
   },
   {
     path: '**',
-    loadChildren: () => import('./error/error.module').then( m => m.ErrorPageModule)
-  }
+    loadChildren: () =>
+      import('./error/error.module').then(m => m.ErrorPageModule),
+  },
 ];
 
 @NgModule({

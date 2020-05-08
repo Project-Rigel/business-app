@@ -3,7 +3,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { User } from '../interfaces/user';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import "firebase/auth"
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ErrorToastService } from './error-toast.service';
@@ -41,13 +42,12 @@ export class AuthService {
           'scopes': 'profile email',
         });
         credential = await this.fireAuth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken));
-        alert(JSON.stringify(credential));
       } else {
         credential = await this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
       }
       await this.updateUserData(credential.user);
     } catch (e) {
-      alert(JSON.stringify(e));
+      console.error(e);
       await this.errorToastService.present({ message: e.message });
       throw e;
     }

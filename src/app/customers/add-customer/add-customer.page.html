@@ -10,6 +10,7 @@
 
       <ion-buttons slot="end">
         <ion-button
+          [disabled]="!submitEnabled"
           type="submit"
           (click)="submitForm(customerForm.value, user.id)"
         >
@@ -28,52 +29,61 @@
               Nombre
               <ion-text color="danger">*</ion-text>
             </ion-label>
-            <ion-input required type="text" formControlName="name"></ion-input>
+            <ion-input
+              #inputNombre
+              enterkeyhint="enter"
+              (keyup.enter)="goToNext(primerApellido)"
+              required
+              type="text"
+              formControlName="name"
+            ></ion-input>
           </ion-item>
-        </ion-list>
-        <ion-text color="danger">
-          <p
-            *ngIf="name.invalid && name.touched"
-            class="error-msg-text ion-text-center
+          <ion-text color="danger">
+            <p
+              *ngIf="name.invalid && name.touched"
+              class="error-msg-text ion-text-center
 "
-          >
-            El nombre debe contener al menos 3 caracteres.
-          </p>
-        </ion-text>
+            >
+              El nombre debe contener al menos 3 caracteres.
+            </p>
+          </ion-text>
 
-        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
           <ion-item>
             <ion-label position="stacked">
               Primer Apellido
               <ion-text color="danger">*</ion-text>
             </ion-label>
             <ion-input
+              #primerApellido
+              enterkeyhint="enter"
               required
               type="text"
               formControlName="firstSurname"
+              (keyup.enter)="goToNext(segundoApellido)"
             ></ion-input>
           </ion-item>
-        </ion-list>
 
-        <ion-text color="danger">
-          <p
-            *ngIf="firstSurname.invalid && firstSurname.touched"
-            class=" error-msg-text ion-text-center"
-          >
-            El apellido debe contener al menos 3 caracteres.
-          </p>
-        </ion-text>
+          <ion-text color="danger">
+            <p
+              *ngIf="firstSurname.invalid && firstSurname.touched"
+              class=" error-msg-text ion-text-center"
+            >
+              El apellido debe contener al menos 3 caracteres.
+            </p>
+          </ion-text>
 
-        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
           <ion-item>
             <ion-label position="stacked">
               Segundo Apellido
               <ion-text color="danger">*</ion-text>
             </ion-label>
             <ion-input
+              #segundoApellido
+              enterkeyhint="enter"
               required
               type="text"
               formControlName="secondSurname"
+              (keyup.enter)="goToNext(emailField)"
             ></ion-input>
           </ion-item>
         </ion-list>
@@ -93,8 +103,11 @@
               Email
             </ion-label>
             <ion-input
+              #emailField
+              enterkeyhint="enter"
               type="email"
               formControlName="email"
+              (keyup.enter)="goToNext(phoneInput)"
             ></ion-input> </ion-item
         ></ion-list>
 
@@ -114,7 +127,8 @@
               <ion-text color="danger">*</ion-text>
             </ion-label>
             <ion-input
-              placeholder="+34"
+              #phoneInput
+              enterkeyhint="enter"
               required
               type="text"
               formControlName="phone"

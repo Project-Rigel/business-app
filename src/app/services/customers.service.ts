@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { merge, Observable } from 'rxjs';
 import { Customer } from '../interfaces/customer';
-import * as firebase from 'firebase';
-import { distinct, map } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

@@ -116,4 +116,6 @@ export class CustomersPage implements OnInit, OnDestroy {
       this.ionInfiniteScrollElement.disabled = false;
     }
   }
+
+  seeDetails()
 }

@@ -20,7 +20,9 @@
 		"@angular/forms": "~8.2.14",
 		"@angular/platform-browser": "~8.2.14",
 		"@angular/platform-browser-dynamic": "~8.2.14",
+		"@angular/pwa": "^0.901.5",
 		"@angular/router": "~8.2.14",
+		"@angular/service-worker": "~8.2.14",
 		"@ionic-native/core": "^5.25.0",
 		"@ionic-native/google-plus": "^5.25.0",
 		"@ionic-native/keyboard": "^5.25.0",
@@ -31,6 +33,7 @@
 		"cordova-android": "^8.1.0",
 		"cordova-browser": "^6.0.0",
 		"cordova-ios": "^5.1.1",
+		"cordova-ios-plugin-no-export-compliance": "0.0.6",
 		"cordova-plugin-googleplus": "8.4.0",
 		"core-js": "^2.5.4",
 		"firebase": "^7.14.3",
@@ -83,9 +86,10 @@
 			"cordova-plugin-ionic-webview": {},
 			"cordova-plugin-ionic-keyboard": {},
 			"cordova-plugin-googleplus": {
-				"REVERSED_CLIENT_ID": "com.googleusercontent.apps.457735200635-jk4esdsp6fl98gg42illp44t17lsqj7t",
+				"REVERSED_CLIENT_ID": "com.googleusercontent.apps.457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b",
 				"WEB_APPLICATION_CLIENT_ID": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com"
-			}
+			},
+			"cordova-ios-plugin-no-export-compliance": {}
 		},
 		"platforms": [
 			"android",

@@ -14,6 +14,15 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
+        path: 'notifications',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsPageModule),
+          },
+        ],
+      },
+      {
         path: 'profile',
         children: [
           {
@@ -31,6 +40,7 @@ const routes: Routes = [
           },
         ],
       },
+
       {
         path: '',
         redirectTo: 'customers',

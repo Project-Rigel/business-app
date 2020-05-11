@@ -1,5 +1,5 @@
 {
-	"name": "test-pwa",
+	"name": "com.rigel.business",
 	"version": "0.0.9",
 	"author": "Ionic Framework",
 	"homepage": "https://ionicframework.com/",
@@ -30,6 +30,7 @@
 		"@ionic-native/status-bar": "^5.25.0",
 		"@ionic/angular": "^5.1.0",
 		"@teamhive/lottie-player": "^1.0.0",
+		"cordova-android": "^8.1.0",
 		"cordova-browser": "^6.0.0",
 		"cordova-ios": "^5.1.1",
 		"cordova-ios-plugin-no-export-compliance": "0.0.6",
@@ -91,8 +92,8 @@
 			"cordova-ios-plugin-no-export-compliance": {}
 		},
 		"platforms": [
-			"browser",
-			"ios"
+			"android",
+			"browser"
 		]
 	}
 }

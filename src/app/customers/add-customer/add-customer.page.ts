@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonInput, ModalController } from '@ionic/angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
 import { AuthService } from '../../services/auth.service';
@@ -15,6 +20,7 @@ import { take } from 'rxjs/operators';
 export class AddCustomerPage implements OnInit {
   customerForm: FormGroup;
   submitEnabled: boolean = true;
+  submitClicked = false;
   @ViewChild('inputNombre', { static: false }) input: IonInput;
 
   constructor(
@@ -30,10 +36,10 @@ export class AddCustomerPage implements OnInit {
     // this.keyboard.show(); TODO this only shows in android. In Ios just need to focus the element
     this.submitEnabled = true;
     this.customerForm = this.formBuilder.group({
-      name: ['', [Validators.minLength(3)]],
-      firstSurname: ['', [Validators.minLength(3)]],
-      secondSurname: ['', [Validators.minLength(3)]],
-      phone: ['', [Validators.maxLength(9), Validators.minLength(9)]],
+      name: ['', [Validators.required]],
+      firstSurname: ['', [Validators.required]],
+      secondSurname: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
       email: ['', [Validators.email]],
     });
   }
@@ -45,20 +51,29 @@ export class AddCustomerPage implements OnInit {
 
   async cancel() {
     this.keyboard.hide();
+    try{
+      await this.errorToastService.dismiss();
+    }catch (e) {
+console.log(e);
+    }finally {
+      setTimeout(async () => {
+
+        await this.ctrl.dismiss({ done: false });
+        this.submitClicked = false;
+      }, 100);
+    }
 
     //theres a bug in the animation of the keyboard which starts at the same time as the modal.
-    setTimeout(async () => {
-      await this.errorToastService.dismiss();
-      await this.ctrl.dismiss({ done: false });
-    }, 100);
-
 
   }
 
   async submitForm(value: any, clientId: string) {
+    this.submitClicked = true;
     if (!this.customerForm.valid) {
       await this.errorToastService.present({
-        message: 'Rellene los campos obligatorios.',
+        message: this.email.invalid
+          ? 'El email no tiene el formato correcto.'
+          : 'Rellene los campos obligatorios.',
       });
     } else {
       this.keyboard.hide();
@@ -73,6 +88,7 @@ export class AddCustomerPage implements OnInit {
       );
 
       await this.ctrl.dismiss({ done: true, values: this.customerForm.value });
+      this.submitClicked = false;
     }
   }
 
@@ -97,5 +113,20 @@ export class AddCustomerPage implements OnInit {
 
   get name() {
     return this.customerForm.get('name');
+  }
+
+  isInputInvalid(control: AbstractControl) {
+    if (this.submitClicked && control.invalid) {
+      return true;
+    }
+    if (control.invalid && control.touched && this.submitClicked) {
+      return true;
+    }
+
+    if (control.invalid && control.touched && !this.submitClicked) {
+      return false;
+    }
+
+    return false;
   }
 }

@@ -79,8 +79,9 @@ export class CustomersPage implements OnInit, OnDestroy {
     if (this.ionInfiniteScrollElement) {
       this.ionInfiniteScrollElement.disabled = false;
     }
-    this.paginationService.reset();
-
+    if (data.done) {
+      this.paginationService.reset();
+    }
   }
 
   async search(event) {
@@ -114,5 +115,9 @@ export class CustomersPage implements OnInit, OnDestroy {
     if (this.ionInfiniteScrollElement) {
       this.ionInfiniteScrollElement.disabled = false;
     }
+  }
+
+  seeDetails(){
+
   }
 }

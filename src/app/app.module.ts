@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { PaginationService } from './services/pagination-service.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { ServiceWorkerModule } from '@angular/service-worker';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -27,6 +28,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
     AngularFireAuthModule,
     AngularFireStorageModule,
     FormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

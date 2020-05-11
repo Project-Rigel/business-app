@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.rigel.business" version="0.0.8">
-    <name>Project Rigel: Business</name>
+    <name>ProjectRigelBusiness</name>
     <description>Business app</description>
     <author email="edusimonpicon@icloud.com">E^2</author>
     <content src="index.html" />
@@ -106,7 +106,7 @@
     <plugin name="cordova-plugin-device" spec="~2.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="~5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.0" />
     <plugin name="cordova-plugin-googleplus" spec="~8.4.0">
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.457735200635-jk4esdsp6fl98gg42illp44t17lsqj7t" />
         <variable name="WEB_APPLICATION_CLIENT_ID" value="457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com" />

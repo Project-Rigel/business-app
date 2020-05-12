@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-agenda',
@@ -6,10 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./agenda.page.scss'],
 })
 export class AgendaPage implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private httpClient: HttpClient) {
+    this.agendas = [];
   }
 
+  agendas;
+
+  ngOnInit() {
+    this.httpClient
+      .get('https://picsum.photos/v2/list')
+      .subscribe(res => this.agendas = res);
+  }
+
+  showAgenda() {}
+
+  edit() {}
 }

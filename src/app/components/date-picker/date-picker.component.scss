@@ -1,0 +1,38 @@
+.item {
+  .item-inner {
+    border-bottom: none !important;
+  }
+}
+
+.day-number{
+  font-family: Roboto, monospace;
+  font-size: 12px;
+}
+
+ion-icon {
+  font-size: 25px;
+}
+.calendar-container{
+  transform: translateY(0);
+  transform-origin: top;
+}
+
+.year-range {
+  font-size: 15px;
+  font-weight: bold;
+  font-family: Roboto-Regular;
+  &.button[disabled] {
+    opacity: 1;
+    color: gray !important;
+  }
+}
+
+.calendar-button {
+  text-decoration: underline;
+  padding-right: 2px !important;
+  padding-left: 2px !important;
+}
+
+.invalidMonth {
+  color: #8b8b8b
+}

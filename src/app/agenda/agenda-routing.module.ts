@@ -7,7 +7,12 @@ const routes: Routes = [
   {
     path: '',
     component: AgendaPage
+  },
+  {
+    path: 'details',
+    loadChildren: () => import('./agenda-details/agenda-details.module').then( m => m.AgendaDetailsPageModule)
   }
+
 ];
 
 @NgModule({

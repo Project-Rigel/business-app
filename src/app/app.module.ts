@@ -16,6 +16,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { PaginationService } from './services/pagination-service.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

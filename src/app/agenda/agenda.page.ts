@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-agenda',
@@ -7,19 +9,21 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./agenda.page.scss'],
 })
 export class AgendaPage implements OnInit {
-  constructor(private httpClient: HttpClient) {
-    this.agendas = [];
+  constructor(private httpClient: HttpClient, private router: Router, private route: ActivatedRoute) {
   }
-
-  agendas;
+  loadedImages = 0;
+  agendas$: Observable<any>;
+  loading: boolean = false;
 
   ngOnInit() {
-    this.httpClient
-      .get('https://picsum.photos/v2/list')
-      .subscribe(res => this.agendas = res);
+      this.agendas$ = this.httpClient
+        .get('https://picsum.photos/v2/list');
+
+
   }
 
-  showAgenda() {}
+  showAgenda() {
+    this.router.navigate(["details"], {relativeTo: this.route});
+  }
 
-  edit() {}
 }

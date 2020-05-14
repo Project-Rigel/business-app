@@ -8,6 +8,8 @@ import { AgendaPageRoutingModule } from './agenda-routing.module';
 
 import { AgendaPage } from './agenda.page';
 import { HttpClientModule } from '@angular/common/http';
+import { AddAgendaPage } from './add-agenda/add-agenda.page';
+import { AddAgendaPageModule } from './add-agenda/add-agenda.module';
 
 @NgModule({
   imports: [
@@ -15,8 +17,9 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     IonicModule,
     HttpClientModule,
-    AgendaPageRoutingModule
+    AgendaPageRoutingModule,
+    AddAgendaPageModule
   ],
-  declarations: [AgendaPage]
+  declarations: [AgendaPage],
 })
 export class AgendaPageModule {}

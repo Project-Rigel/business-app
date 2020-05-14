@@ -1,18 +1,14 @@
 <ion-header translucent="true">
-  <ion-toolbar>
-    <!--    <ion-item slot="start" lines="none">-->
-    <!--      <ion-label>Gaming</ion-label>-->
-    <!--      <ion-select interface="popover">-->
-    <!--        <ion-select-option value="nes">NES</ion-select-option>-->
-    <!--        <ion-select-option value="n64">Nintendo64</ion-select-option>-->
-    <!--        <ion-select-option value="ps">PlayStation</ion-select-option>-->
-    <!--        <ion-select-option value="genesis">Sega Genesis</ion-select-option>-->
-    <!--        <ion-select-option value="saturn">Sega Saturn</ion-select-option>-->
-    <!--        <ion-select-option value="snes">SNES</ion-select-option>-->
-    <!--      </ion-select>-->
-    <!--    </ion-item>-->
+  <ion-toolbar class="ion-margin-top">
 
     <ion-title>Agendas</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="addAgenda()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 

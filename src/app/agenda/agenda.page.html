@@ -42,7 +42,12 @@
         <ion-item-sliding *ngFor="let agenda of agendas">
           <ion-item button detail routerLink="details/{{agenda.id}}">
             <ion-thumbnail slot="start">
-              <img src="{{agenda.imageUrl}}" />
+              <img *ngIf="agenda.imageUrl" src="{{agenda.imageUrl}}"  alt="avatar"/>
+              <div *ngIf="!agenda.imageUrl" class="img-agenda">
+                <span class="no-img-text">
+                  {{agenda.name | titlecase | slice:0:1}}</span
+                >
+              </div>
             </ion-thumbnail>
 
             <ion-label>

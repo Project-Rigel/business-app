@@ -25,7 +25,9 @@ export class AgendaDetailsPage implements OnInit {
   display: any[] = [];
   @ViewChild(DatePickerComponent, { static: false })
   datePicker: DatePickerComponent;
+  calendarButtonColor = 'primary';
 
+  height = 120;
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
@@ -37,7 +39,11 @@ export class AgendaDetailsPage implements OnInit {
 
     let lastValidAppointmentIndex = 0;
     for (let i = 0; i < this.allPossibleAppointments.length; i++) {
-      for (let j = lastValidAppointmentIndex; j < this.appointments.length; j++) {
+      for (
+        let j = lastValidAppointmentIndex;
+        j < this.appointments.length;
+        j++
+      ) {
         console.log(
           { pne: Math.floor(this.appointments[j].startDate.getTime() / 1000) },
           { two: Math.floor(this.allPossibleAppointments[i].getTime() / 1000) },
@@ -85,35 +91,42 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   async showCalendar() {
+    this.isCalendarOpen = !this.isCalendarOpen;
+    this.calendarButtonColor = this.isCalendarOpen ? 'medium' : 'primary';
     this.openCalendar.stop();
     this.closeCalendar.stop();
     this.isCalendarOpen
       ? await this.closeCalendar.play()
       : await this.openCalendar.play();
-    this.isCalendarOpen = !this.isCalendarOpen;
   }
 
   async onReorder(event) {
     event.detail.complete();
   }
 
-  getOccupationPercent(){
-    return Math.floor(((this.allPossibleAppointments.length - this.appointments.length) / 100) * 100);
+  getOccupationPercent() {
+    return Math.floor(
+      ((this.allPossibleAppointments.length - this.appointments.length) / 100) *
+        100,
+    );
   }
 
-  shouldDrawHour(elem: any, i :number){
-    if(i === 0){
+  shouldDrawHour(elem: any, i: number) {
+    if (i === 0) {
       return true;
     }
-    if(elem.appointments && Math.floor(elem.appointment.startDate.getTime() / 1000) === Math.floor(elem.interval.getTime() / 1000)){
+    if (
+      elem.appointments &&
+      Math.floor(elem.appointment.startDate.getTime() / 1000) ===
+        Math.floor(elem.interval.getTime() / 1000)
+    ) {
       return true;
     }
 
-    if(!elem.appointment && elem.interval){
+    if (!elem.appointment && elem.interval) {
       return true;
     }
 
     return false;
-
   }
 }

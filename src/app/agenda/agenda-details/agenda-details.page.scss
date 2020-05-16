@@ -1,6 +1,5 @@
-.date-picker{
+.date-picker {
 }
-
 
 .calendar {
   justify-content: center;
@@ -10,10 +9,22 @@
   height: 280px;
 }
 
-.full-height{
+.full-height {
   height: 100%;
 }
 
-.hour-height{
-  height: 150px !important;
+.hour {
+  height: var(--hour-height);
+}
+
+.list-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.segment {
+  width: 200px;
+  height: 5px;
+  color: red;
+  background-color: red;
 }

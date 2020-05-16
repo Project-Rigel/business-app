@@ -1,6 +1,13 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
+import {
+  AngularFireAuthGuard,
+  redirectUnauthorizedTo,
+} from '@angular/fire/auth-guard';
+
+const redirectToLogin = () => redirectUnauthorizedTo(['login']);
+
 const routes: Routes = [
   {
     path: '',
@@ -11,7 +18,8 @@ const routes: Routes = [
     path: 'app',
     loadChildren: () =>
       import('./tabs/tabs.module').then(m => m.TabsPageModule),
-    canActivate: [AuthGuard],
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectToLogin },
   },
   {
     path: 'login',
@@ -23,14 +31,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./error/error.module').then(m => m.ErrorPageModule),
   },
-  {
-    path: 'notifications',
-    loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
-  },  {
-    path: 'agenda',
-    loadChildren: () => import('./agenda/agenda.module').then( m => m.AgendaPageModule)
-  },
-
 ];
 
 @NgModule({

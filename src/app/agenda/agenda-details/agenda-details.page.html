@@ -6,8 +6,12 @@
     <ion-title>agenda-details</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button button (click)="showCalendar()">
-        <ion-icon name="calendar"></ion-icon>
+      <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
+        <ion-icon
+          [color]="calendarButtonColor"
+          slot="icon-only"
+          name="calendar"
+        ></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -22,72 +26,33 @@
     ></date-picker>
   </div>
   <div id="citas-content" class="agenda-content">
-    <p>{{getOccupationPercent()}}% Ocupación</p>
+    <p class="ion-text-center list-title">
+      {{getOccupationPercent()}}% Ocupación
+    </p>
     <ion-row>
       <ion-col size="3">
         <div class="full-height">
           <ion-list>
             <ion-item
-              class="hour-height"
+              class="hour"
               *ngFor="let hour of this.display"
               lines="none"
+              [style.--hour-height.px]="height"
             >
-              <p>{{hour.interval | date:"H:mm"}}</p>
+                <p>{{hour.interval | date:"H:mm"}}</p>
             </ion-item>
           </ion-list>
         </div>
       </ion-col>
       <ion-col>
         <ion-list>
-          <ion-item
+          <app-agenda-appointment
             *ngFor="let cita of this.display; index as i"
-            class="hour-height"
-            lines="none"
+            [appointment]="cita.appointment"
           >
-            <ion-label *ngIf="cita.appointment">
-              <h3>{{cita.appointment.name}}</h3>
-              <p>{{cita.appointment.customerName}}</p>
-            </ion-label>
-            <ion-reorder *ngIf="cita.appointment" slot="end"></ion-reorder>
-            <ion-badge slot="end" color="light">
-              <ion-icon
+            <div class="segment"></div>
 
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="danger"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
-
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="danger"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
-
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="success"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
-
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="success"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
-
-                      *ngIf="i == 1"
-                      name="checkmark-done-circle"
-                      color="danger"
-                      size="small"
-              ></ion-icon>
-            </ion-badge>
-
-          </ion-item>
+          </app-agenda-appointment>
         </ion-list>
       </ion-col>
     </ion-row>

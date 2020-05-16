@@ -23,11 +23,11 @@ export class AgendaDetailsPage implements OnInit {
   appointments: Appointment[] = [];
   allPossibleAppointments: any[] = [];
   display: any[] = [];
-  @ViewChild(DatePickerComponent, { static: false })
+  @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
 
-  height = 120;
+  height = 200;
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,

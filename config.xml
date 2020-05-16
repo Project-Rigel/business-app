@@ -51,6 +51,9 @@
         <edit-config file="*-Info.plist" mode="add" target="ITSAppUsesNonExemptEncryption">
             <false />
         </edit-config>
+        <edit-config file="*-Info.plist" mode="add" target="NSPhotoLibraryUsageDescription">
+            <string>Utilizamos el acceso a la galería para que puedas personalizar tus datos dentro de la aplicación.</string>
+        </edit-config>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
@@ -151,16 +154,18 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.4" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
-    <plugin name="cordova-plugin-device" spec="^2.0.3" />
-    <plugin name="cordova-plugin-splashscreen" spec="^5.0.3" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^4.2.1">
-        <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+" />
-    </plugin>
+    <plugin name="cordova-plugin-whitelist" spec="~1.3.3" />
+    <plugin name="cordova-plugin-statusbar" spec="~2.4.2" />
+    <plugin name="cordova-plugin-device" spec="~2.0.2" />
+    <plugin name="cordova-plugin-splashscreen" spec="~5.0.2" />
+    <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.0" />
     <plugin name="cordova-plugin-googleplus" spec="~8.4.0">
-        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b" />
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.457735200635-jk4esdsp6fl98gg42illp44t17lsqj7t" />
         <variable name="WEB_APPLICATION_CLIENT_ID" value="457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com" />
+    </plugin>
+    <plugin name="cordova-ios-plugin-no-export-compliance" spec="~0.0.5" />
+    <plugin name="cordova-plugin-telerik-imagepicker" spec="~2.3.3">
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Permiso para poder seleccionar tus fotos" />
     </plugin>
 </widget>

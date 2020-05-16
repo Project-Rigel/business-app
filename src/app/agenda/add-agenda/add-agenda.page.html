@@ -1,0 +1,77 @@
+<ion-header xmlns="http://www.w3.org/1999/html">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-label color="primary"> Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Añadir una agenda</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [disabled]="form.invalid || loading" (click)="createAgenda()">
+        <ion-label color="primary"> Añadir</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+
+  <ion-grid fixed class="bg-modal">
+
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <ion-col size="12" class="ion-align-self-center">
+        <ion-avatar
+          (click)="selectImage($event)"
+          *ngIf="imageUrl"
+          class="agenda-avatar"
+        >
+          <img src="data:image/jpg;base64,{{imageUrl}}" />
+        </ion-avatar>
+
+        <div
+          *ngIf="!imageUrl"
+          (click)="selectImage($event)"
+          class="dot ion-margin-top image-margin"
+        >
+          <span class="image-text ion-text-center">
+            {{name.value ? (name.value | titlecase | slice:0:6) :
+            "Añadir"}}</span
+          >
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      class="ion-justify-content-center ion-align-items-center ion-margin-top "
+    >
+      <form [formGroup]="form">
+        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
+          <ion-item lines="none" class="min-width-item">
+            <ion-input
+              #inputNombre
+              enterkeyhint="enter"
+              placeholder="Nombre (Obligatorio)"
+              required
+              type="text"
+              formControlName="name"
+            ></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
+          <ion-item
+            lines="none"
+            button
+            (click)="showPicker()"
+            class="min-width-item"
+          >
+            <ion-label slot="start">Intervalos</ion-label>
+            <ion-label class="ion-margin-right" slot="end"
+              >{{minuteSelected}} minutos</ion-label
+            >
+          </ion-item>
+        </ion-list>
+      </form>
+    </ion-row>
+  </ion-grid>
+</ion-content>

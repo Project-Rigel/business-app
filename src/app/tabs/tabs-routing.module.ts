@@ -23,6 +23,15 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'agenda',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../agenda/agenda.module').then(m => m.AgendaPageModule),
+          },
+        ],
+      },
+      {
         path: 'profile',
         children: [
           {

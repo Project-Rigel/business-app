@@ -26,7 +26,11 @@ const routes: Routes = [
   {
     path: 'notifications',
     loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
+  },  {
+    path: 'agenda',
+    loadChildren: () => import('./agenda/agenda.module').then( m => m.AgendaPageModule)
   },
+
 ];
 
 @NgModule({

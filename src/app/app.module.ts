@@ -16,6 +16,8 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { PaginationService } from './services/pagination-service.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -37,6 +39,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     SplashScreen,
     PaginationService,
     Keyboard,
+    ImagePicker,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],

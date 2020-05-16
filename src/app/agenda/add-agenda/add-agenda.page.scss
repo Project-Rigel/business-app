@@ -11,6 +11,12 @@
   color: white;
 }
 
+.agenda-avatar {
+  height: 100px !important;
+  width: 100px !important;
+  margin: 0 auto !important;
+}
+
 .image-margin {
   margin-top: 32px;
 }
@@ -23,9 +29,9 @@
   height: 100%;
 }
 
-.error-msg-text{
+.error-msg-text {
   font-size: 14px;
 }
-.min-width-item{
+.min-width-item {
   min-width: 300px !important;
 }

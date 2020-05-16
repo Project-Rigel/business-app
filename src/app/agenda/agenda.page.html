@@ -1,6 +1,5 @@
 <ion-header translucent="true">
   <ion-toolbar class="ion-margin-top">
-
     <ion-title>Agendas</ion-title>
 
     <ion-buttons slot="end">
@@ -8,7 +7,6 @@
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
@@ -25,14 +23,30 @@
 
     <ion-list>
       <ng-container *ngIf="(agendas$ | async) as agendas; else noAgendas">
+        <ng-container *ngIf="agendas.length === 0">
+          <ion-text color="medium">
+            <h4 class="ion-text-center ion-padding-top">
+              No hay agendas creadas
+            </h4>
+          </ion-text>
+
+          <ion-text color="medium">
+            <p class="ion-text-center">
+              Añádelas con le botón
+              <ion-text color="primary"
+                ><span class="plus-icon-size">+</span></ion-text
+              >
+            </p>
+          </ion-text>
+        </ng-container>
         <ion-item-sliding *ngFor="let agenda of agendas">
-          <ion-item button detail (click)="showAgenda()">
-            <ion-thumbnail slot="start" >
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+          <ion-item button detail routerLink="details/{{agenda.id}}">
+            <ion-thumbnail slot="start">
+              <img src="{{agenda.imageUrl}}" />
             </ion-thumbnail>
 
             <ion-label>
-              <h3>{{agenda.author}}</h3>
+              <h3>{{agenda.name}}</h3>
               <p>30% ocupado</p>
             </ion-label>
           </ion-item>

@@ -37,7 +37,7 @@
     "cordova-ios": "^5.1.1",
     "cordova-ios-plugin-no-export-compliance": "0.0.6",
     "cordova-plugin-googleplus": "8.4.0",
-    "cordova-plugin-telerik-imagepicker": "git+https://github.com/Telerik-Verified-Plugins/ImagePicker.git",
+    "cordova-plugin-telerik-imagepicker": "^2.3.3",
     "core-js": "^2.5.4",
     "dayspan": "^1.1.0",
     "firebase": "^7.14.3",
@@ -97,7 +97,7 @@
       },
       "cordova-ios-plugin-no-export-compliance": {},
       "cordova-plugin-telerik-imagepicker": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Select Pictures from your gallery to customize your business"
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Permiso para poder seleccionar tus fotos"
       }
     },
     "platforms": [

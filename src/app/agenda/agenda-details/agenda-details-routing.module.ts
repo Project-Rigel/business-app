@@ -5,7 +5,7 @@ import { AgendaDetailsPage } from './agenda-details.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':id',
     component: AgendaDetailsPage,
   },
 ];

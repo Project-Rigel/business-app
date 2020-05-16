@@ -1,5 +1,10 @@
 <ion-header xmlns="http://www.w3.org/1999/html">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-label color="primary"> Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Añadir una agenda</ion-title>
     <ion-buttons slot="end">
       <ion-button [disabled]="form.invalid || loading" (click)="createAgenda()">
@@ -8,12 +13,23 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
+  <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+
   <ion-grid fixed class="bg-modal">
+
     <ion-row class="ion-justify-content-center ion-align-items-center">
-      <ion-col size="12">
+      <ion-col size="12" class="ion-align-self-center">
+        <ion-avatar
+          (click)="selectImage($event)"
+          *ngIf="imageUrl"
+          class="agenda-avatar"
+        >
+          <img src="data:image/jpg;base64,{{imageUrl}}" />
+        </ion-avatar>
+
         <div
+          *ngIf="!imageUrl"
           (click)="selectImage($event)"
           class="dot ion-margin-top image-margin"
         >

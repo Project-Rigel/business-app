@@ -29,32 +29,41 @@
     <p class="ion-text-center list-title">
       {{getOccupationPercent()}}% Ocupación
     </p>
-    <ion-row>
-      <ion-col size="3">
-        <div class="full-height">
-          <ion-list>
-            <ion-item
-              class="hour"
-              *ngFor="let hour of this.display"
-              lines="none"
-              [style.--hour-height.px]="height"
-            >
-                <p>{{hour.interval | date:"H:mm"}}</p>
-            </ion-item>
-          </ion-list>
-        </div>
-      </ion-col>
-      <ion-col>
-        <ion-list>
-          <app-agenda-appointment
-            *ngFor="let cita of this.display; index as i"
-            [appointment]="cita.appointment"
-          >
-            <div class="segment"></div>
 
+    <div
+      class="appointments-wrapper"
+      *ngFor="let cita of this.display; index as i"
+    >
+      <ion-row>
+        <ion-col size="3" class="ion-no-padding">
+          <div
+            [style.height.px]="totalHeight/ this.display.length"
+            class="appointment-hour ion-text-center"
+          >
+            {{cita.interval | date:"H:mm"}}
+          </div>
+        </ion-col>
+        <ion-col class="ion-no-padding appointmens-col-wrapper">
+          <div class="segment"></div>
+
+          <div
+            class="appointments-content"
+            [style.height.px]="totalHeight/ this.display.length"
+          ></div>
+          <app-agenda-appointment
+            *ngIf="cita.appointment"
+            [appointment]="cita.appointment"
+            [dayLengthMinutes]="appointmentsService.getJourneyDurationInMinutes()"
+            [containerHeight]="totalHeight"
+            [top]="cita.pxFromLast"
+          >
           </app-agenda-appointment>
-        </ion-list>
-      </ion-col>
-    </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <!--        <ion-list>-->
+
+    <!--        </ion-list>-->
   </div>
 </ion-content>

@@ -1,0 +1,20 @@
+.hour-item{
+  background-color: rgba(0, 195, 255, 0.06);
+  position: absolute;
+  padding: 16px;
+  z-index: 2;
+  width: 100%;
+}
+
+.vertical-line{
+  width: 3px;
+  height: 100%;
+  bottom: 0;
+  background-color: #2dd36f;
+  position: absolute;
+  left: 0;
+}
+
+.item-appointment {
+  --background:  rgba(0, 0, 0, 0);;
+}

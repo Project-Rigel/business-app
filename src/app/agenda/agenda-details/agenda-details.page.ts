@@ -27,7 +27,7 @@ export class AgendaDetailsPage implements OnInit {
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
 
-  height = 200;
+  totalHeight = 1000;
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
@@ -38,27 +38,24 @@ export class AgendaDetailsPage implements OnInit {
     this.allPossibleAppointments = this.appointmentsService.getAllPossibleAppointments();
 
     let lastValidAppointmentIndex = 0;
+    let currentDate = undefined;
+
     for (let i = 0; i < this.allPossibleAppointments.length; i++) {
       for (
         let j = lastValidAppointmentIndex;
         j < this.appointments.length;
         j++
       ) {
-        console.log(
-          { pne: Math.floor(this.appointments[j].startDate.getTime() / 1000) },
-          { two: Math.floor(this.allPossibleAppointments[i].getTime() / 1000) },
-        );
         if (
           Math.floor(this.appointments[j].startDate.getTime() / 1000) ===
           Math.floor(this.allPossibleAppointments[i].getTime() / 1000)
         ) {
+          currentDate = this.appointments[j];
           this.display.push({
             appointment: this.appointments[j],
             interval: this.allPossibleAppointments[i],
           });
           lastValidAppointmentIndex = j;
-          console.log(this.display[this.display.length - 1]);
-          break;
         }
       }
 
@@ -67,6 +64,44 @@ export class AgendaDetailsPage implements OnInit {
       }
     }
 
+    let pxFromLast = 0;
+    let appointmentHeight = 0;
+    let currentAppointment = null;
+
+    for (let i = 0; i < this.display.length; i++) {
+      if (this.display[i].appointment) {
+        currentAppointment = this.display[i].appointment;
+        appointmentHeight += this.totalHeight / this.display.length;
+
+        for (let j = i + 1; j < this.display.length; j++) {
+          console.log('jagged', this.display[i]);
+          if (
+            !this.display[j].appointment &&
+            this.display[j].interval < currentAppointment.endDate
+          ) {
+            appointmentHeight += this.totalHeight / this.display.length;
+          }
+
+          if (
+            this.display[j].appointment ||
+            this.display[j].interval >= currentAppointment.endDate
+          ) {
+            this.display[i].appointmentHeight = appointmentHeight;
+            appointmentHeight = 0;
+            currentAppointment = null;
+            break;
+          }
+        }
+
+        this.display[i].pxFromLast =
+          pxFromLast >= this.display[i].appointmentHeight
+            ? pxFromLast - this.display[i].appointmentHeight
+            : 0;
+        pxFromLast = 0;
+      } else {
+        pxFromLast += this.totalHeight / this.display.length;
+      }
+    }
     console.log(this.display);
   }
 

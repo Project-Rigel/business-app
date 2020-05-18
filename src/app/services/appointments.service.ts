@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Appointment } from '../interfaces/appointment';
-import * as moment from "moment";
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -12,39 +12,63 @@ export class AppointmentsService {
   endHour = 18;
   constructor() {}
 
-  getAllPossibleAppointments(){
+  getAllPossibleAppointments() {
     const total = [];
     const nAppointments: number = Math.trunc(
-      ((18-9) * 60 ) / this.appointmentInterval,
+      ((18 - 9) * 60) / this.appointmentInterval,
     );
     const date = new Date();
-    date.setHours(this.startHour,0,0);
+    date.setHours(this.startHour, 0, 0);
 
     for (let i = 0; i < nAppointments; i++) {
-      total.push(moment(date).add(this.appointmentInterval * i, "m").toDate() );
+      total.push(
+        moment(date)
+          .add(this.appointmentInterval * i, 'm')
+          .toDate(),
+      );
     }
 
+    console.log(total);
     return total;
   }
   getDayAppointments(day = new Date()) {
     const appointments: Appointment[] = [];
     const nAppointments: number = Math.trunc(
-      ((18-9) * 60 ) / this.appointmentInterval,
+      ((18 - 9) * 60) / this.appointmentInterval,
     );
     const date = new Date();
-    date.setHours(this.startHour,0,0);
-    console.log(moment(date).add(this.appointmentInterval, "m").toDate());
+    date.setHours(this.startHour, 0, 0);
+    console.log(
+      moment(date)
+        .add(this.appointmentInterval, 'm')
+        .toDate(),
+    );
     let startDate = null;
     let endDate = date;
     for (let i = 0; i < 8; i++) {
-      if(startDate === null){
-        startDate = moment(date).add(this.appointmentInterval * (i), "m").toDate();
-      }else{
+      if (startDate === null) {
+        startDate = moment(date)
+          .add(this.appointmentInterval * i, 'm')
+          .toDate();
+      } else {
         startDate = endDate;
       }
-      endDate = moment(startDate).add(this.appointmentInterval * 2, "m").toDate();
 
-      const diff = moment(startDate).diff(moment(endDate),"m");
+      if (i === 3) {
+        endDate = moment(startDate)
+          .add(this.appointmentInterval * 4, 'm')
+          .toDate();
+      } else if (i === 4) {
+        endDate = moment(startDate)
+          .add(this.appointmentInterval * 4.2, 'm')
+          .toDate();
+      } else {
+        endDate = moment(startDate)
+          .add(this.appointmentInterval * 2, 'm')
+          .toDate();
+      }
+
+      const diff = moment(startDate).diff(moment(endDate), 'm');
       console.log(diff);
 
       appointments.push({
@@ -54,15 +78,19 @@ export class AppointmentsService {
         customerId: '1',
         customerName: 'Eduardo Simón',
       });
-
     }
     console.log(appointments);
     return appointments;
   }
 
-  public getAppointmentDuration(appointment: Appointment){
-    const dur =  appointment.endDate.getMinutes() + appointment.startDate.getMinutes();
+  public getAppointmentDuration(appointment: Appointment) {
+    const dur =
+      appointment.endDate.getMinutes() + appointment.startDate.getMinutes();
     console.log(dur);
     return dur;
+  }
+
+  public getJourneyDurationInMinutes() {
+    return (this.endHour - this.startHour) * 60;
   }
 }

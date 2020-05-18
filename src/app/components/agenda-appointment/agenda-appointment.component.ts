@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Appointment } from '../../interfaces/appointment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-agenda-appointment',
@@ -7,10 +8,28 @@ import { Appointment } from '../../interfaces/appointment';
   styleUrls: ['./agenda-appointment.component.scss'],
 })
 export class AgendaAppointmentComponent implements OnInit {
-
   @Input() appointment: Appointment;
-  constructor() { }
+  @Input() containerHeight: number;
+  @Input() dayLengthMinutes: number;
+  @Input() top: number;
 
-  ngOnInit() {}
+  height: number;
+  constructor() {}
 
+  ngOnInit() {
+    if (
+      this.appointment &&
+      this.appointment.startDate &&
+      this.appointment.endDate
+    ) {
+      const diff =
+        moment(this.appointment.endDate).diff(
+          moment(this.appointment.startDate),
+          'minutes',
+        );
+
+     const percentHeight = (diff / this.dayLengthMinutes);
+     this.height = percentHeight * this.containerHeight;
+    }
+  }
 }

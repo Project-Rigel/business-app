@@ -1,8 +1,11 @@
-<ion-item class="hour-height" lines="none">
-  <ion-label *ngIf="appointment">
-    <h3>{{ appointment.name }}</h3>
-    <p>{{ appointment.customerName }}</p>
-  </ion-label>
-  <ion-reorder *ngIf="appointment" slot="end"></ion-reorder>
-  <app-agenda-notifications *ngIf="appointment"></app-agenda-notifications>
-</ion-item>
+<div [style.height.px]="height" [style.top.px]="top" class="hour-item">
+  <div *ngIf="appointment" class="vertical-line"></div>
+
+  <ion-item class="ion-no-padding item-appointment" lines="none">
+    <ion-label *ngIf="appointment">
+      <h3>{{ appointment.name }}</h3>
+      <p>{{ appointment.customerName }}</p>
+    </ion-label>
+    <app-agenda-notifications *ngIf="appointment"></app-agenda-notifications>
+  </ion-item>
+</div>

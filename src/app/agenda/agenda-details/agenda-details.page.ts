@@ -11,6 +11,11 @@ import { Animation } from '@ionic/core';
 import { AppointmentsService } from '../../services/appointments.service';
 import { Appointment } from '../../interfaces/appointment';
 import * as moment from 'moment';
+import { AgendaService } from '../../services/agenda.service';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Agenda } from '../../interfaces/agenda';
+import { switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-agenda-details',
   templateUrl: './agenda-details.page.html',
@@ -26,15 +31,26 @@ export class AgendaDetailsPage implements OnInit {
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
+  agenda$: Observable<Agenda>;
 
   totalHeight = 1000;
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
+    private agendaService: AgendaService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    this.appointments = this.appointmentsService.getDayAppointments(new Date());
+    const value = this.route.snapshot.paramMap.get('id');
+    console.log(value);
+    this.agenda$ = this.agendaService.getAgendaById(value);
+
+    this.agenda$.pipe(switchMap(agenda => {
+      return this.appointmentsService.getDayAppointments(agenda.id, new Date());
+    })).subscribe(appointments => {
+      console.log(appointments);
+    })
     this.allPossibleAppointments = this.appointmentsService.getAllPossibleAppointments();
 
     let lastValidAppointmentIndex = 0;

@@ -3,9 +3,17 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/app/tabs/agenda"></ion-back-button>
     </ion-buttons>
-    <ion-title>agenda-details</ion-title>
+    <ion-title>{{(agenda$ | async)?.name}}</ion-title>
+
 
     <ion-buttons slot="end">
+      <ion-button color="primary">
+        <ion-icon
+                [color]="calendarButtonColor"
+                slot="icon-only"
+                name="settings"
+        ></ion-icon>
+      </ion-button>
       <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
         <ion-icon
           [color]="calendarButtonColor"
@@ -46,10 +54,12 @@
         <ion-col class="ion-no-padding appointmens-col-wrapper">
           <div class="segment"></div>
 
-          <div
+          <ion-item lines="none"
             class="appointments-content"
-            [style.height.px]="totalHeight/ this.display.length"
-          ></div>
+            [style.--min-height.px]="totalHeight/ this.display.length"
+          >
+            <ion-icon slot="end" name="add"></ion-icon>
+          </ion-item>
           <app-agenda-appointment
             *ngIf="cita.appointment"
             [appointment]="cita.appointment"

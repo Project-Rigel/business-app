@@ -5,13 +5,12 @@
     </ion-buttons>
     <ion-title>{{(agenda$ | async)?.name}}</ion-title>
 
-
     <ion-buttons slot="end">
       <ion-button color="primary">
         <ion-icon
-                [color]="calendarButtonColor"
-                slot="icon-only"
-                name="settings"
+          [color]="calendarButtonColor"
+          slot="icon-only"
+          name="settings"
         ></ion-icon>
       </ion-button>
       <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
@@ -34,9 +33,31 @@
     ></date-picker>
   </div>
   <div id="citas-content" class="agenda-content">
-    <p class="ion-text-center list-title">
-      {{getOccupationPercent()}}% Ocupación
-    </p>
+    <ion-row class="ion-margin-bottom">
+      <ion-col size="8">
+        <p
+          *ngIf="!addingAppointment"
+          class="ion-text-start ion-margin-start list-title"
+        >
+          {{getOccupationPercent()}}% Ocupación
+        </p>
+
+        <ion-item *ngIf="addingAppointment" lines="none">
+          <ion-label>Producto</ion-label>
+          <ion-select (ionChange)="selectProduct($event)" placeholder="Seleccionar">
+            <ion-select-option value="Primera Visita">Primera Visita</ion-select-option>
+            <ion-select-option value="Revisión">Revisión</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="4" class="ion-align-self-center ion-justify-content-center">
+        <ion-button
+          (click)="toggleEditAppointment()"
+          color="primary"
+        > Añadir cita</ion-button>
+      </ion-col>
+    </ion-row>
 
     <div
       class="appointments-wrapper"
@@ -54,12 +75,22 @@
         <ion-col class="ion-no-padding appointmens-col-wrapper">
           <div class="segment"></div>
 
-          <ion-item lines="none"
+          <div
             class="appointments-content"
-            [style.--min-height.px]="totalHeight/ this.display.length"
+            [style.height.px]="totalHeight/ this.display.length"
           >
-            <ion-icon slot="end" name="add"></ion-icon>
-          </ion-item>
+            <ion-button
+                    class="choose-button"
+                    *ngIf="selectedProduct"
+                    (click)="selectTime($event)"
+                    size="small"
+                    color="primary"
+                    expand="block"
+                    [style.width.px]="100"
+            >Elegir</ion-button
+            >
+          </div>
+
           <app-agenda-appointment
             *ngIf="cita.appointment"
             [appointment]="cita.appointment"
@@ -71,9 +102,5 @@
         </ion-col>
       </ion-row>
     </div>
-
-    <!--        <ion-list>-->
-
-    <!--        </ion-list>-->
   </div>
 </ion-content>

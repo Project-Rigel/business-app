@@ -32,18 +32,7 @@
       <ng-container *ngIf="(search$ | async) as search; else inSearch">
         <ion-list *ngIf="search.length > 0; else noSearchResults">
           <ion-item *ngFor="let customer of search">
-            <ion-label>
-              {{customer.name | titlecase}}
-              <ion-label class="surnames"
-                >{{customer.firstSurname | titlecase}} {{customer.secondSurname
-                | titlecase}}
-              </ion-label>
-            </ion-label>
-            <ion-icon
-              slot="end"
-              color="primary"
-              name="information-circle-outline"
-            ></ion-icon>
+          <app-customer-element [customer]="customer"></app-customer-element>
           </ion-item>
         </ion-list>
         <ng-template #noSearchResults>
@@ -91,18 +80,7 @@
       <ng-template #notLoading>
         <ion-list>
           <ion-item *ngFor="let customer of data">
-            <ion-label>
-              {{customer.name | titlecase}}
-              <ion-label class="surnames"
-                >{{customer.firstSurname | titlecase}} {{customer.secondSurname
-                | titlecase}}
-              </ion-label>
-            </ion-label>
-            <ion-icon
-              slot="end"
-              color="primary"
-              name="information-circle-outline"
-            ></ion-icon>
+            <app-customer-element [customer]="customer"></app-customer-element>
           </ion-item>
         </ion-list>
 

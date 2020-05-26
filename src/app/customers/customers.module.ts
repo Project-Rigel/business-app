@@ -8,6 +8,7 @@ import { CustomersPageRoutingModule } from './customers-routing.module';
 
 import { CustomersPage } from './customers.page';
 import { AddCustomerPage } from './add-customer/add-customer.page';
+import { CustomerElementComponent } from '../components/customer-element/customer-element.component';
 
 @NgModule({
   entryComponents:[AddCustomerPage],
@@ -18,7 +19,7 @@ import { AddCustomerPage } from './add-customer/add-customer.page';
     CustomersPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [CustomersPage, AddCustomerPage],
+  declarations: [CustomersPage, AddCustomerPage, CustomerElementComponent],
 
 })
 export class CustomersPageModule {}

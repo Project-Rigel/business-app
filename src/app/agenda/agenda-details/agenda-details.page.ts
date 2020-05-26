@@ -32,8 +32,10 @@ export class AgendaDetailsPage implements OnInit {
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
   agenda$: Observable<Agenda>;
-
+  addingAppointment = false;
+  selectedProduct: string;
   totalHeight = 1000;
+
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
@@ -179,5 +181,17 @@ export class AgendaDetailsPage implements OnInit {
     }
 
     return false;
+  }
+
+  toggleEditAppointment(){
+    this.addingAppointment = !this.addingAppointment;
+  }
+
+  selectProduct(event){
+    this.selectedProduct = event.detail.value;
+  }
+
+  selectTime(event){
+
   }
 }

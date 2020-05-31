@@ -10,6 +10,8 @@ import { AgendaPage } from './agenda.page';
 import { HttpClientModule } from '@angular/common/http';
 import { AddAgendaPage } from './add-agenda/add-agenda.page';
 import { AddAgendaPageModule } from './add-agenda/add-agenda.module';
+import { AddAppointmentWizardComponent } from './add-appointment-wizard/add-appointment-wizard.component';
+import { CustomersPageModule } from '../customers/customers.module';
 
 @NgModule({
   imports: [
@@ -18,8 +20,9 @@ import { AddAgendaPageModule } from './add-agenda/add-agenda.module';
     IonicModule,
     HttpClientModule,
     AgendaPageRoutingModule,
-    AddAgendaPageModule
+    AddAgendaPageModule,
+    CustomersPageModule,
   ],
-  declarations: [AgendaPage],
+  declarations: [AgendaPage, AddAppointmentWizardComponent],
 })
 export class AgendaPageModule {}

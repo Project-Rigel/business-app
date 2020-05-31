@@ -1,0 +1,74 @@
+<ng-container *ngIf="loadedData">
+  <ng-container *ngIf="isSearching; else noSearch">
+    <ng-container *ngIf="searchResult; else inSearch">
+      <ion-list *ngIf="searchResult.length > 0; else noSearchResults" [style.height.%]="maxHeightPercent">
+          <app-customer-element *ngFor="let customer of searchResult" [customer]="customer"></app-customer-element>
+      </ion-list>
+      <ng-template #noSearchResults>
+        <ion-text color="medium">
+          <h4 class="ion-text-center ion-padding-top">
+            No se han encontrado coincidencias
+          </h4>
+        </ion-text>
+      </ng-template>
+    </ng-container>
+    <ng-template #inSearch>
+      <ion-list [style.height.%]="maxHeightPercent">
+        <ion-item *ngFor="let load of [1,1,1,1,1,1,1,1]">
+          <ion-skeleton-text animated style="width: 20%">
+            <ion-skeleton-text animated style="width: 35%">
+            </ion-skeleton-text>
+          </ion-skeleton-text>
+          <ion-skeleton-text
+                  slot="end"
+                  animated
+                  style="width: 10%"
+          ></ion-skeleton-text>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </ng-container>
+  <ng-template #noSearch>
+    <ng-container
+            *ngIf="loading; else notLoading"
+    >
+      <ion-list [style.height.%]="maxHeightPercent">
+        <ion-item *ngFor="let load of [1,1,1,1,1,1,1,1]">
+          <ion-skeleton-text animated style="width: 20%">
+            <ion-skeleton-text animated style="width: 35%">
+            </ion-skeleton-text>
+          </ion-skeleton-text>
+          <ion-skeleton-text
+                  slot="end"
+                  animated
+                  style="width: 10%"
+          ></ion-skeleton-text>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+    <ng-template #notLoading>
+      <ion-list [style.height.%]="maxHeightPercent">
+          <app-customer-element *ngFor="let customer of loadedData" [customer]="customer"></app-customer-element>
+      </ion-list>
+
+      <ng-container
+              *ngIf="loadedData.length === 0 && !done"
+      >
+        <ion-text color="medium">
+          <h4 class="ion-text-center ion-padding-top">
+            No hay pacientes registrados
+          </h4>
+        </ion-text>
+
+        <ion-text color="medium">
+          <p class="ion-text-center">
+            Añádelos en el icono
+            <ion-text color="primary"
+            ><span class="plus-icon-size">+</span></ion-text
+            >
+          </p>
+        </ion-text>
+      </ng-container>
+    </ng-template>
+  </ng-template>
+</ng-container>

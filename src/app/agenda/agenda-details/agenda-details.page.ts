@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { AnimationController } from '@ionic/angular';
+import { AnimationController, ModalController } from '@ionic/angular';
 import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 import { Animation } from '@ionic/core';
 import { AppointmentsService } from '../../services/appointments.service';
@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Agenda } from '../../interfaces/agenda';
 import { switchMap } from 'rxjs/operators';
+import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 @Component({
   selector: 'app-agenda-details',
   templateUrl: './agenda-details.page.html',
@@ -41,6 +42,7 @@ export class AgendaDetailsPage implements OnInit {
     public appointmentsService: AppointmentsService,
     private agendaService: AgendaService,
     private route: ActivatedRoute,
+    private modalController: ModalController,
   ) {}
 
   ngOnInit() {
@@ -48,11 +50,18 @@ export class AgendaDetailsPage implements OnInit {
     console.log(value);
     this.agenda$ = this.agendaService.getAgendaById(value);
 
-    this.agenda$.pipe(switchMap(agenda => {
-      return this.appointmentsService.getDayAppointments(agenda.id, new Date());
-    })).subscribe(appointments => {
-      console.log(appointments);
-    })
+    this.agenda$
+      .pipe(
+        switchMap(agenda => {
+          return this.appointmentsService.getDayAppointments(
+            agenda.id,
+            new Date(),
+          );
+        }),
+      )
+      .subscribe(appointments => {
+        console.log(appointments);
+      });
     this.allPossibleAppointments = this.appointmentsService.getAllPossibleAppointments();
 
     let lastValidAppointmentIndex = 0;
@@ -183,15 +192,25 @@ export class AgendaDetailsPage implements OnInit {
     return false;
   }
 
-  toggleEditAppointment(){
+  toggleEditAppointment() {
     this.addingAppointment = !this.addingAppointment;
   }
 
-  selectProduct(event){
+  selectProduct(event) {
     this.selectedProduct = event.detail.value;
   }
 
-  selectTime(event){
+  selectTime(event) {}
 
+  async startAddAppointmentWizard() {
+    const modal = await this.modalController.create({
+      component: AddAppointmentWizardComponent,
+      swipeToClose: true,
+      componentProps: {
+        display: this.display
+      }
+    });
+
+    await modal.present();
   }
 }

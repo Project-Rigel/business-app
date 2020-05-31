@@ -9,17 +9,21 @@ import { CustomersPageRoutingModule } from './customers-routing.module';
 import { CustomersPage } from './customers.page';
 import { AddCustomerPage } from './add-customer/add-customer.page';
 import { CustomerElementComponent } from '../components/customer-element/customer-element.component';
+import { CustomersListComponent } from './customers-list/customers-list.component';
 
 @NgModule({
-  entryComponents:[AddCustomerPage],
+  entryComponents: [AddCustomerPage],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     CustomersPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  declarations: [CustomersPage, AddCustomerPage, CustomerElementComponent],
+  declarations: [CustomersPage, AddCustomerPage, CustomerElementComponent, CustomersListComponent],
 
+  exports: [
+    CustomersListComponent,
+  ],
 })
 export class CustomersPageModule {}

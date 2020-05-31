@@ -1,12 +1,14 @@
-<ion-label>
-  {{customer.name | titlecase}}
-  <ion-label class="surnames"
-  >{{customer.firstSurname | titlecase}} {{customer.secondSurname
+<ion-item>
+    <ion-label>
+        {{customer.name | titlecase}}
+        <ion-label class="surnames"
+        >{{customer.firstSurname | titlecase}} {{customer.secondSurname
           | titlecase}}
-  </ion-label>
-</ion-label>
-<ion-icon
-        slot="end"
-        color="primary"
-        name="information-circle-outline"
-></ion-icon>
+        </ion-label>
+    </ion-label>
+    <ion-icon
+            slot="end"
+            color="primary"
+            name="information-circle-outline"
+    ></ion-icon>
+</ion-item>

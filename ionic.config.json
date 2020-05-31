@@ -1,7 +1,0 @@
-{
-  "name": "test-pwa",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "angular"
-}

@@ -10,6 +10,8 @@ import { Customer } from '../../interfaces/customer';
 export class CustomerElementComponent implements OnInit {
 
   @Input() customer: Customer;
+  @Input() isSelectable: boolean;
+
   constructor() { }
 
   ngOnInit() {}

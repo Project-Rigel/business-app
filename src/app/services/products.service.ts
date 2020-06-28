@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../interfaces/product';
 import { Observable, of } from 'rxjs';
+import * as moment from 'moment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +13,16 @@ export class ProductsService {
   }
 
   getBusinessProducts(businessId: string): Observable<Product[]> {
-    return of([{ name: 'product 1', id: '1', description: 'THe first product in the world.' }, {
-      name: 'product 2',
+    return of([{
+      name: 'Primera Visita',
+      id: '1',
+      description: 'Primera visita para conocer al paciente.',
+      duration: moment.duration(30, 'minutes')
+    }, {
+      name: 'Revisión tetas',
       id: '2',
-      description: 'Lorem ipsum lorem ipsum',
+      description: 'Revisión postoperatorio tetas',
+      duration: moment.duration(60, 'minutes')
     }]);
   }
 }

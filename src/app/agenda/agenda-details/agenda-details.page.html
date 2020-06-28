@@ -1,106 +1,84 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/tabs/agenda"></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{(agenda$ | async)?.name}}</ion-title>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/app/tabs/agenda" text=""></ion-back-button>
+        </ion-buttons>
 
-    <ion-buttons slot="end">
-      <ion-button color="primary">
-        <ion-icon
-          [color]="calendarButtonColor"
-          slot="icon-only"
-          name="settings"
-        ></ion-icon>
-      </ion-button>
-      <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
-        <ion-icon
-          [color]="calendarButtonColor"
-          slot="icon-only"
-          name="calendar"
-        ></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button color="primary">
+                <ion-icon
+                        color="primary"
+                        slot="icon-only"
+                        name="settings-outline"
+                ></ion-icon>
+            </ion-button>
+            <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
+                <ion-icon
+                        [color]="calendarButtonColor"
+                        slot="icon-only"
+                        name="calendar-outline"
+                ></ion-icon>
+            </ion-button>
+
+            <ion-button *ngIf="!addingAppointment"
+                        (click)="startAddAppointmentWizard()"
+                        color="primary"
+            >
+                <ion-icon
+                        color="primary"
+                        slot="icon-only"
+                        name="add-outline"
+                ></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="calendar" id="date-container">
-    <date-picker
-      class="date-picker"
-      id="date-picker"
-      (onSelect)="onDateChange($event)"
-    ></date-picker>
-  </div>
-  <div id="citas-content" class="agenda-content">
-    <ion-row class="ion-margin-bottom">
-      <ion-col size="8">
-        <p
-          *ngIf="!addingAppointment"
-          class="ion-text-start ion-margin-start list-title"
-        >
-          {{getOccupationPercent()}}% Ocupación
-        </p>
-
-        <ion-item *ngIf="addingAppointment" lines="none">
-          <ion-label>Producto</ion-label>
-          <ion-select (ionChange)="selectProduct($event)" placeholder="Seleccionar">
-            <ion-select-option value="Primera Visita">Primera Visita</ion-select-option>
-            <ion-select-option value="Revisión">Revisión</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-
-      <ion-col size="4" class="ion-align-self-center ion-justify-content-center">
-        <ion-button
-          (click)="startAddAppointmentWizard()"
-          color="primary"
-        > Añadir cita</ion-button>
-      </ion-col>
-    </ion-row>
-
-    <div
-      class="appointments-wrapper"
-      *ngFor="let cita of this.display; index as i"
-    >
-      <ion-row>
-        <ion-col size="3" class="ion-no-padding">
-          <div
-            [style.height.px]="totalHeight/ this.display.length"
-            class="appointment-hour ion-text-center"
-          >
-            {{cita.interval | date:"H:mm"}}
-          </div>
-        </ion-col>
-        <ion-col class="ion-no-padding appointmens-col-wrapper">
-          <div class="segment"></div>
-
-          <div
-            class="appointments-content"
-            [style.height.px]="totalHeight/ this.display.length"
-          >
-            <ion-button
-                    class="choose-button"
-                    *ngIf="selectedProduct"
-                    (click)="selectTime($event)"
-                    size="small"
-                    color="primary"
-                    expand="block"
-                    [style.width.px]="100"
-            >Elegir</ion-button
-            >
-          </div>
-
-          <app-agenda-appointment
-            *ngIf="cita.appointment"
-            [appointment]="cita.appointment"
-            [dayLengthMinutes]="appointmentsService.getJourneyDurationInMinutes()"
-            [containerHeight]="totalHeight"
-            [top]="cita.pxFromLast"
-          >
-          </app-agenda-appointment>
-        </ion-col>
-      </ion-row>
+<ion-content [scrollY]="true">
+    <div class="calendar" id="date-container">
+        <date-picker
+                class="date-picker"
+                id="date-picker"
+                (onSelect)="onDateChange($event)"
+        ></date-picker>
     </div>
-  </div>
+    <div id="citas-content" class="agenda-content">
+        <p class="ion-text-center list-title">{{(agenda$ | async)?.name}}</p>
+
+        <ion-row class="ion-margin-bottom ion-justify-content-center ion-align-items-center ion-text-center">
+            <ion-col>
+                <div>
+                    <ion-text *ngIf="addingAppointment" color="medium">
+                        <p>Selecciona la hora de inicio </p>
+                    </ion-text>
+                      <span
+                              *ngIf="addingAppointment"
+                              class="ion-text-start ion-margin-start list-title"
+                      >
+                        Hora de Inicio
+                    </span>
+                    <ion-chip *ngIf="addingAppointment" class="ion-margin-start">
+                        <ion-datetime (ionChange)="updatePossibleAppointment($event)" *ngIf="addingAppointment"
+                                      display-format="H:mm"
+                                      picker-format="H:mm"
+                                      placeholder="--:--"
+                                      [minuteValues]="computeValidMinutes()"
+                                      [hourValues]="computeValidHours()"
+                        ></ion-datetime>
+                        <ion-icon name="time-outline"></ion-icon>
+                    </ion-chip>
+                </div>
+
+                <ion-button *ngIf="addingAppointment && dateTimeValue" [disabled]="loading"
+                            (click)="confirmAppointments(this.route.snapshot.paramMap.get('id'))" expand="block">
+                    <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+                    <ion-label *ngIf="!loading"> Confirmar la cita</ion-label>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+
+        <app-day-timeline [appointments]="(appointmentsService.appointments$|async)" [startDate]="startDate"
+                          [endDate]="endDate"
+                          [intervalsLength]="interval"></app-day-timeline>
+    </div>
 </ion-content>

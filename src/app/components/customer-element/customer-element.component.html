@@ -6,9 +6,12 @@
           | titlecase}}
         </ion-label>
     </ion-label>
-    <ion-icon
+    <ion-icon *ngIf="isSelectable; else selectable"
             slot="end"
             color="primary"
             name="information-circle-outline"
     ></ion-icon>
+    <ng-template #selectable>
+        <ion-radio slot="end" color="primary" value="{{customer.id}}"></ion-radio>
+    </ng-template>
 </ion-item>

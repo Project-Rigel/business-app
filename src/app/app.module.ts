@@ -23,6 +23,7 @@ import {
   ScreenTrackingService,
 } from '@angular/fire/analytics';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAuthGuardModule,
+    AngularFireFunctionsModule,
     AngularFireAnalyticsModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {

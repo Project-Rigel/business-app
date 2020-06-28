@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Customer } from '../../interfaces/customer';
 
 @Component({
@@ -15,9 +15,15 @@ export class CustomersListComponent implements OnInit {
   @Input() isSearching: boolean;
   @Input() searchResult: Customer[];
   @Input() maxHeightPercent : number = 60;
+  @Input() isSelectable: boolean;
+
+  @Output() onCustomerClicked: EventEmitter<Customer> = new EventEmitter<Customer>();
 
   constructor() { }
 
   ngOnInit() {}
 
+  selectCustomer(event) {
+    this.onCustomerClicked.emit(event);
+  }
 }

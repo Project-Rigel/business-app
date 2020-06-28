@@ -1,11 +1,11 @@
-<div [style.height.px]="height" [style.top.px]="top" class="hour-item">
+<div [style.height.px]="heightPx" [style.top.px]="topPx" class="hour-item">
   <div *ngIf="appointment" class="vertical-line"></div>
 
-  <ion-item class="ion-no-padding item-appointment" lines="none">
+  <div class="ion-no-padding item-appointment">
     <ion-label *ngIf="appointment">
       <h3>{{ appointment.name }}</h3>
       <p>{{ appointment.customerName }}</p>
     </ion-label>
     <app-agenda-notifications *ngIf="appointment"></app-agenda-notifications>
-  </ion-item>
+  </div>
 </div>

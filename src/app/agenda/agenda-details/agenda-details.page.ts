@@ -1,135 +1,79 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { AnimationController, ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AnimationController, IonDatetime, ModalController } from '@ionic/angular';
 import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 import { Animation } from '@ionic/core';
 import { AppointmentsService } from '../../services/appointments.service';
 import { Appointment } from '../../interfaces/appointment';
-import * as moment from 'moment';
 import { AgendaService } from '../../services/agenda.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Agenda } from '../../interfaces/agenda';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
+import * as moment from 'moment';
+import { duration, Duration, Moment } from 'moment';
+import { Customer } from '../../interfaces/customer';
+import { Product } from '../../interfaces/product';
+
+interface DisplayItem {
+  appointment?: Appointment;
+  interval: Date;
+  appointmentHeight?: number,
+  pxFromLast?: number
+}
+
 @Component({
   selector: 'app-agenda-details',
   templateUrl: './agenda-details.page.html',
   styleUrls: ['./agenda-details.page.scss'],
 })
 export class AgendaDetailsPage implements OnInit {
+
   closeCalendar: Animation;
   openCalendar: Animation;
   isCalendarOpen: boolean = true;
-  appointments: Appointment[] = [];
-  allPossibleAppointments: any[] = [];
-  display: any[] = [];
+  display: DisplayItem[] = [];
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
   agenda$: Observable<Agenda>;
   addingAppointment = false;
-  selectedProduct: string;
-  totalHeight = 1000;
+  addingAppointmentInfo: { intervals: { from: string, to: string }[], customer: Customer, product: Product };
+  startDate: Moment;
+  endDate: Moment;
+  interval: Duration;
+  dateTimeInitialValue: Moment;
+  dateTimeValue = null;
+  possibleAppointmentId: string;
+
+  @ViewChild(IonDatetime) dateTime: IonDatetime;
+  public loading: boolean;
 
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
     private agendaService: AgendaService,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private modalController: ModalController,
-  ) {}
+  ) {
+    this.startDate = moment(new Date().setHours(9, 0, 0, 0));
+    this.endDate = moment(new Date().setHours(18, 0, 0, 0));
+    this.interval = duration(30, 'minutes');
+    this.dateTimeInitialValue = moment(new Date().setHours(this.startDate.get('hours')));
+    const value = this.route.snapshot.paramMap.get('id');
+    this.agenda$ = this.agendaService.getAgendaById(value);
+  }
 
   ngOnInit() {
-    const value = this.route.snapshot.paramMap.get('id');
-    console.log(value);
-    this.agenda$ = this.agendaService.getAgendaById(value);
-
     this.agenda$
       .pipe(
         switchMap(agenda => {
-          return this.appointmentsService.getDayAppointments(
+          return this.appointmentsService.updateDayAppointments(
             agenda.id,
             new Date(),
           );
         }),
-      )
-      .subscribe(appointments => {
-        console.log(appointments);
-      });
-    this.allPossibleAppointments = this.appointmentsService.getAllPossibleAppointments();
-
-    let lastValidAppointmentIndex = 0;
-    let currentDate = undefined;
-
-    for (let i = 0; i < this.allPossibleAppointments.length; i++) {
-      for (
-        let j = lastValidAppointmentIndex;
-        j < this.appointments.length;
-        j++
-      ) {
-        if (
-          Math.floor(this.appointments[j].startDate.getTime() / 1000) ===
-          Math.floor(this.allPossibleAppointments[i].getTime() / 1000)
-        ) {
-          currentDate = this.appointments[j];
-          this.display.push({
-            appointment: this.appointments[j],
-            interval: this.allPossibleAppointments[i],
-          });
-          lastValidAppointmentIndex = j;
-        }
-      }
-
-      if (!this.display[i]) {
-        this.display.push({ interval: this.allPossibleAppointments[i] });
-      }
-    }
-
-    let pxFromLast = 0;
-    let appointmentHeight = 0;
-    let currentAppointment = null;
-
-    for (let i = 0; i < this.display.length; i++) {
-      if (this.display[i].appointment) {
-        currentAppointment = this.display[i].appointment;
-        appointmentHeight += this.totalHeight / this.display.length;
-
-        for (let j = i + 1; j < this.display.length; j++) {
-          console.log('jagged', this.display[i]);
-          if (
-            !this.display[j].appointment &&
-            this.display[j].interval < currentAppointment.endDate
-          ) {
-            appointmentHeight += this.totalHeight / this.display.length;
-          }
-
-          if (
-            this.display[j].appointment ||
-            this.display[j].interval >= currentAppointment.endDate
-          ) {
-            this.display[i].appointmentHeight = appointmentHeight;
-            appointmentHeight = 0;
-            currentAppointment = null;
-            break;
-          }
-        }
-
-        this.display[i].pxFromLast =
-          pxFromLast >= this.display[i].appointmentHeight
-            ? pxFromLast - this.display[i].appointmentHeight
-            : 0;
-        pxFromLast = 0;
-      } else {
-        pxFromLast += this.totalHeight / this.display.length;
-      }
-    }
-    console.log(this.display);
+        take(1)).subscribe(v => console.log(v));
   }
 
   ionViewDidEnter() {
@@ -153,64 +97,92 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   async showCalendar() {
-    this.isCalendarOpen = !this.isCalendarOpen;
     this.calendarButtonColor = this.isCalendarOpen ? 'medium' : 'primary';
     this.openCalendar.stop();
     this.closeCalendar.stop();
     this.isCalendarOpen
       ? await this.closeCalendar.play()
       : await this.openCalendar.play();
+    this.isCalendarOpen = !this.isCalendarOpen;
+
   }
-
-  async onReorder(event) {
-    event.detail.complete();
-  }
-
-  getOccupationPercent() {
-    return Math.floor(
-      ((this.allPossibleAppointments.length - this.appointments.length) / 100) *
-        100,
-    );
-  }
-
-  shouldDrawHour(elem: any, i: number) {
-    if (i === 0) {
-      return true;
-    }
-    if (
-      elem.appointments &&
-      Math.floor(elem.appointment.startDate.getTime() / 1000) ===
-        Math.floor(elem.interval.getTime() / 1000)
-    ) {
-      return true;
-    }
-
-    if (!elem.appointment && elem.interval) {
-      return true;
-    }
-
-    return false;
-  }
-
-  toggleEditAppointment() {
-    this.addingAppointment = !this.addingAppointment;
-  }
-
-  selectProduct(event) {
-    this.selectedProduct = event.detail.value;
-  }
-
-  selectTime(event) {}
 
   async startAddAppointmentWizard() {
     const modal = await this.modalController.create({
       component: AddAppointmentWizardComponent,
       swipeToClose: true,
       componentProps: {
-        display: this.display
-      }
+        display: this.display,
+        agendaId: this.route.snapshot.paramMap.get('id'),
+      },
     });
 
     await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data) {
+      if (data.done) {
+        this.addingAppointment = true;
+        this.addingAppointmentInfo = data;
+      }
+    }
+  }
+
+  async updatePossibleAppointment($event: any) {
+    this.dateTimeValue = new Date($event.detail.value);
+    const date = new Date($event.detail.value);
+
+    if (!this.possibleAppointmentId) {
+      this.possibleAppointmentId = this.appointmentsService.getId();
+    }
+
+    const appointment = {
+      id: this.possibleAppointmentId,
+      startDate: date,
+      endDate: moment(date).add(this.addingAppointmentInfo.product.duration).toDate(),
+      name: this.addingAppointmentInfo.product.name,
+      customerId: this.addingAppointmentInfo.customer.id,
+      customerName: this.addingAppointmentInfo.customer.name,
+    };
+    this.appointmentsService.updatePossibleAppointment(appointment);
+  }
+
+  async confirmAppointments(agendaId: string) {
+    try {
+      this.loading = true;
+      await this.appointmentsService.confirmAppointments(agendaId);
+      this.loading = false;
+    } catch (e) {
+      this.loading = false;
+    }
+  }
+
+  computeValidMinutes() {
+    const minutes = [];
+    if (this.addingAppointmentInfo) {
+      let v = 60;
+
+      while (v >= 0) {
+        v -= this.addingAppointmentInfo.product.duration.asMinutes();
+        minutes.push(v);
+      }
+    }
+
+    return minutes;
+  }
+
+  computeValidHours() {
+    const validHours = [];
+    if (this.addingAppointmentInfo) {
+      this.addingAppointmentInfo.intervals.forEach(v => {
+        const start = Number.parseInt(v.from.split(':')[0]);
+        const end = Number.parseInt(v.to.split(':')[0]);
+        for (let i =start; i < end + 1; i++) {
+          validHours.push(i);
+        }
+      });
+    }
+
+    return validHours;
   }
 }

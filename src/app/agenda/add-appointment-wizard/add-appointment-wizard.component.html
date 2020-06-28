@@ -2,7 +2,7 @@
     <ion-toolbar>
         <ion-title>Añadir una cita</ion-title>
         <ion-buttons slot="end">
-            <ion-button (click)="closeModal()">
+            <ion-button (click)="cancel()">
                 <ion-label color="primary"> Cancelar</ion-label>
             </ion-button>
         </ion-buttons>
@@ -12,7 +12,6 @@
 <ion-content fullscreen [scrollY]="false" class="ion-padding">
     <ion-slides mode="ios" pager="ios" [options]="sliderOptions" class="slider-content">
         <ion-slide>
-
             <div class="slide">
                 <div>
                     <ion-text class="ion-margin-top ion-text-center"><h1>Seleccione un cliente</h1></ion-text>
@@ -29,12 +28,12 @@
                                     [isSearching]="searching"
                                     [done]="(paginationService.done | async)"
                                     [loading]="(paginationService.loading | async)"
-                                    [searchResult]="(search$ | async)"></app-customers-list>
+                                    [searchResult]="(search$ | async)"
+                                    [isSelectable]="true"
+                                    (onCustomerClicked)="selectedCustomer = $event"></app-customers-list>
 
                 <ion-button expand="block" color="primary" (click)="nextSlide()"> Siguiente</ion-button>
             </div>
-
-
             <!--            <ion-row>-->
             <!--                <ion-col size="12">-->
             <!--                    <ion-infinite-scroll threshold="150px" (ionInfinite)="loadData($event)">-->
@@ -43,85 +42,27 @@
             <!--                    </ion-infinite-scroll>-->
             <!--                </ion-col>-->
             <!--            </ion-row>-->
-
-
         </ion-slide>
 
         <ion-slide class="slide">
             <ion-text class="ion-margin-top ion-text-center"><h1>Seleccione un producto</h1></ion-text>
             <ion-list [style.height.%]="74">
                 <ion-radio-group allow-empty-selection>
-                    <ion-item *ngFor="let product of (productsService.getBusinessProducts('1') | async)">
+                    <ion-item (click)="selectedProduct = product" *ngFor="let product of (productsService.getBusinessProducts('1') | async)">
                         <ion-label>
                             <ion-label>{{product.name}}</ion-label>
+                            <ion-label>{{product.description}}</ion-label>
                         </ion-label>
-                        <ion-radio slot="end" color="primary" value="{{product.name}}"></ion-radio>
+                        <ion-radio slot="end" color="primary" value="{{product.id}}"></ion-radio>
                     </ion-item>
-
-
                 </ion-radio-group>
-
-
             </ion-list>
-            <ion-button expand="block" color="primary" (click)="nextSlide()">Siguiente</ion-button>
+
+            <ion-button [disabled]="!selectedProduct" expand="block" color="primary" (click)="closeModal()">
+                <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+                <ion-label *ngIf="!loading"> Siguiente</ion-label></ion-button>
         </ion-slide>
 
-        <ion-slide class="slide">
-            <ion-text class="ion-text-center ion-padding"><h1>Seleccione hora</h1></ion-text>
-
-            <div id="citas-content" class="agenda-content ion-padding-top ion-padding-bottom">
-                <div
-                        class="appointments-wrapper"
-                        *ngFor="let cita of this.display; index as i"
-                >
-                    <ion-row>
-                        <ion-col size="3" class="ion-no-padding">
-                            <div
-                                    [style.height.px]="totalHeight/ this.display.length"
-                                    class="appointment-hour ion-text-center"
-                            >
-
-                                {{cita.interval | date:"H:mm"}}
-                            </div>
-                        </ion-col>
-                        <ion-col size="7" class="ion-no-padding appointmens-col-wrapper">
-                            <div class="segment"></div>
-
-
-                            <div
-                                    class="appointments-content"
-                                    [style.height.px]="totalHeight/ this.display.length"
-                            >
-                                <!--                                <ion-button-->
-                                <!--                                        class="choose-button"-->
-                                <!--                                        *ngIf="selectedProduct"-->
-                                <!--                                        (click)="selectTime($event)"-->
-                                <!--                                        size="small"-->
-                                <!--                                        color="primary"-->
-                                <!--                                        expand="block"-->
-                                <!--                                        [style.width.px]="100"-->
-                                <!--                                >Elegir</ion-button-->
-                                <!--                                >-->
-                            </div>
-
-                            <!--                            <app-agenda-appointment-->
-                            <!--                                    *ngIf="cita.appointment"-->
-                            <!--                                    [appointment]="cita.appointment"-->
-                            <!--                                    [dayLengthMinutes]="appointmentsService.getJourneyDurationInMinutes()"-->
-                            <!--                                    [containerHeight]="totalHeight"-->
-                            <!--                                    [top]="cita.pxFromLast"-->
-                            <!--                            >-->
-                            <!--                            </app-agenda-appointment>-->
-                        </ion-col>
-
-                        <ion-col size="2">
-                            <ion-icon class="add-icon" name="pencil"></ion-icon>
-                        </ion-col>
-                    </ion-row>
-                </div>
-            </div>
-
-            <ion-button expand="block" color="primary" (click)="closeModal()">Citar</ion-button>
-        </ion-slide>
     </ion-slides>
+    º
 </ion-content>

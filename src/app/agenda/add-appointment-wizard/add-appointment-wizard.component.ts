@@ -5,9 +5,11 @@ import { Customer } from '../../interfaces/customer';
 import { CustomersService } from '../../services/customers.service';
 import { AuthService } from '../../services/auth.service';
 import { PaginationService } from '../../services/pagination-service.service';
-import { switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, take } from 'rxjs/operators';
 import { AddCustomerPage } from '../../customers/add-customer/add-customer.page';
 import { ProductsService } from '../../services/products.service';
+import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-add-appointment-wizard',
@@ -15,30 +17,26 @@ import { ProductsService } from '../../services/products.service';
   styleUrls: ['./add-appointment-wizard.component.scss'],
 })
 export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
-
-
   @ViewChild(IonInfiniteScroll)
   ionInfiniteScrollElement: IonInfiniteScroll;
 
   @ViewChild(IonSlides)
   ionSlides: IonSlides;
-
   subscriptions: Subscription[];
   search$: Observable<Customer[]>;
-  searchValue: string;
   searching = false;
-  sliderOptions: any = {
-
-  };
-  display: any;
-  totalHeight: number;
+  sliderOptions: any = {};
+  agendaId: string;
+  selectedCustomer: Customer;
+  selectedProduct: Product;
+  loading: boolean;
 
   constructor(private readonly customerService: CustomersService,
               private readonly auth: AuthService,
               private readonly modalController: ModalController,
               public readonly paginationService: PaginationService,
               public readonly productsService: ProductsService,
-              private readonly platform:Platform) {
+              public readonly intervalsService: GetAvailableIntervalsService) {
     this.subscriptions = [];
   }
 
@@ -69,11 +67,9 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       }),
     );
 
-    this.totalHeight = 1000;
   }
 
   async ngAfterViewInit(): Promise<void> {
-    console.log(this.ionSlides.getSwiper());
     await this.ionSlides.lockSwipes(true);
   }
 
@@ -128,7 +124,6 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   }
 
   cancelSearch(event) {
-    console.log('cancelling');
     this.searching = false;
     if (this.ionInfiniteScrollElement) {
       this.ionInfiniteScrollElement.disabled = false;
@@ -136,16 +131,33 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   }
 
   closeModal() {
-    this.modalController.dismiss();
+    this.loading = true;
+    this.intervalsService.endpoint({
+      businessId: 'hello', //not needed yet
+      agendaId: this.agendaId,
+      productId: this.selectedProduct.id,
+      timestamp: new Date().toISOString(),
+    }).pipe(take(1)).subscribe(async v => {
+      this.loading = false;
+      await this.modalController.dismiss({
+        done: true,
+        intervals: v.intervals,
+        customer: this.selectedCustomer,
+        product: this.selectedProduct,
+      });
+    }, error => {
+      this.loading = false;
+    });
   }
 
-  async nextSlide(){
+  async nextSlide() {
     await this.ionSlides.lockSwipeToNext(false);
     await this.ionSlides.slideNext(600);
     await this.ionSlides.lockSwipes(false);
     await this.ionSlides.lockSwipeToNext(true);
   }
 
-
-
+  async cancel() {
+    await this.modalController.dismiss({done: false})
+  }
 }

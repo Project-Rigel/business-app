@@ -30,6 +30,10 @@
                         name="add-outline"
                 ></ion-icon>
             </ion-button>
+
+            <ion-button (click)="cancelAddAppointment()" *ngIf="addingAppointment">
+                <ion-label color="primary"> Cancelar</ion-label>
+            </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -51,10 +55,10 @@
                     <ion-text *ngIf="addingAppointment" color="medium">
                         <p>Selecciona la hora de inicio </p>
                     </ion-text>
-                      <span
-                              *ngIf="addingAppointment"
-                              class="ion-text-start ion-margin-start list-title"
-                      >
+                    <span
+                            *ngIf="addingAppointment"
+                            class="ion-text-start ion-margin-start list-title"
+                    >
                         Hora de Inicio
                     </span>
                     <ion-chip *ngIf="addingAppointment" class="ion-margin-start">
@@ -62,10 +66,11 @@
                                       display-format="H:mm"
                                       picker-format="H:mm"
                                       placeholder="--:--"
+                                      [value]="dateTimeValue"
                                       [minuteValues]="computeValidMinutes()"
                                       [hourValues]="computeValidHours()"
                         ></ion-datetime>
-                        <ion-icon name="time-outline"></ion-icon>
+                        <ion-icon name="time-outline"></ion-icon>d
                     </ion-chip>
                 </div>
 

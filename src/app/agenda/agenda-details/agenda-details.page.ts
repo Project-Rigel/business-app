@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AnimationController, IonDatetime, ModalController } from '@ionic/angular';
+import { AlertController, AnimationController, IonDatetime, ModalController } from '@ionic/angular';
 import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 import { Animation } from '@ionic/core';
 import { AppointmentsService } from '../../services/appointments.service';
@@ -55,6 +55,7 @@ export class AgendaDetailsPage implements OnInit {
     private agendaService: AgendaService,
     public route: ActivatedRoute,
     private modalController: ModalController,
+    public alertController: AlertController,
   ) {
     this.startDate = moment(new Date().setHours(9, 0, 0, 0));
     this.endDate = moment(new Date().setHours(18, 0, 0, 0));
@@ -65,15 +66,7 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.agenda$
-      .pipe(
-        switchMap(agenda => {
-          return this.appointmentsService.updateDayAppointments(
-            agenda.id,
-            new Date(),
-          );
-        }),
-        take(1)).subscribe(v => console.log(v));
+    this.updateAppointments(new Date());
   }
 
   ionViewDidEnter() {
@@ -81,19 +74,22 @@ export class AgendaDetailsPage implements OnInit {
       .create()
       .addElement(document.getElementById('date-container'))
       .duration(400)
-      .fromTo('height', '250px', '0px')
+      .fromTo('height', '200px', '0px')
       .easing('ease-in-out');
 
     this.openCalendar = this.animationController
       .create()
       .addElement(document.getElementById('date-container'))
       .duration(400)
-      .fromTo('height', '0px', '250px')
+      .fromTo('height', '0px', '200px')
       .easing('ease-in-out');
   }
 
   onDateChange(event) {
-    console.log(event);
+    this.startDate = moment(event.setHours(9, 0, 0, 0));
+    this.endDate = moment(event.setHours(18, 0, 0, 0));
+    this.dateTimeValue = event;
+    this.updateAppointments(event);
   }
 
   async showCalendar() {
@@ -130,7 +126,6 @@ export class AgendaDetailsPage implements OnInit {
 
   async updatePossibleAppointment($event: any) {
     this.dateTimeValue = new Date($event.detail.value);
-    const date = new Date($event.detail.value);
 
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
@@ -138,8 +133,8 @@ export class AgendaDetailsPage implements OnInit {
 
     const appointment = {
       id: this.possibleAppointmentId,
-      startDate: date,
-      endDate: moment(date).add(this.addingAppointmentInfo.product.duration).toDate(),
+      startDate: this.dateTimeValue,
+      endDate: moment(this.dateTimeValue).add(this.addingAppointmentInfo.product.duration).toDate(),
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
@@ -148,13 +143,37 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   async confirmAppointments(agendaId: string) {
-    try {
-      this.loading = true;
-      await this.appointmentsService.confirmAppointments(agendaId);
-      this.loading = false;
-    } catch (e) {
-      this.loading = false;
-    }
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirm!',
+      message: 'Message <strong>text</strong>!!!',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          },
+        }, {
+          text: 'Okay',
+          handler: async () => {
+            try {
+              this.loading = true;
+              await this.appointmentsService.confirmAppointments(agendaId);
+              this.loading = false;
+              this.addingAppointmentInfo = null;
+              this.addingAppointment = false;
+            } catch (e) {
+              this.loading = false;
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+
   }
 
   computeValidMinutes() {
@@ -177,12 +196,29 @@ export class AgendaDetailsPage implements OnInit {
       this.addingAppointmentInfo.intervals.forEach(v => {
         const start = Number.parseInt(v.from.split(':')[0]);
         const end = Number.parseInt(v.to.split(':')[0]);
-        for (let i =start; i < end + 1; i++) {
+        for (let i = start; i < end + 1; i++) {
           validHours.push(i);
         }
       });
     }
 
     return validHours;
+  }
+
+  private updateAppointments(date: Date) {
+    this.agenda$
+      .pipe(
+        switchMap(agenda => {
+          return this.appointmentsService.updateDayAppointments(
+            agenda.id,
+            date,
+          );
+        }),
+        take(1)).subscribe(v => console.log(v));
+  }
+
+  cancelAddAppointment() {
+    this.addingAppointment = false;
+    this.addingAppointmentInfo = null;
   }
 }

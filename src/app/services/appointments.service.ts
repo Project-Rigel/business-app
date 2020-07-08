@@ -5,6 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { AgendaDay } from '../interfaces/agendaDay';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root',
@@ -51,18 +52,23 @@ export class AppointmentsService {
       .collection<AgendaDay>('appointments')
       .doc<AgendaDay>(`${strDate}-${agendaId}`)
       .valueChanges().pipe(map(v => {
-        this.appointments.next(v.appointments.map((v: any): Appointment => {
-            return {
-              startDate: v.startDate.toDate(),
-              id: v.id,
-              customerName: v.customerName,
-              endDate: v.endDate.toDate(),
-              customerId: v.customerId,
-              name: v.name,
-            };
-          }
-        ));
-        return v.appointments;
+        if (v && v.appointments) {
+          this.appointments.next(v.appointments.map((v: any): Appointment => {
+              return {
+                startDate: v.startDate.toDate(),
+                id: v.id,
+                customerName: v.customerName,
+                endDate: v.endDate.toDate(),
+                customerId: v.customerId,
+                name: v.name,
+              };
+            },
+          ));
+        } else {
+          this.appointments.next([]);
+        }
+
+        return this.appointments.value;
       }));
   }
 
@@ -87,7 +93,7 @@ export class AppointmentsService {
   }
 
   updatePossibleAppointment(appointment: Appointment) {
-    const appointToShow = this.appointments.value.filter(v => v.id !== appointment.id);
+    const appointToShow = this.appointments?.value.filter(v => v.id !== appointment.id);
     appointToShow.push(appointment);
 
     this.appointments.next(appointToShow);
@@ -100,8 +106,8 @@ export class AppointmentsService {
     if (this.appointmentToBeConfirmed) {
       await this.afs.doc(`agendas/${agendaId}`)
         .collection<AgendaDay>('appointments')
-        .doc<AgendaDay>(`${this.getStringDate(this.appointmentToBeConfirmed.startDate)}-${agendaId}`)
-        .set({ appointments: [this.appointmentToBeConfirmed] }, { merge: true});
+        .doc<any>(`${this.getStringDate(this.appointmentToBeConfirmed.startDate)}-${agendaId}`)
+        .update({ appointments: firebase.firestore.FieldValue.arrayUnion(this.appointmentToBeConfirmed) });
     }
 
     this.appointmentToBeConfirmed = null;

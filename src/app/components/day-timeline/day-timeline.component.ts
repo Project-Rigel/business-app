@@ -37,7 +37,4 @@ export class DayTimelineComponent implements OnInit {
     });
   }
 
-  trackByMethod(index: number, el: any): number {
-    return el.startDate;
-  }
 }

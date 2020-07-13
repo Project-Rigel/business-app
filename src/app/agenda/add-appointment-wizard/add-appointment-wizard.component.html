@@ -29,7 +29,7 @@
                                 [searchResult]="(search$ | async)"
                                 [isSelectable]="true"
                                 (onCustomerClicked)="selectedCustomer = $event"></app-customers-list>                                             
-                <ion-button expand="block" color="primary" (click)="nextSlide()"> Siguiente</ion-button>
+                <ion-button [disabled]="!selectedCustomer" expand="block" color="primary" (click)="nextSlide()"> Siguiente</ion-button>
             </div>
                  
             <!-- <ion-row>

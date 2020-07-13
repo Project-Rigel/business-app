@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
   EventEmitter,
   Input,
   OnInit,
@@ -34,12 +33,11 @@ export class CustomersListComponent implements OnInit {
   @Output() onCustomerClicked: EventEmitter<Customer> = new EventEmitter<Customer>();
 
   subscriptions: Subscription[];
+  lastIdSelected: string;
 
   constructor(private paginationService: PaginationService) {
     this.subscriptions = [];
-    
-    
-   }
+  }
 
   ngOnInit() {
     console.log("LoadedData:");
@@ -48,8 +46,6 @@ export class CustomersListComponent implements OnInit {
     this.subscriptions.push(
       this.paginationService.done.subscribe(done => {
         if (done === true && this.ionInfiniteScrollElement) {
-          console.log("DONE");
-
           this.ionInfiniteScrollElement.disabled = true;
         }
       })
@@ -57,9 +53,7 @@ export class CustomersListComponent implements OnInit {
 
     this.subscriptions.push(
       this.paginationService.loading.subscribe(async loading => {
-        if (!loading && this.ionInfiniteScrollElement) {   
-          console.log("LOADIBG");
-                 
+        if (!loading && this.ionInfiniteScrollElement) {
           await this.ionInfiniteScrollElement.complete();
         }
       })
@@ -70,21 +64,22 @@ export class CustomersListComponent implements OnInit {
     if (this.subscriptions) {
       this.subscriptions.forEach(sub => sub.unsubscribe());
     }
+    // Reset para que si se cierra el modal y se vuelve a entrar la lista contenga solo los primeros 15 elementos.
+    this.paginationService.reset();
   }
 
   selectCustomer(event) {
-    this.onCustomerClicked.emit(event);
-    console.log("LoadedData:");
-    console.log(this.loadedData);
-    
-    console.log("searchResult:");
-    console.log(this.searchResult);
+    if (event.id === this.lastIdSelected) {
+      this.onCustomerClicked.emit(null);
+      this.lastIdSelected = "";
+    } else {
+      this.onCustomerClicked.emit(event);
+      this.lastIdSelected = event.id;
+    }
+
   }
 
   loadData(event) {
-    console.log(this.ionInfiniteScrollElement);
-    console.log("Loading more data");
     this.paginationService.more();
-    //this.ionInfiniteScrollElement.disabled = true;
   }
 }

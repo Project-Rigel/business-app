@@ -2,7 +2,7 @@
     <ng-container *ngIf="isSearching; else noSearch">
         <ng-container *ngIf="searchResult; else inSearch">
             <ion-list *ngIf="searchResult.length > 0; else noSearchResults" [style.height.%]="maxHeightPercent">
-                <ion-radio-group (ionChange)="selectCustomer($event)" *ngIf="isSelectable; else notSelectable " allow-empty-selection>
+                <ion-radio-group *ngIf="isSelectable; else notSelectable " allow-empty-selection>
                     <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of searchResult"
                                           [customer]="customer"></app-customer-element>
                 </ion-radio-group>
@@ -11,12 +11,14 @@
                                           [customer]="customer" [isSelectable]="isSelectable"></app-customer-element>
                 </ng-template>
             </ion-list>
-            <ng-template #noSearchResults>
-                <ion-text color="medium">
-                    <h4 class="ion-text-center ion-padding-top">
-                        No se han encontrado coincidencias
-                    </h4>
-                </ion-text>
+            <ng-template #noSearchResults >
+                <ion-item [style.height.%]="maxHeightPercent">
+                    <ion-text color="medium">
+                        <h4 class="ion-text-center ion-padding-top">
+                            No se han encontrado coincidencias
+                        </h4>
+                    </ion-text>
+                </ion-item>
             </ng-template>
         </ng-container>
         <ng-template #inSearch>

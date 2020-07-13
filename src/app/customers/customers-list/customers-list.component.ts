@@ -69,6 +69,7 @@ export class CustomersListComponent implements OnInit {
   }
 
   selectCustomer(event) {
+    console.log(event);
     if (event.id === this.lastIdSelected) {
       this.onCustomerClicked.emit(null);
       this.lastIdSelected = "";
@@ -76,7 +77,6 @@ export class CustomersListComponent implements OnInit {
       this.onCustomerClicked.emit(event);
       this.lastIdSelected = event.id;
     }
-
   }
 
   loadData(event) {

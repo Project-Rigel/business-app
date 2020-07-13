@@ -1,16 +1,14 @@
-import { AfterViewInit, Component, OnInit, PlatformRef, ViewChild } from '@angular/core';
-import { IonInfiniteScroll, IonSlides, ModalController, Platform } from '@ionic/angular';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, IonSlides, ModalController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 import { Customer } from '../../interfaces/customer';
 import { CustomersService } from '../../services/customers.service';
 import { AuthService } from '../../services/auth.service';
 import { PaginationService } from '../../services/pagination-service.service';
-import { catchError, switchMap, take } from 'rxjs/operators';
-import { AddCustomerPage } from '../../customers/add-customer/add-customer.page';
+import { switchMap, take } from 'rxjs/operators';
 import { ProductsService } from '../../services/products.service';
 import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
 import { Product } from '../../interfaces/product';
-import { CustomersListComponent } from 'src/app/customers/customers-list/customers-list.component';
 
 @Component({
   selector: 'app-add-appointment-wizard',
@@ -18,12 +16,9 @@ import { CustomersListComponent } from 'src/app/customers/customers-list/custome
   styleUrls: ['./add-appointment-wizard.component.scss'],
 })
 export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
-  // @ViewChild(IonInfiniteScroll)
-  // ionInfiniteScrollElement: IonInfiniteScroll;
 
   @ViewChild(IonSlides)
   ionSlides: IonSlides;
-  //subscriptions: Subscription[];
   search$: Observable<Customer[]>;
   searching = false;
   sliderOptions: any = {};
@@ -32,13 +27,14 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   selectedProduct: Product;
   loading: boolean;
 
+  lastIdSelected: string
+
   constructor(private readonly customerService: CustomersService,
               private readonly auth: AuthService,
               private readonly modalController: ModalController,
               public readonly paginationService: PaginationService,
               public readonly productsService: ProductsService,
               public readonly intervalsService: GetAvailableIntervalsService) {
-    //this.subscriptions = [];    
   }
 
   ngOnInit() {
@@ -52,52 +48,11 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       }
     });
 
-    /* this.subscriptions.push(
-      this.paginationService.done.subscribe(done => {
-        if (done === true) {
-          this.ionInfiniteScrollElement.disabled = true;
-        }
-      }),
-    );
-
-    this.subscriptions.push(
-      this.paginationService.loading.subscribe(async loading => {
-        if (!loading && this.ionInfiniteScrollElement) {
-          await this.ionInfiniteScrollElement.complete();
-        }
-      }),
-    ); */
-
   }
 
   async ngAfterViewInit(): Promise<void> {
     await this.ionSlides.lockSwipes(true);
   }
-
-  /* ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
-    }
-  } */
-
-  /* loadData(event) {
-    // this.lastElement$.next(this.lastElement);
-    this.paginationService.more();
-  } */
-
-  /* async addCustomer() {
-    const modal = await this.modalController.create({
-      component: AddCustomerPage,
-    });
-    await modal.present();
-    const { data } = await modal.onDidDismiss();
-    if (this.ionInfiniteScrollElement) {
-      this.ionInfiniteScrollElement.disabled = false;
-    }
-    if (data.done) {
-      this.paginationService.reset();
-    }
-  } */
 
   async search(event) {
     let inputs = event.target.value.toString().split(' ');
@@ -124,12 +79,15 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
- /*  cancelSearch(event) {
-    this.searching = false;
-    if (this.ionInfiniteScrollElement) {
-      this.ionInfiniteScrollElement.disabled = false;
+  selectProduct(event) {
+    if (event.id === this.lastIdSelected) {
+      this.selectedProduct = null;
+      this.lastIdSelected = "";
+    } else {
+      this.selectedProduct = event;
+      this.lastIdSelected = event.id;
     }
-  } */
+  }
 
   closeModal() {
     this.loading = true;

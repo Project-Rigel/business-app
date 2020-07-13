@@ -10,6 +10,7 @@ import { AddCustomerPage } from '../../customers/add-customer/add-customer.page'
 import { ProductsService } from '../../services/products.service';
 import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
 import { Product } from '../../interfaces/product';
+import { CustomersListComponent } from 'src/app/customers/customers-list/customers-list.component';
 
 @Component({
   selector: 'app-add-appointment-wizard',
@@ -17,12 +18,12 @@ import { Product } from '../../interfaces/product';
   styleUrls: ['./add-appointment-wizard.component.scss'],
 })
 export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
-  @ViewChild(IonInfiniteScroll)
-  ionInfiniteScrollElement: IonInfiniteScroll;
+  // @ViewChild(IonInfiniteScroll)
+  // ionInfiniteScrollElement: IonInfiniteScroll;
 
   @ViewChild(IonSlides)
   ionSlides: IonSlides;
-  subscriptions: Subscription[];
+  //subscriptions: Subscription[];
   search$: Observable<Customer[]>;
   searching = false;
   sliderOptions: any = {};
@@ -37,7 +38,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               public readonly paginationService: PaginationService,
               public readonly productsService: ProductsService,
               public readonly intervalsService: GetAvailableIntervalsService) {
-    this.subscriptions = [];
+    //this.subscriptions = [];    
   }
 
   ngOnInit() {
@@ -51,7 +52,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.subscriptions.push(
+    /* this.subscriptions.push(
       this.paginationService.done.subscribe(done => {
         if (done === true) {
           this.ionInfiniteScrollElement.disabled = true;
@@ -65,7 +66,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
           await this.ionInfiniteScrollElement.complete();
         }
       }),
-    );
+    ); */
 
   }
 
@@ -73,18 +74,18 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     await this.ionSlides.lockSwipes(true);
   }
 
-  ngOnDestroy() {
+  /* ngOnDestroy() {
     if (this.subscriptions) {
       this.subscriptions.forEach(sub => sub.unsubscribe());
     }
-  }
+  } */
 
-  loadData(event) {
+  /* loadData(event) {
     // this.lastElement$.next(this.lastElement);
     this.paginationService.more();
-  }
+  } */
 
-  async addCustomer() {
+  /* async addCustomer() {
     const modal = await this.modalController.create({
       component: AddCustomerPage,
     });
@@ -96,7 +97,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     if (data.done) {
       this.paginationService.reset();
     }
-  }
+  } */
 
   async search(event) {
     let inputs = event.target.value.toString().split(' ');
@@ -123,12 +124,12 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  cancelSearch(event) {
+ /*  cancelSearch(event) {
     this.searching = false;
     if (this.ionInfiniteScrollElement) {
       this.ionInfiniteScrollElement.disabled = false;
     }
-  }
+  } */
 
   closeModal() {
     this.loading = true;

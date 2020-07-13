@@ -54,17 +54,26 @@
             </ion-list>
         </ng-container>
         <ng-template #notLoading>
-            <ion-list [style.height.%]="maxHeightPercent">
-                <ion-radio-group *ngIf="isSelectable; else notSelectable " allow-empty-selection>
-                    <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of loadedData"
-                                          [customer]="customer"></app-customer-element>
-                </ion-radio-group>
-                <ng-template #notSelectable>
-                    <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of loadedData"
-                                          [customer]="customer" [isSelectable]="isSelectable"></app-customer-element>
-                </ng-template>
-            </ion-list>
+            <ion-content [style.height.%]="maxHeightPercent">
+                <ion-list>                
+                    <ion-radio-group *ngIf="isSelectable; else notSelectable " allow-empty-selection>
+                        <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of loadedData"
+                                            [customer]="customer"></app-customer-element>
+                    </ion-radio-group>
+                    <ng-template #notSelectable>
+                        <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of loadedData"
+                                            [customer]="customer" [isSelectable]="isSelectable"></app-customer-element>
+                    </ng-template>                
+                </ion-list>
 
+                <ion-infinite-scroll threshold="20%" (ionInfinite)="loadData($event)">
+                    <ion-infinite-scroll-content
+                      loadingSpinner="bubbles"
+                      loadingText="Cargando clientes...">
+                    </ion-infinite-scroll-content>
+                </ion-infinite-scroll>                
+            </ion-content>
+            
             <ng-container
                     *ngIf="loadedData.length === 0 && !done"
             >

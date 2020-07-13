@@ -19,29 +19,27 @@
                             debounce="500"
                             placeholder="Nombre Apellido Apellido"
                     ></ion-searchbar>
-                </div>
-
-
-                <app-customers-list class="customers-list ion-padding"
-                                    [maxHeightPercent]="60"
-                                    [loadedData]="(paginationService.data | async)"
-                                    [isSearching]="searching"
-                                    [done]="(paginationService.done | async)"
-                                    [loading]="(paginationService.loading | async)"
-                                    [searchResult]="(search$ | async)"
-                                    [isSelectable]="true"
-                                    (onCustomerClicked)="selectedCustomer = $event"></app-customers-list>
-
+                </div>         
+                <app-customers-list #customerList class="customers-list ion-padding"
+                                [maxHeightPercent]="60"
+                                [loadedData]="(paginationService.data | async)"
+                                [isSearching]="searching"
+                                [done]="(paginationService.done | async)"
+                                [loading]="(paginationService.loading | async)"
+                                [searchResult]="(search$ | async)"
+                                [isSelectable]="true"
+                                (onCustomerClicked)="selectedCustomer = $event"></app-customers-list>                                             
                 <ion-button expand="block" color="primary" (click)="nextSlide()"> Siguiente</ion-button>
             </div>
-            <!--            <ion-row>-->
-            <!--                <ion-col size="12">-->
-            <!--                    <ion-infinite-scroll threshold="150px" (ionInfinite)="loadData($event)">-->
-            <!--                        <ion-infinite-scroll-content loadingSpinner="crescent">-->
-            <!--                        </ion-infinite-scroll-content>-->
-            <!--                    </ion-infinite-scroll>-->
-            <!--                </ion-col>-->
-            <!--            </ion-row>-->
+                 
+            <!-- <ion-row>
+                 <ion-col size="12">
+                    <ion-infinite-scroll threshold="150px" (ionInfinite)="loadData($event)">
+                        <ion-infinite-scroll-content loadingSpinner="crescent">
+                        </ion-infinite-scroll-content>
+                    </ion-infinite-scroll>
+                </ion-col>
+            </ion-row> -->
         </ion-slide>
 
         <ion-slide class="slide">

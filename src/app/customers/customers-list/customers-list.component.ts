@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild, ContentChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Customer } from '../../interfaces/customer';
 import { PaginationService } from 'src/app/services/pagination-service.service';
 import { IonInfiniteScroll } from '@ionic/angular';
@@ -12,12 +21,7 @@ import { Subscription } from 'rxjs';
 })
 export class CustomersListComponent implements OnInit {
 
-  private ionInfiniteScrollElement: IonInfiniteScroll;
-  @ViewChild(IonInfiniteScroll, { static: false }) set content(content: IonInfiniteScroll) {
-    if (content) {
-      this.ionInfiniteScrollElement = content;
-    }
-  }
+  @ViewChild(IonInfiniteScroll, { static: false }) public ionInfiniteScrollElement: IonInfiniteScroll;
 
   @Input() loadedData: Customer[];
   @Input() loading: boolean;
@@ -40,18 +44,15 @@ export class CustomersListComponent implements OnInit {
   ngOnInit() {
     console.log("LoadedData:");
     console.log(this.loadedData);
-    
-    console.log("searchResult:");
-    console.log(this.searchResult);
 
     this.subscriptions.push(
       this.paginationService.done.subscribe(done => {
-        if (done === true) {
+        if (done === true && this.ionInfiniteScrollElement) {
           console.log("DONE");
-          
+
           this.ionInfiniteScrollElement.disabled = true;
         }
-      }),
+      })
     );
 
     this.subscriptions.push(
@@ -61,7 +62,7 @@ export class CustomersListComponent implements OnInit {
                  
           await this.ionInfiniteScrollElement.complete();
         }
-      }),
+      })
     );
   }
 
@@ -81,8 +82,9 @@ export class CustomersListComponent implements OnInit {
   }
 
   loadData(event) {
-    
+    console.log(this.ionInfiniteScrollElement);
     console.log("Loading more data");
     this.paginationService.more();
+    //this.ionInfiniteScrollElement.disabled = true;
   }
 }

@@ -94,7 +94,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   closeModal() {
     this.loading = true;
     this.intervalsService.endpoint({
-      businessId: 'hello', //not needed yet
+      businessId: 'OY7AR28O0WYV1bcoe1qZu53cmD32', //not needed yet
       agendaId: this.agendaId,
       productId: this.selectedProduct.id,
       timestamp: new Date().toISOString(),

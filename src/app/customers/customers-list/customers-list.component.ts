@@ -40,9 +40,6 @@ export class CustomersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("LoadedData:");
-    console.log(this.loadedData);
-
     this.subscriptions.push(
       this.paginationService.done.subscribe(done => {
         if (done === true && this.ionInfiniteScrollElement) {
@@ -69,7 +66,6 @@ export class CustomersListComponent implements OnInit {
   }
 
   selectCustomer(event) {
-    console.log(event);
     if (event.id === this.lastIdSelected) {
       this.onCustomerClicked.emit(null);
       this.lastIdSelected = "";

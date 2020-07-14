@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IonInfiniteScroll, IonSlides, ModalController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, IonSlides, ModalController, ToastController } from '@ionic/angular';
+import { Observable, Subscription, throwError } from 'rxjs';
 import { Customer } from '../../interfaces/customer';
 import { CustomersService } from '../../services/customers.service';
 import { AuthService } from '../../services/auth.service';
 import { PaginationService } from '../../services/pagination-service.service';
-import { switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, take } from 'rxjs/operators';
 import { ProductsService } from '../../services/products.service';
 import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
 import { Product } from '../../interfaces/product';
@@ -34,7 +34,9 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               private readonly modalController: ModalController,
               public readonly paginationService: PaginationService,
               public readonly productsService: ProductsService,
-              public readonly intervalsService: GetAvailableIntervalsService) {
+              public readonly intervalsService: GetAvailableIntervalsService,
+              public readonly toastCtrl: ToastController,
+              private chRef: ChangeDetectorRef) { // Para detectar los cambios de la variable loading en el html
   }
 
   ngOnInit() {
@@ -96,7 +98,8 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       agendaId: this.agendaId,
       productId: this.selectedProduct.id,
       timestamp: new Date().toISOString(),
-    }).pipe(take(1)).subscribe(async v => {
+    }).pipe(
+        take(1)).subscribe(async (v: any) => {
       this.loading = false;
       await this.modalController.dismiss({
         done: true,
@@ -104,9 +107,12 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
         customer: this.selectedCustomer,
         product: this.selectedProduct,
       });
-    }, error => {
-      this.loading = false;
-    });
+    }, err => {
+        this.presentError().then(() => {
+          this.loading = false;
+          this.chRef.detectChanges()
+      })
+    })
   }
 
   async nextSlide() {
@@ -118,5 +124,16 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
 
   async cancel() {
     await this.modalController.dismiss({done: false})
+  }
+
+  // Mover a un componente a parte
+  async presentError() {
+    const toast = await this.toastCtrl.create({
+      message: 'Servidor temporalmente no disponible. Inténtelo de nuevo más tarde.',
+      duration: 3000,
+      position: 'middle',
+      cssClass: 'toast-error'
+    })
+    await toast.present();
   }
 }

@@ -48,11 +48,11 @@
                 </ion-radio-group>
             </ion-list>
 
-            <ion-button [disabled]="!selectedProduct" expand="block" color="primary" (click)="closeModal()">
+            <ion-button [disabled]="!selectedProduct || loading" expand="block" color="primary" (click)="closeModal()">
                 <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
-                <ion-label *ngIf="!loading"> Siguiente</ion-label></ion-button>
+                <ion-label *ngIf="!loading"> Siguiente</ion-label>
+            </ion-button>
         </ion-slide>
 
     </ion-slides>
-    º
 </ion-content>

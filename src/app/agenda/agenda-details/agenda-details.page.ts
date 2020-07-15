@@ -43,7 +43,7 @@ export class AgendaDetailsPage implements OnInit {
   endDate: Moment;
   interval: Duration;
   dateTimeInitialValue: Moment;
-  dateTimeValue = null;
+  dateTimeValue = new Date();
   possibleAppointmentId: string;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
@@ -110,6 +110,7 @@ export class AgendaDetailsPage implements OnInit {
       componentProps: {
         display: this.display,
         agendaId: this.route.snapshot.paramMap.get('id'),
+        daySelected: this.dateTimeValue
       },
     });
 
@@ -120,6 +121,7 @@ export class AgendaDetailsPage implements OnInit {
       if (data.done) {
         this.addingAppointment = true;
         this.addingAppointmentInfo = data;
+        console.log(this.addingAppointmentInfo);
       }
     }
   }

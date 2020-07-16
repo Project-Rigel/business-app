@@ -55,13 +55,31 @@
                     <ion-text *ngIf="addingAppointment" color="medium">
                         <p>Selecciona la hora de inicio </p>
                     </ion-text>
+
+
+                    <ion-grid *ngIf="addingAppointmentInfo && !selectedStartTime" >
+                        <ion-row>
+                            <ion-col size="4" *ngFor="let gap of appoinmentGaps">
+                                <ion-chip class="ion-no-margin">
+                                    {{gap}}
+                                    <ion-icon name="time-outline"></ion-icon>
+                                </ion-chip>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+
+
+
+
+
+
                     <span
-                            *ngIf="addingAppointment"
+                            *ngIf="addingAppointment && selectedStartTime"
                             class="ion-text-start ion-margin-start list-title"
                     >
                         Hora de Inicio
                     </span>
-                    <ion-chip *ngIf="addingAppointment" class="ion-margin-start">
+                    <ion-chip *ngIf="addingAppointment && selectedStartTime" class="ion-margin-start">
                         <ion-datetime (ionChange)="updatePossibleAppointment($event)" *ngIf="addingAppointment"
                                       display-format="H:mm"
                                       picker-format="H:mm"
@@ -72,6 +90,11 @@
                         ></ion-datetime>
                         <ion-icon name="time-outline"></ion-icon>d
                     </ion-chip>
+
+
+
+
+
                 </div>
 
                 <ion-button *ngIf="addingAppointment && dateTimeValue" [disabled]="loading"

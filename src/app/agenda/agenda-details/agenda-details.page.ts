@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
+import { Time } from 'dayspan';
 
 interface DisplayItem {
   appointment?: Appointment;
@@ -39,11 +40,13 @@ export class AgendaDetailsPage implements OnInit {
   agenda$: Observable<Agenda>;
   addingAppointment = false;
   addingAppointmentInfo: { intervals: { from: string, to: string }[], customer: Customer, product: Product };
+  appoinmentGaps: string[] = []
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
   dateTimeInitialValue: Moment;
   dateTimeValue = new Date();
+  selectedStartTime: boolean = false;
   possibleAppointmentId: string;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
@@ -121,9 +124,23 @@ export class AgendaDetailsPage implements OnInit {
       if (data.done) {
         this.addingAppointment = true;
         this.addingAppointmentInfo = data;
+
         console.log(this.addingAppointmentInfo);
+        console.log(this.interval.asMinutes());
+
+        const intervals = this.addingAppointmentInfo.intervals;
+        for (const gap of intervals) {
+          for (let item = moment(gap.from, 'HH:mm'); moment(gap.to, "HH:mm").diff(item) > 0; item.add(this.interval.asMinutes(), 'minutes')) {
+            console.log(item.format("HH:mm"));
+            this.appoinmentGaps.push(item.format("HH:mm"))
+          }
+        }
       }
     }
+  }
+
+  timeFromString(timeString) : Moment {
+    return moment(timeString, "HH:mm")
   }
 
   async updatePossibleAppointment($event: any) {
@@ -222,5 +239,6 @@ export class AgendaDetailsPage implements OnInit {
   cancelAddAppointment() {
     this.addingAppointment = false;
     this.addingAppointmentInfo = null;
+    this.appoinmentGaps = []
   }
 }

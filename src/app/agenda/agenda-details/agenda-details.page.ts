@@ -125,26 +125,37 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointment = true;
         this.addingAppointmentInfo = data;
 
-        console.log(this.addingAppointmentInfo);
-        console.log(this.interval.asMinutes());
-
+        // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
+        const productDuration = this.addingAppointmentInfo.product.duration;
         for (const gap of intervals) {
           for (let item = moment(gap.from, 'HH:mm'); moment(gap.to, "HH:mm").diff(item) > 0; item.add(this.interval.asMinutes(), 'minutes')) {
             console.log(item.format("HH:mm"));
-            this.appoinmentGaps.push(item.format("HH:mm"))
+            const aux = moment(item)
+            if (moment(gap.to, "HH:mm").diff(aux.add(productDuration.asMinutes(), 'minutes')) >= 0) {
+              this.appoinmentGaps.push(item.format("HH:mm"))
+            }
           }
         }
       }
     }
   }
 
-  timeFromString(timeString) : Moment {
-    return moment(timeString, "HH:mm")
+  selectTime($event) {
+    this.updatePossibleAppointment($event)
+    this.selectedStartTime=!this.selectedStartTime;
   }
 
   async updatePossibleAppointment($event: any) {
-    this.dateTimeValue = new Date($event.detail.value);
+    let hour = parseInt($event.target.innerText.split(':')[0]);
+    let minutes = parseInt($event.target.innerText.split(':')[1]);
+    if (isNaN(hour)) {
+      hour = parseInt($event.target.parentNode.innerText.split(':')[0]);
+      minutes = parseInt($event.target.parentNode.innerText.split(':')[1]);
+    }
+
+    this.dateTimeValue.setHours(hour);
+    this.dateTimeValue.setMinutes(minutes);
 
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();

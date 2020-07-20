@@ -102,6 +102,14 @@ export class AppointmentsService {
     this.appointmentToBeConfirmed = null;
   }
 
+  cancelAppointment(appointment: Appointment) {
+    this.appointmentToBeConfirmed = null;
+    const aux = this.appointments.value;
+    const indexToRemove = this.appointments.value.indexOf(appointment);
+    aux.splice(indexToRemove, 1);
+    this.appointments.next(aux);
+  }
+
   getId(): string {
     return this.afs.createId();
   }

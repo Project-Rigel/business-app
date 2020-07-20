@@ -32,7 +32,10 @@ export class AgendaDetailsPage implements OnInit {
 
   closeCalendar: Animation;
   openCalendar: Animation;
+  closeConfirmApoointment: Animation;
+  openConfirmAppoinment: Animation;
   isCalendarOpen: boolean = true;
+  isConfirmAppointmentOpen: boolean = false
   display: DisplayItem[] = [];
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
@@ -48,6 +51,7 @@ export class AgendaDetailsPage implements OnInit {
   dateTimeValue = new Date();
   selectedStartTime: boolean = false;
   possibleAppointmentId: string;
+  appointment;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
   public loading: boolean;
@@ -86,6 +90,20 @@ export class AgendaDetailsPage implements OnInit {
       .duration(400)
       .fromTo('height', '0px', '200px')
       .easing('ease-in-out');
+
+    this.closeConfirmApoointment = this.animationController
+      .create()
+      .addElement(document.getElementById('confirm-container'))
+      .duration(400)
+      .fromTo('height', '200px', '0px')
+      .easing('ease-in-out');
+
+    this.openConfirmAppoinment = this.animationController
+      .create()
+      .addElement(document.getElementById('confirm-container'))
+      .duration(400)
+      .fromTo('height', '0px', '200px')
+      .easing('ease-in-out');
   }
 
   onDateChange(event) {
@@ -104,6 +122,15 @@ export class AgendaDetailsPage implements OnInit {
       : await this.openCalendar.play();
     this.isCalendarOpen = !this.isCalendarOpen;
 
+  }
+
+  async showConfirmApoointmentDialog() {
+    this.openConfirmAppoinment.stop();
+    this.closeConfirmApoointment.stop();
+    this.isConfirmAppointmentOpen
+      ? await this.closeConfirmApoointment.play()
+      : await this.openConfirmAppoinment.play();
+    this.isConfirmAppointmentOpen = !this.isConfirmAppointmentOpen;
   }
 
   async startAddAppointmentWizard() {
@@ -125,6 +152,7 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointment = true;
         this.addingAppointmentInfo = data;
 
+        this.showConfirmApoointmentDialog();
         // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
         const productDuration = this.addingAppointmentInfo.product.duration;
@@ -143,6 +171,7 @@ export class AgendaDetailsPage implements OnInit {
   selectTime($event) {
     this.updatePossibleAppointment($event)
     this.selectedStartTime=!this.selectedStartTime;
+    this.showConfirmApoointmentDialog()
   }
 
   async updatePossibleAppointment($event: any) {
@@ -160,7 +189,7 @@ export class AgendaDetailsPage implements OnInit {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
 
-    const appointment = {
+    this.appointment = {
       id: this.possibleAppointmentId,
       startDate: this.dateTimeValue,
       endDate: moment(this.dateTimeValue).add(this.addingAppointmentInfo.product.duration).toDate(),
@@ -168,14 +197,14 @@ export class AgendaDetailsPage implements OnInit {
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
     };
-    this.appointmentsService.updatePossibleAppointment(appointment);
+    this.appointmentsService.updatePossibleAppointment(this.appointment);
   }
 
   async confirmAppointments(agendaId: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Cita confirmada',
-      message: 'Fecha: <strong>{{dateTimeValue}}</strong>',
+      message: 'Fecha: ' + this.dateTimeValue,
       buttons: [
         {
           text: 'Cancel',
@@ -185,7 +214,7 @@ export class AgendaDetailsPage implements OnInit {
             console.log('Confirm Cancel: blah');
           },
         }, {
-          text: 'Okay',
+          text: 'Ok',
           handler: async () => {
             try {
               this.loading = true;
@@ -212,12 +241,13 @@ export class AgendaDetailsPage implements OnInit {
             date,
           );
         }),
-        take(1)).subscribe(v => console.log(v));
+        take(1)).subscribe(v => v);
   }
 
   cancelAddAppointment() {
     this.addingAppointment = false;
     this.addingAppointmentInfo = null;
     this.appoinmentGaps = []
+    this.appointmentsService.cancelAppointment(this.appointment);
   }
 }

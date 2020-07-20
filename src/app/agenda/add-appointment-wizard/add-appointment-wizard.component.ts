@@ -39,7 +39,6 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               public readonly toastCtrl: ToastController,
               private chRef: ChangeDetectorRef) { // Para detectar los cambios de la variable loading en el html
 
-    console.log(this.daySelected);
   }
 
   ngOnInit() {

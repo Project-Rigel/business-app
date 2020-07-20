@@ -310,10 +310,8 @@ export class DatePickerComponent implements OnInit {
   }
 
   generateCalendarWeeks(forDay: Day): Array<any> {
-    console.log(forDay);
     const weeks: Array<any> = [];
     const month = Calendar.months<string, any>(1, forDay);
-    console.log(month);
     const numOfWeeks = month.days.length / 7;
 
     let dayIndex = 0;

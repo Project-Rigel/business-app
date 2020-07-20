@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Appointment } from '../../interfaces/appointment';
 import { Duration, Moment } from 'moment';
 import { AppointmentsService } from '../../services/appointments.service';
+import { Observable } from 'rxjs';
 
 interface TimeBlock {
   start: Date,
@@ -15,7 +16,7 @@ interface TimeBlock {
 })
 export class DayTimelineComponent implements OnInit {
 
-  @Input() appointments: Appointment[];
+  @Input() appointments: Observable<Appointment[]>;
   @Input() startDate: Moment;
   @Input() endDate: Moment;
   @Input() intervalsLength: Duration;

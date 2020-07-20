@@ -8,7 +8,7 @@
 
 
     <div class="appointments-wrapper">
-        <app-agenda-appointment *ngFor="let appointment of appointments; index as i;"
+        <app-agenda-appointment *ngFor="let appointment of (appointments | async); index as i;"
                                 [dayStartDate]="startDate"
                                 [appointment]="appointment"
                                 [dayLengthMinutes]="dayLengthMinutes"

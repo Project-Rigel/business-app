@@ -64,8 +64,8 @@ export class AgendaDetailsPage implements OnInit {
     private modalController: ModalController,
     public alertController: AlertController,
   ) {
-    this.startDate = moment(new Date().setHours(9, 0, 0, 0));
-    this.endDate = moment(new Date().setHours(18, 0, 0, 0));
+    this.startDate = moment(new Date().setHours(7, 0, 0, 0));
+    this.endDate = moment(new Date().setHours(23, 0, 0, 0));
     this.interval = duration(30, 'minutes');
     this.dateTimeInitialValue = moment(new Date().setHours(this.startDate.get('hours')));
     const value = this.route.snapshot.paramMap.get('id');

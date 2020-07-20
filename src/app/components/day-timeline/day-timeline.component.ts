@@ -24,7 +24,7 @@ export class DayTimelineComponent implements OnInit {
 
   timeBlocks: TimeBlock[] = [];
   dayLengthMinutes: number;
-  componentHeight: number = 1200;
+  componentHeight: number = 1900;
 
   constructor(private appointmentsService: AppointmentsService) {
   }
@@ -32,7 +32,6 @@ export class DayTimelineComponent implements OnInit {
   ngOnInit() {
     this.dayLengthMinutes = this.endDate.diff(this.startDate, 'minutes');
     const nBlocks = Math.floor(this.dayLengthMinutes / this.intervalsLength.asMinutes());
-
     this.timeBlocks = this.appointmentsService.getAllPossibleAppointments().map(v => {
       return { start: v };
     });

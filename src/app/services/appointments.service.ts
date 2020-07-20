@@ -15,8 +15,8 @@ export class AppointmentsService {
   public appointments$: Observable<Appointment[]> = this.appointments.asObservable();
   appointmentInterval = 30;
   //de 0 a 23 horas
-  startHour = 9;
-  endHour = 18;
+  startHour = 7;
+  endHour = 23;
   appointmentToBeConfirmed: Appointment;
 
 
@@ -26,7 +26,7 @@ export class AppointmentsService {
   getAllPossibleAppointments() {
     const total: Date[] = [];
     const nAppointments: number = Math.trunc(
-      ((18 - 9) * 60) / this.appointmentInterval,
+      ((this.endHour - this.startHour) * 60) / this.appointmentInterval,
     );
     const date = new Date();
     date.setHours(this.startHour, 0, 0);
@@ -85,9 +85,7 @@ export class AppointmentsService {
   updatePossibleAppointment(appointment: Appointment) {
     const appointToShow = this.appointments?.value.filter(v => v.id !== appointment.id);
     appointToShow.push(appointment);
-
     this.appointments.next(appointToShow);
-
     this.appointmentToBeConfirmed = appointment;
   }
 

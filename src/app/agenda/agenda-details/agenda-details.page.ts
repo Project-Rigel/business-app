@@ -130,7 +130,6 @@ export class AgendaDetailsPage implements OnInit {
         const productDuration = this.addingAppointmentInfo.product.duration;
         for (const gap of intervals) {
           for (let item = moment(gap.from, 'HH:mm'); moment(gap.to, "HH:mm").diff(item) > 0; item.add(this.interval.asMinutes(), 'minutes')) {
-            console.log(item.format("HH:mm"));
             const aux = moment(item)
             if (moment(gap.to, "HH:mm").diff(aux.add(productDuration.asMinutes(), 'minutes')) >= 0) {
               this.appoinmentGaps.push(item.format("HH:mm"))
@@ -175,8 +174,8 @@ export class AgendaDetailsPage implements OnInit {
   async confirmAppointments(agendaId: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
-      header: 'Confirm!',
-      message: 'Message <strong>text</strong>!!!',
+      header: 'Cita confirmada',
+      message: 'Fecha: <strong>{{dateTimeValue}}</strong>',
       buttons: [
         {
           text: 'Cancel',
@@ -201,38 +200,7 @@ export class AgendaDetailsPage implements OnInit {
         },
       ],
     });
-
     await alert.present();
-
-  }
-
-  computeValidMinutes() {
-    const minutes = [];
-    if (this.addingAppointmentInfo) {
-      let v = 60;
-
-      while (v >= 0) {
-        v -= this.addingAppointmentInfo.product.duration.asMinutes();
-        minutes.push(v);
-      }
-    }
-
-    return minutes;
-  }
-
-  computeValidHours() {
-    const validHours = [];
-    if (this.addingAppointmentInfo) {
-      this.addingAppointmentInfo.intervals.forEach(v => {
-        const start = Number.parseInt(v.from.split(':')[0]);
-        const end = Number.parseInt(v.to.split(':')[0]);
-        for (let i = start; i < end + 1; i++) {
-          validHours.push(i);
-        }
-      });
-    }
-
-    return validHours;
   }
 
   private updateAppointments(date: Date) {

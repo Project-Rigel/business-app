@@ -79,7 +79,7 @@
                     </ion-chip>
                 </div>
 
-                <ion-button *ngIf="addingAppointment && dateTimeValue" [disabled]="loading"
+                <ion-button *ngIf="addingAppointment && dateTimeValue" [disabled]="!selectedStartTime"
                             (click)="confirmAppointments(this.route.snapshot.paramMap.get('id'))" expand="block">
                     <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
                     <ion-label *ngIf="!loading"> Confirmar la cita</ion-label>

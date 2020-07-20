@@ -19,6 +19,7 @@ export class AppointmentsService {
   endHour = 18;
   appointmentToBeConfirmed: Appointment;
 
+
   constructor(private afs: AngularFirestore) {
   }
 
@@ -81,17 +82,6 @@ export class AppointmentsService {
     return strDate;
   }
 
-  public getAppointmentDuration(appointment: Appointment) {
-    const dur =
-      appointment.endDate.getMinutes() + appointment.startDate.getMinutes();
-    console.log(dur);
-    return dur;
-  }
-
-  public getJourneyDurationInMinutes() {
-    return (this.endHour - this.startHour) * 60;
-  }
-
   updatePossibleAppointment(appointment: Appointment) {
     const appointToShow = this.appointments?.value.filter(v => v.id !== appointment.id);
     appointToShow.push(appointment);
@@ -107,9 +97,8 @@ export class AppointmentsService {
       await this.afs.doc(`agendas/${agendaId}`)
         .collection<AgendaDay>('appointments')
         .doc<any>(`${this.getStringDate(this.appointmentToBeConfirmed.startDate)}-${agendaId}`)
-        .update({ appointments: firebase.firestore.FieldValue.arrayUnion(this.appointmentToBeConfirmed) });
+        .set({ appointments: firebase.firestore.FieldValue.arrayUnion(this.appointmentToBeConfirmed) }, {merge: true})
     }
-
     this.appointmentToBeConfirmed = null;
   }
 

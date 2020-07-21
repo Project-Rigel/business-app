@@ -23,6 +23,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   searching = false;
   sliderOptions: any = {};
   agendaId: string;
+  daySelected: Date;
   selectedCustomer: Customer;
   selectedProduct: Product;
   loading: boolean;
@@ -37,6 +38,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               public readonly intervalsService: GetAvailableIntervalsService,
               public readonly toastCtrl: ToastController,
               private chRef: ChangeDetectorRef) { // Para detectar los cambios de la variable loading en el html
+
   }
 
   ngOnInit() {
@@ -97,7 +99,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       businessId: 'OY7AR28O0WYV1bcoe1qZu53cmD32', //not needed yet
       agendaId: this.agendaId,
       productId: this.selectedProduct.id,
-      timestamp: new Date().toISOString(),
+      timestamp: this.daySelected.toISOString(),
     }).pipe(
         take(1)).subscribe(async (v: any) => {
       this.loading = false;

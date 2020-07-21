@@ -15,9 +15,10 @@ export class AppointmentsService {
   public appointments$: Observable<Appointment[]> = this.appointments.asObservable();
   appointmentInterval = 30;
   //de 0 a 23 horas
-  startHour = 9;
-  endHour = 18;
+  startHour = 7;
+  endHour = 23;
   appointmentToBeConfirmed: Appointment;
+
 
   constructor(private afs: AngularFirestore) {
   }
@@ -25,7 +26,7 @@ export class AppointmentsService {
   getAllPossibleAppointments() {
     const total: Date[] = [];
     const nAppointments: number = Math.trunc(
-      ((18 - 9) * 60) / this.appointmentInterval,
+      ((this.endHour - this.startHour) * 60) / this.appointmentInterval,
     );
     const date = new Date();
     date.setHours(this.startHour, 0, 0);
@@ -81,23 +82,10 @@ export class AppointmentsService {
     return strDate;
   }
 
-  public getAppointmentDuration(appointment: Appointment) {
-    const dur =
-      appointment.endDate.getMinutes() + appointment.startDate.getMinutes();
-    console.log(dur);
-    return dur;
-  }
-
-  public getJourneyDurationInMinutes() {
-    return (this.endHour - this.startHour) * 60;
-  }
-
   updatePossibleAppointment(appointment: Appointment) {
     const appointToShow = this.appointments?.value.filter(v => v.id !== appointment.id);
     appointToShow.push(appointment);
-
     this.appointments.next(appointToShow);
-
     this.appointmentToBeConfirmed = appointment;
   }
 
@@ -107,10 +95,17 @@ export class AppointmentsService {
       await this.afs.doc(`agendas/${agendaId}`)
         .collection<AgendaDay>('appointments')
         .doc<any>(`${this.getStringDate(this.appointmentToBeConfirmed.startDate)}-${agendaId}`)
-        .update({ appointments: firebase.firestore.FieldValue.arrayUnion(this.appointmentToBeConfirmed) });
+        .set({ appointments: firebase.firestore.FieldValue.arrayUnion(this.appointmentToBeConfirmed) }, {merge: true})
     }
-
     this.appointmentToBeConfirmed = null;
+  }
+
+  cancelAppointment(appointment: Appointment) {
+    this.appointmentToBeConfirmed = null;
+    const aux = this.appointments.value;
+    const indexToRemove = this.appointments.value.indexOf(appointment);
+    aux.splice(indexToRemove, 1);
+    this.appointments.next(aux);
   }
 
   getId(): string {

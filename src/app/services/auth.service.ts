@@ -1,24 +1,34 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/firestore';
 import { User } from '../interfaces/user';
 import * as firebase from 'firebase/app';
-import "firebase/auth"
+import 'firebase/auth';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ErrorToastService } from './error-toast.service';
 import { Platform } from '@ionic/angular';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import 'firebase/performance';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-
   user$: Observable<User>;
 
-  constructor(private readonly fireAuth: AngularFireAuth, private readonly firestore: AngularFirestore, private router: Router, private errorToastService: ErrorToastService, private platform: Platform, private googlePlus: GooglePlus) {
+  constructor(
+    private readonly fireAuth: AngularFireAuth,
+    private readonly firestore: AngularFirestore,
+    private router: Router,
+    private errorToastService: ErrorToastService,
+    private platform: Platform,
+    private googlePlus: GooglePlus,
+  ) {
     this.user$ = this.fireAuth.authState.pipe(
       switchMap(user => {
         // Logged in
@@ -37,13 +47,18 @@ export class AuthService {
       let credential;
       if (this.platform.is('cordova')) {
         const gPlusUser = await this.googlePlus.login({
-          'webClientId': '457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com',
-          'offline': true,
-          'scopes': 'profile email',
+          webClientId:
+            '457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com',
+          offline: true,
+          scopes: 'profile email',
         });
-        credential = await this.fireAuth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken));
+        credential = await this.fireAuth.signInWithCredential(
+          firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken),
+        );
       } else {
-        credential = await this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        credential = await this.fireAuth.signInWithPopup(
+          new firebase.auth.GoogleAuthProvider(),
+        );
       }
       await this.updateUserData(credential.user);
     } catch (e) {
@@ -57,10 +72,12 @@ export class AuthService {
     await this.fireAuth.signInWithEmailAndPassword(email, password);
   }
 
-
   async createUser(email: string, password: string) {
     try {
-      const credential = await this.fireAuth.createUserWithEmailAndPassword(email, password);
+      const credential = await this.fireAuth.createUserWithEmailAndPassword(
+        email,
+        password,
+      );
       await this.updateUserData(credential.user);
     } catch (e) {
       await this.errorToastService.present({ message: e.message });
@@ -70,7 +87,7 @@ export class AuthService {
 
   async logOut() {
     try {
-      if(this.platform.is("cordova")){
+      if (this.platform.is('cordova')) {
         await this.googlePlus.logout();
       }
       await this.fireAuth.signOut();
@@ -83,7 +100,9 @@ export class AuthService {
 
   private updateUserData(user) {
     // Sets user data to firestore on login
-    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(`users/${user.uid}`);
+    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
+      `users/${user.uid}`,
+    );
 
     const data = {
       id: user.uid,
@@ -94,7 +113,5 @@ export class AuthService {
     };
 
     return userRef.set(data, { merge: true });
-
   }
-
 }

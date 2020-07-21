@@ -14,14 +14,15 @@ export class AgendaService {
     name: string,
     minuteSelected: string,
     downloadUrl: string,
-    businessId: string
+    businessId: string,
   ) {
     const agenda: Agenda = {
       id: id,
       name: name,
       interval: minuteSelected,
       imageUrl: downloadUrl,
-      businessId: businessId
+      businessId: businessId,
+      intervals: {}
     };
 
     await this.firestore
@@ -30,9 +31,15 @@ export class AgendaService {
       .set(agenda);
   }
 
-    getAgendas(id: string): Observable<Agenda[]>{
-    return this.firestore.collection<Agenda>("agendas", ref =>{
-      return ref.where("businessId", "==", id);
-    }).valueChanges();
+  getBusinessAgenda(businessId: string): Observable<Agenda[]> {
+    return this.firestore
+      .collection<Agenda>('agendas', ref => {
+        return ref.where('businessId', '==', businessId);
+      })
+      .valueChanges();
+  }
+
+  getAgendaById(id: string) {
+    return this.firestore.doc<Agenda>(`agendas/${id}`).valueChanges();
   }
 }

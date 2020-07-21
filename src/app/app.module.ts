@@ -17,6 +17,13 @@ import { PaginationService } from './services/pagination-service.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import {
+  AngularFireAnalyticsModule,
+  ScreenTrackingService,
+} from '@angular/fire/analytics';
+import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,11 +33,17 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirePerformanceModule,
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireAuthGuardModule,
+    AngularFireFunctionsModule,
+    AngularFireAnalyticsModule,
     FormsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+    }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
@@ -38,6 +51,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
     GooglePlus,
     SplashScreen,
     PaginationService,
+    ScreenTrackingService,
     Keyboard,
     ImagePicker,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

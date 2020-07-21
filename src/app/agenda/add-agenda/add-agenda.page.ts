@@ -25,7 +25,7 @@ export class AddAgendaPage implements OnInit {
   loading = false;
   imageUrl;
 
-  @ViewChild('inputNombre', { static: false }) input: IonInput;
+  @ViewChild('inputNombre') input: IonInput;
   constructor(
     private formBuilder: FormBuilder,
     private imagePicker: ImagePicker,

@@ -4,4 +4,5 @@ export interface  Agenda{
   interval: string;
   imageUrl: string;
   businessId: string;
+  intervals : any;
 }

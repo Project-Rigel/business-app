@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { IonInfiniteScroll, IonSlides, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, IonInfiniteScroll, IonSlides, ModalController, ToastController } from '@ionic/angular';
 import { Observable, Subscription, throwError } from 'rxjs';
 import { Customer } from '../../interfaces/customer';
 import { CustomersService } from '../../services/customers.service';
@@ -36,7 +36,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               public readonly paginationService: PaginationService,
               public readonly productsService: ProductsService,
               public readonly intervalsService: GetAvailableIntervalsService,
-              public readonly toastCtrl: ToastController,
+              public readonly alertController: AlertController,
               private chRef: ChangeDetectorRef) { // Para detectar los cambios de la variable loading en el html
 
   }
@@ -130,12 +130,14 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
 
   // Mover a un componente a parte
   async presentError() {
-    const toast = await this.toastCtrl.create({
-      message: 'Servidor temporalmente no disponible. Inténtelo de nuevo más tarde.',
-      duration: 3000,
-      position: 'middle',
-      cssClass: 'toast-error'
-    })
-    await toast.present();
+    const alert = await this.alertController.create({
+      cssClass: 'alert',
+      header: 'Error',
+      subHeader: 'Servidor temporalmente no disponible. ',
+      message: 'Inténtelo de nuevo más tarde.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 }

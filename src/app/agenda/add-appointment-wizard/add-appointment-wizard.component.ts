@@ -132,6 +132,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   async presentError() {
     const alert = await this.alertController.create({
       cssClass: 'alert',
+      mode: 'ios',
       header: 'Error',
       subHeader: 'Servidor temporalmente no disponible. ',
       message: 'Inténtelo de nuevo más tarde.',

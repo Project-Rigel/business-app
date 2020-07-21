@@ -1,7 +1,5 @@
 {
-  "name": "test-pwa",
-  "integrations": {
-    "cordova": {}
-  },
+  "name": "green-and-in",
+  "integrations": {},
   "type": "angular"
 }

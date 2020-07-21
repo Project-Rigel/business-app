@@ -1,24 +1,34 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import {
+  AngularFireAuthGuard,
+  redirectUnauthorizedTo,
+} from '@angular/fire/auth-guard';
 
+const redirectToLogin = () => redirectUnauthorizedTo(['app/login']);
 
 const routes: Routes = [
-
   {
     path: '',
     redirectTo: 'tabs',
     pathMatch: 'full',
-  }, {
+  },
+  {
     path: 'tabs',
     component: TabsPage,
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectToLogin },
     children: [
       {
         path: 'notifications',
         children: [
           {
             path: '',
-            loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsPageModule),
+            loadChildren: () =>
+              import('../notifications/notifications.module').then(
+                m => m.NotificationsPageModule,
+              ),
           },
         ],
       },
@@ -27,7 +37,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('../agenda/agenda.module').then(m => m.AgendaPageModule),
+            loadChildren: () =>
+              import('../agenda/agenda.module').then(m => m.AgendaPageModule),
           },
         ],
       },
@@ -36,7 +47,10 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule),
+            loadChildren: () =>
+              import('../profile/profile.module').then(
+                m => m.ProfilePageModule,
+              ),
           },
         ],
       },
@@ -45,25 +59,25 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('../customers/customers.module').then(m => m.CustomersPageModule),
+            loadChildren: () =>
+              import('../customers/customers.module').then(
+                m => m.CustomersPageModule,
+              ),
           },
         ],
       },
 
       {
         path: '',
-        redirectTo: 'customers',
+        redirectTo: 'agenda',
         pathMatch: 'full',
       },
     ],
   },
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TabsPageRoutingModule {
-}
-
+export class TabsPageRoutingModule {}

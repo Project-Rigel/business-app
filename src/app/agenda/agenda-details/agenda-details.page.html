@@ -1,95 +1,89 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/tabs/agenda"></ion-back-button>
-    </ion-buttons>
-    <ion-title>agenda-details</ion-title>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/app/tabs/agenda" text=""></ion-back-button>
+        </ion-buttons>
 
-    <ion-buttons slot="end">
-      <ion-button button (click)="showCalendar()">
-        <ion-icon name="calendar"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button color="primary">
+                <ion-icon
+                        color="primary"
+                        slot="icon-only"
+                        name="settings-outline"
+                ></ion-icon>
+            </ion-button>
+            <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
+                <ion-icon
+                        [color]="calendarButtonColor"
+                        slot="icon-only"
+                        name="calendar-outline"
+                ></ion-icon>
+            </ion-button>
+
+            <ion-button *ngIf="!addingAppointment"
+                        (click)="startAddAppointmentWizard()"
+                        color="primary"
+            >
+                <ion-icon
+                        color="primary"
+                        slot="icon-only"
+                        name="add-outline"
+                ></ion-icon>
+            </ion-button>
+
+            <ion-button (click)="cancelAddAppointment()" *ngIf="addingAppointment">
+                <ion-label color="primary"> Cancelar</ion-label>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="calendar" id="date-container">
-    <date-picker
-      class="date-picker"
-      id="date-picker"
-      (onSelect)="onDateChange($event)"
-    ></date-picker>
-  </div>
-  <div id="citas-content" class="agenda-content">
-    <p>{{getOccupationPercent()}}% Ocupación</p>
-    <ion-row>
-      <ion-col size="3">
-        <div class="full-height">
-          <ion-list>
-            <ion-item
-              class="hour-height"
-              *ngFor="let hour of this.display"
-              lines="none"
-            >
-              <p>{{hour.interval | date:"H:mm"}}</p>
-            </ion-item>
-          </ion-list>
-        </div>
-      </ion-col>
-      <ion-col>
-        <ion-list>
-          <ion-item
-            *ngFor="let cita of this.display; index as i"
-            class="hour-height"
-            lines="none"
-          >
-            <ion-label *ngIf="cita.appointment">
-              <h3>{{cita.appointment.name}}</h3>
-              <p>{{cita.appointment.customerName}}</p>
-            </ion-label>
-            <ion-reorder *ngIf="cita.appointment" slot="end"></ion-reorder>
-            <ion-badge slot="end" color="light">
-              <ion-icon
+<ion-content [scrollY]="true">
+    <div class="calendar" id="date-container">
+        <date-picker
+                class="date-picker"
+                id="date-picker"
+                (onSelect)="onDateChange($event)"
+        ></date-picker>
+    </div>
+    <div id="citas-content" class="agenda-content">
+        <p class="ion-text-center list-title">{{(agenda$ | async)?.name}}</p>
 
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="danger"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
+        <ion-row class="ion-margin-bottom ion-justify-content-center ion-align-items-center ion-text-center">
+            <ion-col>
+                <div>
+                    <ion-text *ngIf="addingAppointment" color="medium">
+                        <p>Selecciona la hora de inicio </p>
+                    </ion-text>
+                    <span
+                            *ngIf="addingAppointment"
+                            class="ion-text-start ion-margin-start list-title"
+                    >
+                        Hora de Inicio
+                    </span>
+                    <ion-chip *ngIf="addingAppointment" class="ion-margin-start">
+                        <ion-datetime (ionChange)="updatePossibleAppointment($event)" *ngIf="addingAppointment"
+                                      display-format="H:mm"
+                                      picker-format="H:mm"
+                                      placeholder="--:--"
+                                      [value]="dateTimeValue"
+                                      [minuteValues]="computeValidMinutes()"
+                                      [hourValues]="computeValidHours()"
+                        ></ion-datetime>
+                        <ion-icon name="time-outline"></ion-icon>d
+                    </ion-chip>
+                </div>
 
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="danger"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
+                <ion-button *ngIf="addingAppointment && dateTimeValue" [disabled]="loading"
+                            (click)="confirmAppointments(this.route.snapshot.paramMap.get('id'))" expand="block">
+                    <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+                    <ion-label *ngIf="!loading"> Confirmar la cita</ion-label>
+                </ion-button>
+            </ion-col>
+        </ion-row>
 
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="success"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
-
-                      *ngIf="i == 0"
-                      name="checkmark-done-circle"
-                      color="success"
-                      size="small"
-              ></ion-icon>
-              <ion-icon
-
-                      *ngIf="i == 1"
-                      name="checkmark-done-circle"
-                      color="danger"
-                      size="small"
-              ></ion-icon>
-            </ion-badge>
-
-          </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </div>
+        <app-day-timeline [appointments]="(appointmentsService.appointments$|async)" [startDate]="startDate"
+                          [endDate]="endDate"
+                          [intervalsLength]="interval"></app-day-timeline>
+    </div>
 </ion-content>

@@ -14,7 +14,7 @@ import { PaginationService } from '../services/pagination-service.service';
   styleUrls: ['./customers.page.scss'],
 })
 export class CustomersPage implements OnInit, OnDestroy {
-  @ViewChild(IonInfiniteScroll, { static: false })
+  @ViewChild(IonInfiniteScroll)
   ionInfiniteScrollElement: IonInfiniteScroll;
 
   subscriptions: Subscription[];

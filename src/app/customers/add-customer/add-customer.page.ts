@@ -21,7 +21,7 @@ export class AddCustomerPage implements OnInit {
   customerForm: FormGroup;
   submitEnabled: boolean = true;
   submitClicked = false;
-  @ViewChild('inputNombre', { static: false }) input: IonInput;
+  @ViewChild('inputNombre') input: IonInput;
 
   constructor(
     private ctrl: ModalController,

@@ -1,20 +1,21 @@
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { scan, take, tap } from 'rxjs/operators';
 
-
 interface QueryConfig {
-  path: string, //  path to collection
-  field: string, // field to orderBy
-  limit: number, // limit per query
-  reverse: boolean, // reverse order?
-  prepend: boolean // prepend to source?
+  path: string; //  path to collection
+  field: string; // field to orderBy
+  limit: number; // limit per query
+  reverse: boolean; // reverse order?
+  prepend: boolean; // prepend to source?
 }
 
 @Injectable()
 export class PaginationService {
-
   // Source data
   private _done = new BehaviorSubject(false);
   private _loading = new BehaviorSubject(false);
@@ -27,8 +28,7 @@ export class PaginationService {
   done: Observable<boolean> = this._done.asObservable();
   loading: Observable<boolean> = this._loading.asObservable();
 
-
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore) {}
 
   // Initial query sets options and defines the Observable
   // passing opts will override the defaults
@@ -36,20 +36,19 @@ export class PaginationService {
     this.query = {
       path,
       field,
-      limit: limit
-      ,
+      limit: limit,
       reverse: false,
       prepend: false,
-      ...opts
-    }
+      ...opts,
+    };
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-        .limit(this.query.limit)
-    })
+        .limit(this.query.limit);
+    });
 
-    this.mapAndUpdate(first)
+    this.mapAndUpdate(first);
 
     // Create the observable array for consumption in components
     this.data = this._data.asObservable().pipe(
@@ -57,10 +56,9 @@ export class PaginationService {
         return this.query.prepend ? val.concat(acc) : acc.concat(val);
       }),
     );
-
   }
 
-  public reset(){
+  public reset() {
     this._data.next([]);
     this._done.next(false);
     this._loading.next(false);
@@ -69,10 +67,10 @@ export class PaginationService {
     const first = this.afs.collection(this.query.path, ref => {
       return ref
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-        .limit(this.query.limit)
-    })
+        .limit(this.query.limit);
+    });
 
-    this.mapAndUpdate(first)
+    this.mapAndUpdate(first);
 
     // Create the observable array for consumption in components
     this.data = this._data.asObservable().pipe(
@@ -82,38 +80,38 @@ export class PaginationService {
     );
   }
 
-
   // Retrieves additional data from firestore
   more() {
-    const cursor = this.getCursor()
+    const cursor = this.getCursor();
 
     const more = this.afs.collection(this.query.path, ref => {
       return ref
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit)
-        .startAfter(cursor)
-    })
-    this.mapAndUpdate(more)
+        .startAfter(cursor);
+    });
+    this.mapAndUpdate(more);
   }
-
 
   // Determines the doc snapshot to paginate query
   private getCursor() {
-    const current = this._data.value
+    const current = this._data.value;
     if (current.length) {
-      return this.query.prepend ? current[0].doc : current[current.length - 1].doc
+      return this.query.prepend
+        ? current[0].doc
+        : current[current.length - 1].doc;
     }
-    return null
+    return null;
   }
-
 
   // Maps the snapshot to usable format the updates source
   private mapAndUpdate(col: AngularFirestoreCollection<any>) {
-
-    if (this._done.value || this._loading.value) { return };
+    if (this._done.value || this._loading.value) {
+      return;
+    }
 
     // loading
-    this._loading.next(true)
+    this._loading.next(true);
 
     // Map snapshot with doc ref (needed for cursor)
     return col
@@ -129,7 +127,6 @@ export class PaginationService {
           // If prepending, reverse the batch order
           values = this.query.prepend ? values.reverse() : values;
 
-          console.log("values", values);
           // update source with new values, done loading
           this._data.next(values);
           this._loading.next(false);
@@ -142,7 +139,5 @@ export class PaginationService {
         take(1),
       )
       .subscribe();
-
   }
-
 }

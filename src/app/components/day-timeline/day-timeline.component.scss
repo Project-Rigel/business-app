@@ -1,0 +1,31 @@
+.segment::before{
+  content: attr(hour-label) " ";
+  position: relative;
+  left: -50px;
+  top: -10px;
+  color: #cbcbcb;
+  font-size: small;
+}
+
+.segment {
+  position: absolute;
+  height: 1px;
+  background-color: #dcdcdc;
+  z-index: 2;
+  width: 80%;
+}
+
+.timeline-wrapper{
+  position: relative;
+  overflow: scroll;
+  padding: 16px 8px;
+  height: 1200px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.appointments-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}

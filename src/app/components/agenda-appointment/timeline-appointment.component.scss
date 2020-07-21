@@ -1,0 +1,31 @@
+.hour-item{
+  background-color: #ff090985;
+  position: absolute;
+  padding: 16px;
+  width: 80%;
+  left: 0px;
+  margin-left: 18%;
+  z-index: 5;
+}
+
+.vertical-line{
+  width: 3px;
+  height: 100%;
+  bottom: 0;
+  background-color: #b50f0f;
+  position: absolute;
+  left: 0;
+}
+
+.item-appointment {
+  --background:  rgba(0, 0, 0, 0);;
+}
+
+.appointment-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-bold{
+  font-weight: bold;
+}

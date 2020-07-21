@@ -17,7 +17,6 @@
   <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
 
   <ion-grid fixed class="bg-modal">
-
     <ion-row class="ion-justify-content-center ion-align-items-center">
       <ion-col size="12" class="ion-align-self-center">
         <ion-avatar
@@ -33,10 +32,11 @@
           (click)="selectImage($event)"
           class="dot ion-margin-top image-margin"
         >
-          <span class="image-text ion-text-center">
-            {{name.value ? (name.value | titlecase | slice:0:6) :
-            "Añadir"}}</span
-          >
+          <ion-icon
+            name="camera-outline"
+            size="large"
+            class="image-text"
+          ></ion-icon>
         </div>
       </ion-col>
     </ion-row>

@@ -107,8 +107,8 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   onDateChange(event) {
-    this.startDate = moment(event.setHours(9, 0, 0, 0));
-    this.endDate = moment(event.setHours(18, 0, 0, 0));
+    this.startDate = moment(event.setHours(7, 0, 0, 0));
+    this.endDate = moment(event.setHours(23, 0, 0, 0));
     this.dateTimeValue = event;
     this.updateAppointments(event);
   }

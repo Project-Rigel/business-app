@@ -35,7 +35,7 @@ export class TimelineAppointmentComponent implements OnInit {
       );
 
     const percentOfDayDuration = (minuteDiff / this.dayLengthMinutes);
-    this.heightPx = percentOfDayDuration * this.parentContainerLengthPx;
+    this.heightPx = percentOfDayDuration * this.parentContainerLengthPx - 1; // -1 para separar visualmente citas adyacentes verticalemnte
   }
 
   private computeTopProperty() {

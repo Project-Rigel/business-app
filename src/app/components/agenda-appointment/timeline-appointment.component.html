@@ -4,10 +4,10 @@
   <div class="ion-no-padding item-appointment">
     <ion-label *ngIf="appointment">
       <div class="appointment-container">
-        <h2 [style.color]="'#b50f0f'" class="text-bold">{{ appointment.name | titlecase }}</h2>
+        <h2 [style.color]="'#b50f0f'" class="text-bold">{{ appointment.customerName | titlecase }}</h2>
         <h3 [style.color]="'#b50f0f'">{{ appointment.startDate | date:"HH:mm" }}-{{ appointment.endDate | date:"HH:mm" }} </h3>
       </div>
-      <p [style.color]="'#b50f0f'">{{ appointment.customerName | titlecase }}</p>
+      <p [style.color]="'#b50f0f'">{{ appointment.name | titlecase }}</p>
     </ion-label>
   </div>
 </div>

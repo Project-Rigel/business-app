@@ -1,7 +1,7 @@
 .hour-item{
   background-color: #ff090985;
   position: absolute;
-  padding: 16px;
+  padding: 10px 16px 16px;
   width: 80%;
   left: 0px;
   margin-left: 18%;
@@ -28,4 +28,8 @@
 
 .text-bold{
   font-weight: bold;
+}
+
+.time-range{
+  padding-top: 16px;
 }

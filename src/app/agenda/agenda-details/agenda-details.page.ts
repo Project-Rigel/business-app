@@ -81,14 +81,14 @@ export class AgendaDetailsPage implements OnInit {
       .create()
       .addElement(document.getElementById('date-container'))
       .duration(400)
-      .fromTo('height', '200px', '0px')
+      .fromTo('height', '246px', '0px')
       .easing('ease-in-out');
 
     this.openCalendar = this.animationController
       .create()
       .addElement(document.getElementById('date-container'))
       .duration(400)
-      .fromTo('height', '0px', '200px')
+      .fromTo('height', '0px', '246px')
       .easing('ease-in-out');
 
     this.closeConfirmApoointment = this.animationController

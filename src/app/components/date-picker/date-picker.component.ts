@@ -14,18 +14,18 @@ export class DatePickerComponent implements OnInit {
   constructor(private animationController: AnimationController) {}
 
   @Input() monthLabels = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre'
   ];
   @Input() dayLabels = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
   @Input() date: Date;
@@ -44,14 +44,23 @@ export class DatePickerComponent implements OnInit {
   @Input() monthLabelsStyle = { 'font-size': '15px' };
   @Input() yearLabelsStyle = { 'font-size': '15px' };
   @Input() itemSelectedStyle = {
-    background: '#488aff',
+    background: 'var(--ion-color-primary)',
     color: '#f4f4f4 !important',
+    borderRadius: '25%/50%',
   };
   @Input() invalidDateStyle = {
     'text-decoration': 'line-through',
     color: 'red',
   };
-  @Input() todaysItemStyle = { color: 'var(--ion-color-primary)' };
+  @Input() todaysItemStyle = {
+    color: 'var(--ion-color-primary)'
+  };
+
+  @Input() todaySelectedStyle = {
+    background: 'var(--ion-color-primary)',
+    color: '#ffffff',
+    borderRadius: '25%/50%',
+  }
 
   @Output() onSelect: EventEmitter<Date> = new EventEmitter();
 
@@ -73,7 +82,7 @@ export class DatePickerComponent implements OnInit {
   endYear: number;
 
   ngOnInit() {
-
+    console.log(this.date)
     this.initOptions();
     this.createCalendarWeeks();
   }
@@ -118,9 +127,6 @@ export class DatePickerComponent implements OnInit {
     }
   }
 
-  public async hideCalendar() {
-
-  }
   createCalendarWeeks() {
     this.weeks = this.generateCalendarWeeks(
       Day.fromDate(
@@ -305,7 +311,7 @@ export class DatePickerComponent implements OnInit {
     return (
       this.yearSelected === this.currentYear &&
       this.monthSelected === this.currentMonth &&
-      this.currentDay === day
+      day === this.currentDay
     );
   }
 
@@ -386,6 +392,10 @@ export class DatePickerComponent implements OnInit {
     );
   }
 
+  getMonthName() {
+    return this.monthLabels[this.monthSelected - 1]
+  }
+
   //Styles
 
   getDayStyle(day: Day) {
@@ -398,7 +408,11 @@ export class DatePickerComponent implements OnInit {
       this.daySelected &&
       day.dayIdentifier === this.daySelected.dayIdentifier
     ) {
-      style = { ...style, ...this.itemSelectedStyle };
+      if (this.isToday(this.daySelected.dayOfMonth)) {
+        style = { ...style, ...this.todaySelectedStyle};
+      } else {
+        style = { ...style, ...this.itemSelectedStyle};
+      }
     }
 
     const dayStyle =

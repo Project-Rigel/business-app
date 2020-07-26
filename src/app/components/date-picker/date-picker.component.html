@@ -6,16 +6,15 @@
   <!--    <ion-button fill="clear" [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">-->
   <!--      {{yearSelected}}-->
   <!--    </ion-button>-->
-
-  <!--    <span slot="end" *ngIf="hasPrevious() || hasNext()">-->
-  <!--            <ion-button  fill="clear" [disabled]="!hasPrevious()" (click)="previous()">-->
-  <!--                <ion-icon slot="icon-only" name="ios-arrow-back"></ion-icon>-->
-  <!--            </ion-button>-->
-  <!--            <ion-button fill="clear" [disabled]="!hasNext()" (click)="next()">-->
-  <!--                <ion-icon slot="icon-only" name="ios-arrow-forward"></ion-icon>-->
-  <!--            </ion-button>-->
-  <!--        </span>-->
-  <!--  </ion-item>-->
+  <ion-item [ngStyle]="backgroundStyle" lines="none" *ngIf="hasPrevious() || hasNext()">
+      <ion-button  slot="start" fill="clear" [disabled]="!hasPrevious()" (click)="previous()">
+          <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-label class="ion-text-center">{{getMonthName()}} de {{yearSelected}}</ion-label>
+      <ion-button slot="end" fill="clear" [disabled]="!hasNext()" (click)="next()">
+          <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+  </ion-item>
 
   <ion-grid *ngIf="showView === 'calendar'">
     <ion-row class="ion-justify-content-center">

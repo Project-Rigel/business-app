@@ -19,8 +19,6 @@ import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
-import { Time } from 'dayspan';
-import { log } from 'console';
 
 interface DisplayItem {
   appointment?: Appointment;

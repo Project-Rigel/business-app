@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { AgendaDay } from '../interfaces/agendaDay';
 import * as firebase from 'firebase';
-import { log } from 'console';
 
 @Injectable({
   providedIn: 'root',

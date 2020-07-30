@@ -13,8 +13,8 @@ import { CustomerDetailsPage } from './customer-details.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    CustomerDetailsPageRoutingModule
+    CustomerDetailsPageRoutingModule,
   ],
-  declarations: [CustomerDetailsPage]
+  declarations: [CustomerDetailsPage],
 })
 export class CustomerDetailsPageModule {}

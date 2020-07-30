@@ -51,20 +51,18 @@ export class AddCustomerPage implements OnInit {
 
   async cancel() {
     this.keyboard.hide();
-    try{
+    try {
       await this.errorToastService.dismiss();
-    }catch (e) {
-console.log(e);
-    }finally {
+    } catch (e) {
+      console.log(e);
+    } finally {
       setTimeout(async () => {
-
         await this.ctrl.dismiss({ done: false });
         this.submitClicked = false;
       }, 100);
     }
 
     //theres a bug in the animation of the keyboard which starts at the same time as the modal.
-
   }
 
   async submitForm(value: any, clientId: string) {

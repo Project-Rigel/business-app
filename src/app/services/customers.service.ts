@@ -89,20 +89,27 @@ export class CustomersService {
       );
     }
 
-    if(firstSurname){
-      return merge(searchByName$, searchBySurname$).pipe(map(val => {
-        return val.filter((v, i) => val.indexOf(v) === i);
-      }));
+    if (firstSurname) {
+      return merge(searchByName$, searchBySurname$).pipe(
+        map(val => {
+          return val.filter((v, i) => val.indexOf(v) === i);
+        }),
+      );
     }
 
-    if(secondSurname){
-      return merge(searchByName$, searchBySurname$, searchBySecondSurname$).pipe(map(val => {
-        return val.filter((v, i) => val.indexOf(v) === i);
-      }));
+    if (secondSurname) {
+      return merge(
+        searchByName$,
+        searchBySurname$,
+        searchBySecondSurname$,
+      ).pipe(
+        map(val => {
+          return val.filter((v, i) => val.indexOf(v) === i);
+        }),
+      );
     }
 
     return searchByName$;
-
   }
 
   private findCustomersByField(userId: string, field: string, value: string) {

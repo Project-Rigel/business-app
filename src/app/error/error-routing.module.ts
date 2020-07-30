@@ -6,8 +6,8 @@ import { ErrorPage } from './error.page';
 const routes: Routes = [
   {
     path: '',
-    component: ErrorPage
-  }
+    component: ErrorPage,
+  },
 ];
 
 @NgModule({

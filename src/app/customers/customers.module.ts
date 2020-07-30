@@ -20,10 +20,13 @@ import { CustomersListComponent } from './customers-list/customers-list.componen
     CustomersPageRoutingModule,
     ReactiveFormsModule,
   ],
-  declarations: [CustomersPage, AddCustomerPage, CustomerElementComponent, CustomersListComponent],
-
-  exports: [
+  declarations: [
+    CustomersPage,
+    AddCustomerPage,
+    CustomerElementComponent,
     CustomersListComponent,
   ],
+
+  exports: [CustomersListComponent],
 })
 export class CustomersPageModule {}

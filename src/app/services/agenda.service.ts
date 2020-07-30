@@ -22,7 +22,7 @@ export class AgendaService {
       interval: minuteSelected,
       imageUrl: downloadUrl,
       businessId: businessId,
-      intervals: {}
+      intervals: {},
     };
 
     await this.firestore

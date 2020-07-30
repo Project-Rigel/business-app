@@ -9,8 +9,8 @@ describe('AgendaNotificationsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AgendaNotificationsComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [AgendaNotificationsComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgendaNotificationsComponent);

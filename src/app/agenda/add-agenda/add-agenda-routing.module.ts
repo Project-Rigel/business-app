@@ -6,8 +6,8 @@ import { AddAgendaPage } from './add-agenda.page';
 const routes: Routes = [
   {
     path: '',
-    component: AddAgendaPage
-  }
+    component: AddAgendaPage,
+  },
 ];
 
 @NgModule({

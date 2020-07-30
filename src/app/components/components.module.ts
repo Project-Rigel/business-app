@@ -6,14 +6,19 @@ import { AgendaNotificationsComponent } from './agenda-notifications/agenda-noti
 import { TimelineAppointmentComponent } from './agenda-appointment/timeline-appointment.component';
 import { DayTimelineComponent } from './day-timeline/day-timeline.component';
 
-
-
 @NgModule({
-  declarations: [DatePickerComponent, AgendaNotificationsComponent, TimelineAppointmentComponent, DayTimelineComponent],
-  imports: [
-    CommonModule,
-    IonicModule,
+  declarations: [
+    DatePickerComponent,
+    AgendaNotificationsComponent,
+    TimelineAppointmentComponent,
+    DayTimelineComponent,
   ],
-  exports: [DatePickerComponent, AgendaNotificationsComponent, TimelineAppointmentComponent, DayTimelineComponent],
+  imports: [CommonModule, IonicModule],
+  exports: [
+    DatePickerComponent,
+    AgendaNotificationsComponent,
+    TimelineAppointmentComponent,
+    DayTimelineComponent,
+  ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

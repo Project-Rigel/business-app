@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AlertController, AnimationController, IonDatetime, ModalController } from '@ionic/angular';
+import {
+  AlertController,
+  AnimationController,
+  IonDatetime,
+  ModalController,
+} from '@ionic/angular';
 import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 import { Animation } from '@ionic/core';
 import { AppointmentsService } from '../../services/appointments.service';
@@ -15,12 +20,13 @@ import { duration, Duration, Moment } from 'moment';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
 import { Time } from 'dayspan';
+import { log } from 'console';
 
 interface DisplayItem {
   appointment?: Appointment;
   interval: Date;
-  appointmentHeight?: number,
-  pxFromLast?: number
+  appointmentHeight?: number;
+  pxFromLast?: number;
 }
 
 @Component({
@@ -29,21 +35,24 @@ interface DisplayItem {
   styleUrls: ['./agenda-details.page.scss'],
 })
 export class AgendaDetailsPage implements OnInit {
-
   closeCalendar: Animation;
   openCalendar: Animation;
   closeConfirmApoointment: Animation;
   openConfirmAppoinment: Animation;
   isCalendarOpen: boolean = true;
-  isConfirmAppointmentOpen: boolean = false
+  isConfirmAppointmentOpen: boolean = false;
   display: DisplayItem[] = [];
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
   agenda$: Observable<Agenda>;
   addingAppointment = false;
-  addingAppointmentInfo: { intervals: { from: string, to: string }[], customer: Customer, product: Product };
-  appoinmentGaps: string[] = []
+  addingAppointmentInfo: {
+    intervals: { from: string; to: string }[];
+    customer: Customer;
+    product: Product;
+  };
+  appoinmentGaps: string[] = [];
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
@@ -52,6 +61,8 @@ export class AgendaDetailsPage implements OnInit {
   selectedStartTime: boolean = false;
   possibleAppointmentId: string;
   appointment;
+  exisitingAppointment = null;
+  dayAppointments: Appointment[] = [];
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
   public loading: boolean;
@@ -67,9 +78,15 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
     this.interval = duration(30, 'minutes');
-    this.dateTimeInitialValue = moment(new Date().setHours(this.startDate.get('hours')));
+    this.dateTimeInitialValue = moment(
+      new Date().setHours(this.startDate.get('hours')),
+    );
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
+
+    this.appointmentsService.appointments$.subscribe(data => {
+      this.dayAppointments = data;
+    });
   }
 
   ngOnInit() {
@@ -121,7 +138,6 @@ export class AgendaDetailsPage implements OnInit {
       ? await this.closeCalendar.play()
       : await this.openCalendar.play();
     this.isCalendarOpen = !this.isCalendarOpen;
-
   }
 
   async showConfirmApoointmentDialog() {
@@ -138,9 +154,9 @@ export class AgendaDetailsPage implements OnInit {
       component: AddAppointmentWizardComponent,
       swipeToClose: true,
       componentProps: {
-        display: this.display,
+        //display: this.display,
         agendaId: this.route.snapshot.paramMap.get('id'),
-        daySelected: this.dateTimeValue
+        daySelected: this.dateTimeValue,
       },
     });
 
@@ -156,11 +172,33 @@ export class AgendaDetailsPage implements OnInit {
         // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
         const productDuration = this.addingAppointmentInfo.product.duration;
-        for (const gap of intervals) {
-          for (let item = moment(gap.from, 'HH:mm'); moment(gap.to, "HH:mm").diff(item) > 0; item.add(this.interval.asMinutes(), 'minutes')) {
-            const aux = moment(item)
-            if (moment(gap.to, "HH:mm").diff(aux.add(productDuration.asMinutes(), 'minutes')) >= 0) {
-              this.appoinmentGaps.push(item.format("HH:mm"))
+        for (const gap of intervals) { // 8-12 / 16-20
+          for (
+            let item = moment(gap.from, 'HH:mm');
+            moment(gap.to, 'HH:mm').diff(item) > 0;
+            item.add(this.interval.asMinutes(), 'minutes')
+          ) {  // 8:30   9:00  9:30  10:00 .....
+            const aux = moment(item);
+            if (
+              moment(gap.to, 'HH:mm').diff(
+                aux.add(productDuration.asMinutes(), 'minutes'),
+              ) >= 0
+            ) {
+
+              // if el intervalo tiene hueco (depende de las citas ya creadas)
+              let hasGap = true;
+              this.dayAppointments.forEach(element => {
+                // Posible error con los minutos a y media
+                if (this.isStartTimeFull(element, item) || this.isDurationBiggerThanGap(item, element, productDuration)) {
+                  hasGap = false;
+                }
+                //console.log("Cita: " + element.startDate.getHours() + ":" + element.startDate.getMinutes())
+                //console.log("Chip actual: " + item.hour() + ":" + item.minute())
+              });
+
+              if (hasGap) {
+                this.appoinmentGaps.push(item.format('HH:mm'));
+              }
             }
           }
         }
@@ -168,10 +206,30 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
+  isStartTimeFull(element, item) {
+    return element.startDate.getHours() === item.hour() && element.startDate.getMinutes() === item.minute() && element.sharesStartTimeWithOtherAppointment;
+  }
+
+  isDurationBiggerThanGap(item: Moment, appointment: Appointment, productDuration: Duration) {
+    let end = moment(item).add(productDuration.asMinutes(), 'minutes').toDate();
+    end.setMonth(this.dateTimeValue.getMonth());
+    end.setFullYear(this.dateTimeValue.getFullYear());
+    end.setDate(this.dateTimeValue.getDate())
+  
+    if (this.isBetweenAppointment(appointment, end) && appointment.sharesStartTimeWithOtherAppointment && appointment.positionSharing === 2) {
+      return true
+    }
+    return false;
+  }
+
+  isBetweenAppointment(appointment: Appointment, date: Date) : boolean {
+    return appointment.startDate.getTime() < date.getTime() && appointment.endDate.getTime() >= date.getTime();
+  }
+
   selectTime($event) {
-    this.updatePossibleAppointment($event)
-    this.selectedStartTime=!this.selectedStartTime;
-    this.showConfirmApoointmentDialog()
+    this.updatePossibleAppointment($event);
+    this.selectedStartTime = !this.selectedStartTime;
+    this.showConfirmApoointmentDialog();
   }
 
   async updatePossibleAppointment($event: any) {
@@ -189,13 +247,57 @@ export class AgendaDetailsPage implements OnInit {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
 
+    /////////////////
+    let sharesStartDate: boolean;
+    let sharingPosition: number;
+    let numberOfAppointmentsAtStartDate = 0;
+    let index = 0;
+    console.log(this.dateTimeValue);
+    
+    this.dayAppointments.forEach((element, i) => {
+      if (element.startDate.getTime() === this.dateTimeValue.getTime()) {
+        numberOfAppointmentsAtStartDate++;
+        index = i;
+      }
+    });
+    console.log(index);
+    
+    if (numberOfAppointmentsAtStartDate === 0) {
+      // Si array de citas contiene x elementos, entonces ...
+      sharesStartDate = false;
+      sharingPosition = 0; // enum
+      console.log('Cita sola');
+    } else if (numberOfAppointmentsAtStartDate === 1) {
+      this.dayAppointments[index].sharesStartTimeWithOtherAppointment = true; // Wrong? sharing = 1
+      this.dayAppointments[index].positionSharing = 1;
+      this.appointmentsService.updateExistingAppointment(
+        this.dayAppointments[index],
+      );
+      this.exisitingAppointment = this.dayAppointments[index]
+
+      sharesStartDate = true;
+      sharingPosition = 2;
+      console.log('Cita doble');
+    } else {
+      console.log('Error, más de 2 citas');
+
+      // return error o alerta
+    }
+
+    ////////////////
+
     this.appointment = {
       id: this.possibleAppointmentId,
       startDate: this.dateTimeValue,
-      endDate: moment(this.dateTimeValue).add(this.addingAppointmentInfo.product.duration).toDate(),
+      endDate: moment(this.dateTimeValue)
+        .add(this.addingAppointmentInfo.product.duration)
+        .toDate(),
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
+      sharesStartTimeWithOtherAppointment: sharesStartDate,
+      positionSharing: sharingPosition,
+      // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
   }
@@ -210,10 +312,11 @@ export class AgendaDetailsPage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'secondary',
-          handler: (blah) => {
+          handler: blah => {
             console.log('Confirm Cancel: blah');
           },
-        }, {
+        },
+        {
           text: 'Ok',
           handler: async () => {
             try {
@@ -241,13 +344,22 @@ export class AgendaDetailsPage implements OnInit {
             date,
           );
         }),
-        take(1)).subscribe(v => v);
+        take(1),
+      )
+      .subscribe(v => v);
   }
 
   cancelAddAppointment() {
     this.addingAppointment = false;
     this.addingAppointmentInfo = null;
-    this.appoinmentGaps = []
-    this.appointmentsService.cancelAppointment(this.appointment);
+    this.appoinmentGaps = [];
+    if (this.appointment != null) {
+      this.appointmentsService.cancelAppointment(this.appointment);
+      this.appointment = null;
+    }    
+    if (this.exisitingAppointment != null) {
+      this.appointmentsService.restoreExistingAppointment(this.exisitingAppointment);
+      this.exisitingAppointment = null;
+    }
   }
 }

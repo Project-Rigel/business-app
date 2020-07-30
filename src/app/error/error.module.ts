@@ -9,12 +9,7 @@ import { ErrorPageRoutingModule } from './error-routing.module';
 import { ErrorPage } from './error.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ErrorPageRoutingModule
-  ],
-  declarations: [ErrorPage]
+  imports: [CommonModule, FormsModule, IonicModule, ErrorPageRoutingModule],
+  declarations: [ErrorPage],
 })
 export class ErrorPageModule {}

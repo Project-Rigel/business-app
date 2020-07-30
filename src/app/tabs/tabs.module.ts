@@ -15,8 +15,8 @@ import { ProfilePageModule } from '../profile/profile.module';
     FormsModule,
     IonicModule,
     TabsPageRoutingModule,
-    ProfilePageModule
+    ProfilePageModule,
   ],
-  declarations: [TabsPage]
+  declarations: [TabsPage],
 })
 export class TabsPageModule {}

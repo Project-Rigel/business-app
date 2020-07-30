@@ -9,8 +9,8 @@ describe('DayTimelineComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DayTimelineComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [DayTimelineComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DayTimelineComponent);

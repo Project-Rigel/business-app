@@ -117,7 +117,5 @@ export class CustomersPage implements OnInit, OnDestroy {
     }
   }
 
-  seeDetails(){
-
-  }
+  seeDetails() {}
 }

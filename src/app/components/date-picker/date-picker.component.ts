@@ -10,7 +10,6 @@ import { Animation } from '@ionic/core';
   styleUrls: ['./date-picker.component.scss'],
 })
 export class DatePickerComponent implements OnInit {
-
   constructor(private animationController: AnimationController) {}
 
   @Input() monthLabels = [
@@ -25,7 +24,7 @@ export class DatePickerComponent implements OnInit {
     'Septiembre',
     'Octubre',
     'Noviembre',
-    'Diciembre'
+    'Diciembre',
   ];
   @Input() dayLabels = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
   @Input() date: Date;
@@ -53,7 +52,7 @@ export class DatePickerComponent implements OnInit {
     color: 'red',
   };
   @Input() todaysItemStyle = {
-    color: 'var(--ion-color-primary)'
+    color: 'var(--ion-color-primary)',
   };
 
   @Input() todaySelectedStyle = {
@@ -61,7 +60,7 @@ export class DatePickerComponent implements OnInit {
     justifyContent: 'center',
     alignItems: 'center',
     color: '#ffffff',
-  }
+  };
 
   @Input() insideitemSelectedStyle = {
     textAlign: 'center',
@@ -72,8 +71,8 @@ export class DatePickerComponent implements OnInit {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden'
-  }
+    overflow: 'hidden',
+  };
 
   @Input() insideTodaySelectedStyle = {
     textAlign: 'center',
@@ -83,8 +82,8 @@ export class DatePickerComponent implements OnInit {
     borderRadius: '50%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  };
 
   @Output() onSelect: EventEmitter<Date> = new EventEmitter();
 
@@ -106,7 +105,6 @@ export class DatePickerComponent implements OnInit {
   endYear: number;
 
   ngOnInit() {
-    console.log(this.date)
     this.initOptions();
     this.createCalendarWeeks();
   }
@@ -417,7 +415,7 @@ export class DatePickerComponent implements OnInit {
   }
 
   getMonthName() {
-    return this.monthLabels[this.monthSelected - 1]
+    return this.monthLabels[this.monthSelected - 1];
   }
 
   //Styles
@@ -433,9 +431,9 @@ export class DatePickerComponent implements OnInit {
       day.dayIdentifier === this.daySelected.dayIdentifier
     ) {
       if (this.isToday(this.daySelected.dayOfMonth)) {
-        style = { ...style, ...this.todaySelectedStyle};
+        style = { ...style, ...this.todaySelectedStyle };
       } else {
-        style = { ...style, ...this.itemSelectedStyle};
+        style = { ...style, ...this.itemSelectedStyle };
       }
     }
 
@@ -455,16 +453,16 @@ export class DatePickerComponent implements OnInit {
   }
 
   getDaySelectedStyle(day: Day) {
-    let style = {}
+    let style = {};
 
     if (
       this.daySelected &&
       day.dayIdentifier === this.daySelected.dayIdentifier
     ) {
       if (this.isToday(this.daySelected.dayOfMonth)) {
-        style = { ...style, ...this.insideTodaySelectedStyle};
+        style = { ...style, ...this.insideTodaySelectedStyle };
       } else {
-        style = { ...style, ...this.insideitemSelectedStyle};
+        style = { ...style, ...this.insideitemSelectedStyle };
       }
     }
 

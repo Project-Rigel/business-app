@@ -9,8 +9,8 @@ describe('ErrorPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ErrorPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ErrorPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ErrorPage);

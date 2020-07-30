@@ -11,5 +11,6 @@ import { defineCustomElements } from '@teamhive/lottie-player/loader';
 
 defineCustomElements(window);
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
   .catch(err => console.log(err));

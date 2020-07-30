@@ -9,8 +9,8 @@ describe('AgendaAppointmentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TimelineAppointmentComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [TimelineAppointmentComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TimelineAppointmentComponent);

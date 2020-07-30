@@ -15,8 +15,8 @@ import { AddAgendaPage } from './add-agenda.page';
     FormsModule,
     IonicModule.forRoot(),
     AddAgendaPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  declarations: [AddAgendaPage]
+  declarations: [AddAgendaPage],
 })
 export class AddAgendaPageModule {}

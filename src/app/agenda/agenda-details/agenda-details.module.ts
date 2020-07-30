@@ -17,6 +17,6 @@ import { ComponentsModule } from '../../components/components.module';
     AgendaDetailsPageRoutingModule,
     ComponentsModule,
   ],
-  declarations: [AgendaDetailsPage]
+  declarations: [AgendaDetailsPage],
 })
 export class AgendaDetailsPageModule {}

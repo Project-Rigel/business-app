@@ -9,8 +9,8 @@ describe('AddAppointmentWizardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddAppointmentWizardComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [AddAppointmentWizardComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddAppointmentWizardComponent);

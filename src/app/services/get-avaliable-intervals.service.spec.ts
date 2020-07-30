@@ -6,7 +6,9 @@ describe('GetAvaliableIntervalsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: GetAvailableIntervalsService = TestBed.get(GetAvailableIntervalsService);
+    const service: GetAvailableIntervalsService = TestBed.get(
+      GetAvailableIntervalsService,
+    );
     expect(service).toBeTruthy();
   });
 });

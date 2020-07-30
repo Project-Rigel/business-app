@@ -7,8 +7,8 @@ import { TabsPage } from '../tabs/tabs.page';
 const routes: Routes = [
   {
     path: '',
-    component: ProfilePage
-  }
+    component: ProfilePage,
+  },
 ];
 
 @NgModule({

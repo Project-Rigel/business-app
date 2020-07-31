@@ -96,21 +96,37 @@ export class AppointmentsService {
     );
     appointToShow.push(appointment);
     this.appointments.next(appointToShow);
-    console.log(appointToShow);
-
     this.appointmentToBeConfirmed = appointment;
+    
   }
 
-  updateExistingAppointment(appointment: Appointment) {
-    const appointToShow = this.appointments?.value;
-    let i = -1;
+  updateTemporallyExisitingAppointment(appointment: Appointment) {
+    const appointToShow = this.appointments?.value;    
     appointToShow.forEach((element, index) => {
       if (element.id === appointment.id) {
-        i = index;
+        appointToShow[index] = appointment;
       }
     });
-    if (i != -1) appointToShow[i] = appointment;
     this.appointments.next(appointToShow);
+  }
+
+  async updateExisitingAppointment(agendaId: string, appointments: Appointment[]) {
+    
+    await this.afs
+      .doc(`agendas/${agendaId}`)
+      .collection<AgendaDay>('appointments')
+      .doc<any>(
+        `${this.getStringDate(
+          appointments[0].startDate,
+        )}-${agendaId}`,
+      )
+      .set(
+        {
+          appointments: appointments
+        }
+      );
+
+    
   }
 
   restoreExistingAppointment(appointment: Appointment) {
@@ -120,7 +136,6 @@ export class AppointmentsService {
       const appointToShow = this.appointments?.value;
       let i = -1;
       appointToShow.forEach((element, index) => {
-        console.log(index);
         if (element.id === appointment.id) {
           i = index;
         }

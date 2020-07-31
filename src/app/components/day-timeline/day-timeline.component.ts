@@ -17,7 +17,7 @@ interface TimeBlock {
   selector: 'app-day-timeline',
   templateUrl: './day-timeline.component.html',
   styleUrls: ['./day-timeline.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayTimelineComponent implements OnInit {
   @Input() appointments: Observable<Appointment[]>;

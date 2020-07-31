@@ -61,6 +61,7 @@ export class AgendaDetailsPage implements OnInit {
   appointment;
   exisitingAppointment = null;
   dayAppointments: Appointment[] = [];
+  productDuration: Duration;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
   public loading: boolean;
@@ -169,7 +170,7 @@ export class AgendaDetailsPage implements OnInit {
         this.showConfirmApoointmentDialog();
         // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
-        const productDuration = this.addingAppointmentInfo.product.duration;
+        this.productDuration = this.addingAppointmentInfo.product.duration;
         for (const gap of intervals) { // 8-12 / 16-20
           for (
             let item = moment(gap.from, 'HH:mm');
@@ -179,7 +180,7 @@ export class AgendaDetailsPage implements OnInit {
             const aux = moment(item);
             if (
               moment(gap.to, 'HH:mm').diff(
-                aux.add(productDuration.asMinutes(), 'minutes'),
+                aux.add(this.productDuration.asMinutes(), 'minutes'),
               ) >= 0
             ) {
 
@@ -187,11 +188,9 @@ export class AgendaDetailsPage implements OnInit {
               let hasGap = true;
               this.dayAppointments.forEach(element => {
                 // Posible error con los minutos a y media
-                if (this.isStartTimeFull(element, item) || this.isDurationBiggerThanGap(item, element, productDuration)) {
+                if (this.isStartTimeFull(element, item) || this.isDurationBiggerThanGap(item, element, this.productDuration)) {
                   hasGap = false;
                 }
-                //console.log("Cita: " + element.startDate.getHours() + ":" + element.startDate.getMinutes())
-                //console.log("Chip actual: " + item.hour() + ":" + item.minute())
               });
 
               if (hasGap) {
@@ -225,9 +224,12 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   selectTime($event) {
-    this.updatePossibleAppointment($event);
-    this.selectedStartTime = !this.selectedStartTime;
+    if (this.selectTime)
+      this.updatePossibleAppointment($event);
+    else this.appointmentsService.restoreExistingAppointment(this.exisitingAppointment);
+    
     this.showConfirmApoointmentDialog();
+    this.selectedStartTime = !this.selectedStartTime;
   }
 
   async updatePossibleAppointment($event: any) {
@@ -240,6 +242,8 @@ export class AgendaDetailsPage implements OnInit {
 
     this.dateTimeValue.setHours(hour);
     this.dateTimeValue.setMinutes(minutes);
+    this.dateTimeValue.setSeconds(0);
+    this.dateTimeValue.setMilliseconds(0);
 
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
@@ -250,15 +254,19 @@ export class AgendaDetailsPage implements OnInit {
     let sharingPosition: number;
     let numberOfAppointmentsAtStartDate = 0;
     let index = 0;
-    console.log(this.dateTimeValue);
+    
     
     this.dayAppointments.forEach((element, i) => {
-      if (element.startDate.getTime() === this.dateTimeValue.getTime()) {
-        numberOfAppointmentsAtStartDate++;
+      element.startDate.setSeconds(this.dateTimeValue.getSeconds())
+      element.startDate.setMilliseconds(this.dateTimeValue.getMilliseconds())
+      element.endDate.setSeconds(this.dateTimeValue.getSeconds())
+      element.endDate.setMilliseconds(this.dateTimeValue.getMilliseconds())
+      
+      if (element.startDate.getTime() <= this.dateTimeValue.getTime() && element.endDate.getTime() > this.dateTimeValue.getTime()) { // Cambiar por en rato de cita entero
+        numberOfAppointmentsAtStartDate++;    // Parte derecha    
         index = i;
       }
     });
-    console.log(index);
     
     if (numberOfAppointmentsAtStartDate === 0) {
       // Si array de citas contiene x elementos, entonces ...
@@ -268,7 +276,7 @@ export class AgendaDetailsPage implements OnInit {
     } else if (numberOfAppointmentsAtStartDate === 1) {
       this.dayAppointments[index].sharesStartTimeWithOtherAppointment = true; // Wrong? sharing = 1
       this.dayAppointments[index].positionSharing = 1;
-      this.appointmentsService.updateExistingAppointment(
+      this.appointmentsService.updateTemporallyExisitingAppointment(
         this.dayAppointments[index],
       );
       this.exisitingAppointment = this.dayAppointments[index]
@@ -278,7 +286,7 @@ export class AgendaDetailsPage implements OnInit {
       console.log('Cita doble');
     } else {
       console.log('Error, más de 2 citas');
-
+      return
       // return error o alerta
     }
 
@@ -298,6 +306,7 @@ export class AgendaDetailsPage implements OnInit {
       // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
+
   }
 
   async confirmAppointments(agendaId: string) {
@@ -319,7 +328,9 @@ export class AgendaDetailsPage implements OnInit {
           handler: async () => {
             try {
               this.loading = true;
-              await this.appointmentsService.confirmAppointments(agendaId);
+              await this.appointmentsService.updateExisitingAppointment(agendaId, this.dayAppointments);
+                
+              
               this.loading = false;
               this.addingAppointmentInfo = null;
               this.addingAppointment = false;
@@ -331,6 +342,10 @@ export class AgendaDetailsPage implements OnInit {
       ],
     });
     await alert.present();
+    this.selectedStartTime = !this.selectedStartTime;
+    this.possibleAppointmentId = null;
+    this.appointment = null;
+    this.exisitingAppointment = null;
   }
 
   private updateAppointments(date: Date) {
@@ -359,5 +374,8 @@ export class AgendaDetailsPage implements OnInit {
       this.appointmentsService.restoreExistingAppointment(this.exisitingAppointment);
       this.exisitingAppointment = null;
     }
+    this.selectedStartTime = !this.selectedStartTime;
+    this.possibleAppointmentId = null;
+
   }
 }

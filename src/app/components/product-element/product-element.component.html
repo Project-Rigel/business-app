@@ -1,0 +1,16 @@
+<ion-item>
+  <ion-label>
+      {{product.name | titlecase}}
+      <ion-label class="surnames"
+      >{{product.description | titlecase}} {{product.duration}}
+      </ion-label>
+  </ion-label>
+  <ion-icon *ngIf="isSelectable; else selectable"
+          slot="end"
+          color="primary"
+          name="information-circle-outline"
+  ></ion-icon>
+  <ng-template #selectable>
+      <ion-radio slot="end" color="primary" value="{{product.id}}"></ion-radio>
+  </ng-template>
+</ion-item>

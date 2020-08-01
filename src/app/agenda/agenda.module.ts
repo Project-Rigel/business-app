@@ -12,6 +12,8 @@ import { AddAgendaPage } from './add-agenda/add-agenda.page';
 import { AddAgendaPageModule } from './add-agenda/add-agenda.module';
 import { AddAppointmentWizardComponent } from './add-appointment-wizard/add-appointment-wizard.component';
 import { CustomersPageModule } from '../customers/customers.module';
+import { ProductsPageModule } from '../products/products.module';
+import { ProductsListComponent } from '../products/products-list/products-list.component';
 
 @NgModule({
   imports: [
@@ -22,6 +24,7 @@ import { CustomersPageModule } from '../customers/customers.module';
     AgendaPageRoutingModule,
     AddAgendaPageModule,
     CustomersPageModule,
+    ProductsPageModule
   ],
   declarations: [AgendaPage, AddAppointmentWizardComponent],
 })

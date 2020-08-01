@@ -49,6 +49,12 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
           'name',
           15,
         );
+
+        this.productsService.init(
+          'users/' + user.id + '/products',
+          'name',
+          15,
+        );
       }
     });
 

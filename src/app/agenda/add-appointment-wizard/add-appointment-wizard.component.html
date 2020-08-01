@@ -37,18 +37,6 @@
 
         <ion-slide class="slide">
             <ion-text class="ion-margin-top ion-text-center"><h1>Seleccione un producto</h1></ion-text>
-            <!-- <ion-list [style.height.%]="74">
-                <ion-radio-group allow-empty-selection>
-                    <ion-item (click)="selectProduct(product)" *ngFor="let product of (productsService)">
-                        <ion-label>
-                            <ion-label>{{product.name}}</ion-label>
-                            <ion-label>{{product.description}}</ion-label>
-                        </ion-label>
-                        <ion-radio slot="end" color="primary" value="{{product.id}}"></ion-radio>
-                    </ion-item>
-                </ion-radio-group>
-            </ion-list> -->
-            
             <app-products-list #productsList class="customers-list ion-padding"
                                 [maxHeightPercent]="60"
                                 [loadedData]="(productsService.data | async)"
@@ -59,7 +47,7 @@
                                 [isSelectable]="true"
                                 (onProductClicked)="selectedProduct = $event"></app-products-list>                                             
 
-            <ion-button [disabled]="!selectedProduct || loading" expand="block" color="primary" (click)="closeModal()">
+            <ion-button [disabled]="!selectedProduct" expand="block" color="primary" (click)="closeModal()">
                 <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
                 <ion-label *ngIf="!loading"> Siguiente</ion-label>
             </ion-button>

@@ -11,6 +11,7 @@ import { Customer } from '../../interfaces/customer';
 import { PaginationService } from 'src/app/services/pagination-service.service';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-customers-list',

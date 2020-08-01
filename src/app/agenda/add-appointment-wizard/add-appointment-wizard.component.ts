@@ -89,17 +89,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectProduct(event) {
-    if (event.id === this.lastIdSelected) {
-      this.selectedProduct = null;
-      this.lastIdSelected = "";
-    } else {
-      this.selectedProduct = event;
-      this.lastIdSelected = event.id;
-    }
-  }
-
-  closeModal() {
+  closeModal() {    
     this.loading = true;
     this.intervalsService.endpoint({
       businessId: 'OY7AR28O0WYV1bcoe1qZu53cmD32', //not needed yet
@@ -119,6 +109,8 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
         this.presentError().then(() => {
           this.loading = false;
           this.chRef.detectChanges()
+          console.log(err);
+          
       })
     })
   }

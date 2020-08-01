@@ -23,13 +23,14 @@ export class ProductsListComponent implements OnInit {
   @Input() maxHeightPercent : number = 80   ;
   @Input() isSelectable: boolean;
 
-  @Output() onCustomerClicked: EventEmitter<Product> = new EventEmitter<Product>();
+  @Output() onProductClicked: EventEmitter<Product> = new EventEmitter<Product>();
 
   subscriptions: Subscription[];
   lastIdSelected: string;
 
   constructor(private productService: ProductsService) {
     this.subscriptions = [];    
+    this.lastIdSelected = "";
   }
 
   ngOnInit() {
@@ -60,10 +61,10 @@ export class ProductsListComponent implements OnInit {
 
   selectProduct(event) {
     if (event.id === this.lastIdSelected) {
-      this.onCustomerClicked.emit(null);
+      this.onProductClicked.emit(null);
       this.lastIdSelected = "";
     } else {
-      this.onCustomerClicked.emit(event);
+      this.onProductClicked.emit(event);
       this.lastIdSelected = event.id;
     }
   }

@@ -82,7 +82,6 @@ export class DatePickerComponent implements OnInit {
   endYear: number;
 
   ngOnInit() {
-    console.log(this.date)
     this.initOptions();
     this.createCalendarWeeks();
   }

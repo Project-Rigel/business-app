@@ -6,6 +6,7 @@ import { Product } from '../interfaces/product';
 import { take, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ProductsService } from '../services/products.service';
+import { AddProductComponent } from './add-product/add-product.component';
 
 @Component({
   selector: 'app-products',
@@ -52,7 +53,7 @@ export class ProductsPage implements OnInit {
 
   async addProduct() {
     const modal = await this.modalCtrl.create({
-      component: undefined,
+      component: AddProductComponent,
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();

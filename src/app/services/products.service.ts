@@ -35,6 +35,7 @@ export class ProductsService {
   }
 
   init(path: string, field: string, limit: number, opts?: any) {
+    if (this.data) this.reset()
     this.query = {
       path,
       field,
@@ -58,6 +59,7 @@ export class ProductsService {
         return this.query.prepend ? val.concat(acc) : acc.concat(val);
       }),
     );
+    
   }
 
   public reset() {
@@ -147,11 +149,10 @@ export class ProductsService {
     businessId: string,
     name: string,
     description: string,
-    duration: Duration,
+    duration: number,
   ) {
     const id = this.afs.createId();
-
-    const data: Product = {
+    const data = {
       name,
       description,
       id,

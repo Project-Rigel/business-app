@@ -44,9 +44,9 @@ export class DatePickerComponent implements OnInit {
   @Input() monthLabelsStyle = { 'font-size': '15px' };
   @Input() yearLabelsStyle = { 'font-size': '15px' };
   @Input() itemSelectedStyle = {
-    background: 'var(--ion-color-primary)',
-    color: '#f4f4f4 !important',
-    borderRadius: '25%/50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
   @Input() invalidDateStyle = {
     'text-decoration': 'line-through',
@@ -57,9 +57,33 @@ export class DatePickerComponent implements OnInit {
   };
 
   @Input() todaySelectedStyle = {
-    background: 'var(--ion-color-primary)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     color: '#ffffff',
-    borderRadius: '25%/50%',
+  }
+
+  @Input() insideitemSelectedStyle = {
+    textAlign: 'center',
+    backgroundColor: 'var(--ion-color-primary)',
+    width: '25px',
+    height: '25px',
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden'
+  }
+
+  @Input() insideTodaySelectedStyle = {
+    textAlign: 'center',
+    backgroundColor: 'var(--ion-color-primary)',
+    width: '25px',
+    height: '25px',
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 
   @Output() onSelect: EventEmitter<Date> = new EventEmitter();
@@ -424,6 +448,23 @@ export class DatePickerComponent implements OnInit {
       ];
     if (dayStyle) {
       style = { ...style, ...dayStyle };
+    }
+
+    return style;
+  }
+
+  getDaySelectedStyle(day: Day) {
+    let style = {}
+
+    if (
+      this.daySelected &&
+      day.dayIdentifier === this.daySelected.dayIdentifier
+    ) {
+      if (this.isToday(this.daySelected.dayOfMonth)) {
+        style = { ...style, ...this.insideTodaySelectedStyle};
+      } else {
+        style = { ...style, ...this.insideitemSelectedStyle};
+      }
     }
 
     return style;

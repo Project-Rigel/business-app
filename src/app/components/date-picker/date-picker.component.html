@@ -26,7 +26,7 @@
         {{ daylabel }}
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let week of weeks" class="ion-justify-content-center">
+    <ion-row *ngFor="let week of weeks" class="ion-justify-content-center height-fixed">
       <ion-col
         *ngFor="let day of week"
         (click)="selectDay(day)"
@@ -39,7 +39,7 @@
             [ngStyle]="
               isValidDay(day) && !isOneOfTheValidDates(day) && invalidDateStyle
             "
-            >{{ isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;' }}</span
+            ><div [ngStyle]="getDaySelectedStyle(day)"> {{ isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;' }}</div></span
           >
         </span>
       </ion-col>

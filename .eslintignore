@@ -1,0 +1,7 @@
+node_modules
+platforms
+public
+.firebase
+www
+plugins
+**/app.component.html

@@ -1,12 +1,13 @@
-<ion-item>
-  <ion-label>
+<ion-item >
+  <ion-label style="max-width: 80%;">
       {{product.name | titlecase}}
-      <ion-label class="surnames"
-      >{{product.description | titlecase}} {{product.duration}}
+      <ion-label class="description"
+      >{{product.description | titlecase}} 
       </ion-label>
   </ion-label>
+  <span slot="end">{{product.duration}}'</span>
   <ion-icon *ngIf="isSelectable; else selectable"
-          slot="end"
+          slot="start"
           color="primary"
           name="information-circle-outline"
   ></ion-icon>

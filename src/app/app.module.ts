@@ -23,7 +23,7 @@ import {
   ScreenTrackingService,
 } from '@angular/fire/analytics';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,7 +38,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAuthGuardModule,
-    AngularFireFunctionsModule,
+    AngularFireFunctionsModule.,
     AngularFireAnalyticsModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
@@ -55,6 +55,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     Keyboard,
     ImagePicker,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: REGION, useValue: 'europe-west1' }
   ],
   bootstrap: [AppComponent],
 })

@@ -7,6 +7,7 @@
 .day-number{
   font-family: Roboto, monospace;
   font-size: 12px;
+  text-align: center;
 }
 
 ion-icon {
@@ -35,4 +36,9 @@ ion-icon {
 
 .invalidMonth {
   color: #8b8b8b
+}
+
+.height-fixed {
+  height: 25px;
+  line-height: 2;
 }

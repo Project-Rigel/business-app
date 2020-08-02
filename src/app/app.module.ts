@@ -38,7 +38,7 @@ import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAuthGuardModule,
-    AngularFireFunctionsModule.,
+    AngularFireFunctionsModule,
     AngularFireAnalyticsModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {

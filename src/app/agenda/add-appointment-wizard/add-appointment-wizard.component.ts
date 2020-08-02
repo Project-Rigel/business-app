@@ -9,6 +9,8 @@ import { catchError, switchMap, take } from 'rxjs/operators';
 import { ProductsService } from '../../services/products.service';
 import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
 import { Product } from '../../interfaces/product';
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-add-appointment-wizard',

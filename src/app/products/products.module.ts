@@ -18,7 +18,7 @@ import { AddProductComponent } from './add-product/add-product.component';
     FormsModule,
     IonicModule,
     ProductsPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [ProductsPage, ProductsListComponent, ProductElementComponent, AddProductComponent],
   exports: [

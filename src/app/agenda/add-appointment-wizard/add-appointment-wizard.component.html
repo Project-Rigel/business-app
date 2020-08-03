@@ -38,7 +38,7 @@
         <ion-slide class="slide">
             <ion-text class="ion-margin-top ion-text-center"><h1>Seleccione un producto</h1></ion-text>
             <app-products-list #productsList class="customers-list ion-padding"
-                                [maxHeightPercent]="60"
+                                [maxHeightPercent]="70"
                                 [loadedData]="(productsService.data | async)"
                                 [isSearching]="searching"
                                 [done]="(productsService.done | async)"

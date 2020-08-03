@@ -94,12 +94,17 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   closeModal() {    
     this.loading = true;
     this.intervalsService.endpoint({
-      businessId: 'OY7AR28O0WYV1bcoe1qZu53cmD32', //not needed yet
+      businessId: 'gpVwyDZEsgmVWyaBuwKx', //not needed yet
       agendaId: this.agendaId,
       productId: this.selectedProduct.id,
       timestamp: this.daySelected.toISOString(),
     }).pipe(
         take(1)).subscribe(async (v: any) => {
+          console.log(this.selectedProduct.id);
+          console.log(this.agendaId);
+          console.log(this.daySelected.toISOString());
+          console.log(v);
+          
       this.loading = false;
       await this.modalController.dismiss({
         done: true,

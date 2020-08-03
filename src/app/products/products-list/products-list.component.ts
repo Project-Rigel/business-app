@@ -20,7 +20,7 @@ export class ProductsListComponent implements OnInit {
   @Input() done: boolean;
   @Input() isSearching: boolean;
   @Input() searchResult: Product[];
-  @Input() maxHeightPercent : number = 80   ;
+  @Input() maxHeightPercent : number = 80;
   @Input() isSelectable: boolean;
 
   @Output() onProductClicked: EventEmitter<Product> = new EventEmitter<Product>();

@@ -155,11 +155,7 @@ export class AgendaDetailsPage implements OnInit {
         this.showConfirmApoointmentDialog();
         // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
-        console.log(intervals);
-        
-        
         const productDuration = moment.duration(this.addingAppointmentInfo.product.duration, 'minutes');
-        console.log(productDuration);
 
         for (const gap of intervals) {
           for (let item = moment(gap.from, 'HH:mm'); moment(gap.to, "HH:mm").diff(item) > 0; item.add(this.interval.asMinutes(), 'minutes')) {

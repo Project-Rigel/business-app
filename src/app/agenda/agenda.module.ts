@@ -24,7 +24,7 @@ import { ProductsListComponent } from '../products/products-list/products-list.c
     AgendaPageRoutingModule,
     AddAgendaPageModule,
     CustomersPageModule,
-    ProductsPageModule
+    ProductsPageModule,
   ],
   declarations: [AgendaPage, AddAppointmentWizardComponent],
 })

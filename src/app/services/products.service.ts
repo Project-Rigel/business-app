@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../interfaces/product';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import * as moment from 'moment';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { duration, Duration } from 'moment';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { scan, take, tap } from 'rxjs/operators';
+import { Product } from '../interfaces/product';
 
 interface QueryConfig {
   path: string; //  path to collection
@@ -18,7 +19,6 @@ interface QueryConfig {
   providedIn: 'root',
 })
 export class ProductsService {
-
   // Source data
   private _done = new BehaviorSubject(false);
   private _loading = new BehaviorSubject(false);
@@ -31,11 +31,16 @@ export class ProductsService {
   done: Observable<boolean> = this._done.asObservable();
   loading: Observable<boolean> = this._loading.asObservable();
 
-  constructor(private afs: AngularFirestore) {
-  }
+  constructor(private afs: AngularFirestore) {}
 
-  init(path: string, field: string, limit: number, opts?: any) {
-    if (this.data) this.reset()
+  init(
+    path: string,
+    whereField: string,
+    field: string,
+    limit: number,
+    opts?: any,
+  ) {
+    if (this.data) this.reset();
     this.query = {
       path,
       field,
@@ -47,6 +52,7 @@ export class ProductsService {
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
+        .where('businessId', '==', whereField)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit);
     });
@@ -59,7 +65,6 @@ export class ProductsService {
         return this.query.prepend ? val.concat(acc) : acc.concat(val);
       }),
     );
-    
   }
 
   public reset() {
@@ -156,15 +161,16 @@ export class ProductsService {
       name,
       description,
       id,
-      duration
+      duration,
+      businessId,
     };
 
-    await this.afs.collection(`users/${businessId}/products`).add(data);
+    await this.afs.collection(`products`).add(data);
   }
 
   public findProductByField(businessId: string, field: string, value: string) {
     return this.afs
-      .collection<Product>('users/' + businessId + '/products', ref => {
+      .collection<Product>('products', ref => {
         return ref
           .limit(10)
           .orderBy(field)

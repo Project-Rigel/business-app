@@ -1,16 +1,20 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { AlertController, IonInfiniteScroll, IonSlides, ModalController, ToastController } from '@ionic/angular';
-import { Observable, Subscription, throwError } from 'rxjs';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { AlertController, IonSlides, ModalController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Customer } from '../../interfaces/customer';
-import { CustomersService } from '../../services/customers.service';
-import { AuthService } from '../../services/auth.service';
-import { PaginationService } from '../../services/pagination-service.service';
-import { catchError, switchMap, take } from 'rxjs/operators';
-import { ProductsService } from '../../services/products.service';
-import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
 import { Product } from '../../interfaces/product';
-import * as moment from 'moment';
-
+import { AuthService } from '../../services/auth.service';
+import { CustomersService } from '../../services/customers.service';
+import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
+import { PaginationService } from '../../services/pagination-service.service';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-add-appointment-wizard',
@@ -18,7 +22,6 @@ import * as moment from 'moment';
   styleUrls: ['./add-appointment-wizard.component.scss'],
 })
 export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
-
   @ViewChild(IonSlides)
   ionSlides: IonSlides;
   search$: Observable<Customer[]>;
@@ -30,17 +33,19 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   selectedProduct: Product;
   loading: boolean;
 
-  lastIdSelected: string
+  lastIdSelected: string;
 
-  constructor(private readonly customerService: CustomersService,
-              private readonly auth: AuthService,
-              private readonly modalController: ModalController,
-              public readonly paginationService: PaginationService,
-              public readonly productsService: ProductsService,
-              public readonly intervalsService: GetAvailableIntervalsService,
-              public readonly alertController: AlertController,
-              private chRef: ChangeDetectorRef) { // Para detectar los cambios de la variable loading en el html
-
+  constructor(
+    private readonly customerService: CustomersService,
+    private readonly auth: AuthService,
+    private readonly modalController: ModalController,
+    public readonly paginationService: PaginationService,
+    public readonly productsService: ProductsService,
+    public readonly intervalsService: GetAvailableIntervalsService,
+    public readonly alertController: AlertController,
+    private chRef: ChangeDetectorRef,
+  ) {
+    // Para detectar los cambios de la variable loading en el html
   }
 
   ngOnInit() {
@@ -52,14 +57,9 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
           15,
         );
 
-        this.productsService.init(
-          'users/' + user.id + '/products',
-          'name',
-          15,
-        );
+        this.productsService.init('products', 'businessId', 'name', 15);
       }
     });
-
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -91,35 +91,39 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  closeModal() {    
+  closeModal() {
     this.loading = true;
-    this.intervalsService.endpoint({
-      businessId: 'gpVwyDZEsgmVWyaBuwKx', //not needed yet
-      agendaId: this.agendaId,
-      productId: this.selectedProduct.id,
-      timestamp: this.daySelected.toISOString(),
-    }).pipe(
-        take(1)).subscribe(async (v: any) => {
+    this.intervalsService
+      .endpoint({
+        businessId: 'gpVwyDZEsgmVWyaBuwKx', //not needed yet
+        agendaId: this.agendaId,
+        productId: this.selectedProduct.id,
+        timestamp: this.daySelected.toISOString(),
+      })
+      .pipe(take(1))
+      .subscribe(
+        async (v: any) => {
           console.log(this.selectedProduct.id);
           console.log(this.agendaId);
           console.log(this.daySelected.toISOString());
           console.log(v);
-          
-      this.loading = false;
-      await this.modalController.dismiss({
-        done: true,
-        intervals: v.intervals,
-        customer: this.selectedCustomer,
-        product: this.selectedProduct,
-      });
-    }, err => {
-        this.presentError().then(() => {
+
           this.loading = false;
-          this.chRef.detectChanges()
-          console.log(err);
-          
-      })
-    })
+          await this.modalController.dismiss({
+            done: true,
+            intervals: v.intervals,
+            customer: this.selectedCustomer,
+            product: this.selectedProduct,
+          });
+        },
+        err => {
+          this.presentError().then(() => {
+            this.loading = false;
+            this.chRef.detectChanges();
+            console.log(err);
+          });
+        },
+      );
   }
 
   async nextSlide() {
@@ -130,7 +134,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   }
 
   async cancel() {
-    await this.modalController.dismiss({done: false})
+    await this.modalController.dismiss({ done: false });
   }
 
   // Mover a un componente a parte
@@ -141,7 +145,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       header: 'Error',
       subHeader: 'Servidor temporalmente no disponible. ',
       message: 'Inténtelo de nuevo más tarde.',
-      buttons: ['OK']
+      buttons: ['OK'],
     });
 
     await alert.present();

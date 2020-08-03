@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PaginationService } from '../services/pagination-service.service';
-import { IonInfiniteScroll, ModalController } from '@ionic/angular';
-import { Subscription, Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Product } from '../interfaces/product';
-import { take, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ProductsService } from '../services/products.service';
 import { AddProductComponent } from './add-product/add-product.component';
@@ -14,7 +13,6 @@ import { AddProductComponent } from './add-product/add-product.component';
   styleUrls: ['./products.page.scss'],
 })
 export class ProductsPage implements OnInit {
-
   subscriptions: Subscription[];
   search$: Observable<Product[]>;
   searchValue: string;
@@ -22,22 +20,17 @@ export class ProductsPage implements OnInit {
   constructor(
     private readonly auth: AuthService,
     private readonly modalCtrl: ModalController,
-    public productService: ProductsService
-    ) {
+    public productService: ProductsService,
+  ) {
     this.subscriptions = [];
-   }
+  }
 
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
-        this.productService.init(
-          'users/' + user.id + '/products',
-          'name',
-          15,
-        );
+        this.productService.init('products', 'businessId', 'name', 15);
       }
     });
-
   }
 
   ngOnDestroy() {
@@ -57,7 +50,7 @@ export class ProductsPage implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    
+
     if (data.done) {
       this.productService.reset();
     }
@@ -77,7 +70,7 @@ export class ProductsPage implements OnInit {
             return this.productService.findProductByField(
               user.id, // businessId
               'name',
-              input
+              input,
             );
           }
         }),
@@ -88,6 +81,5 @@ export class ProductsPage implements OnInit {
   cancelSearch(event) {
     console.log('cancelling');
     this.searching = false;
-    
   }
 }

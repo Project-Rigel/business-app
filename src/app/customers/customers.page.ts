@@ -14,8 +14,7 @@ import { PaginationService } from '../services/pagination-service.service';
   styleUrls: ['./customers.page.scss'],
 })
 export class CustomersPage implements OnInit, OnDestroy {
-  @ViewChild(IonInfiniteScroll)
-  ionInfiniteScrollElement: IonInfiniteScroll;
+
 
   subscriptions: Subscription[];
   search$: Observable<Customer[]>;
@@ -28,7 +27,6 @@ export class CustomersPage implements OnInit, OnDestroy {
     private readonly modalCtrl: ModalController,
     public readonly paginationService: PaginationService,
   ) {
-    this.subscriptions = [];
   }
 
   ngOnInit() {
@@ -42,32 +40,11 @@ export class CustomersPage implements OnInit, OnDestroy {
       }
     });
 
-    this.subscriptions.push(
-      this.paginationService.done.subscribe(done => {
-        if (done === true) {
-          this.ionInfiniteScrollElement.disabled = true;
-        }
-      }),
-    );
-
-    this.subscriptions.push(
-      this.paginationService.loading.subscribe(async loading => {
-        if (!loading && this.ionInfiniteScrollElement) {
-          await this.ionInfiniteScrollElement.complete();
-        }
-      }),
-    );
+    
   }
 
   ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
-    }
-  }
-
-  loadData(event) {
-    // this.lastElement$.next(this.lastElement);
-    this.paginationService.more();
+    
   }
 
   async addCustomer() {
@@ -76,12 +53,6 @@ export class CustomersPage implements OnInit, OnDestroy {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (this.ionInfiniteScrollElement) {
-      this.ionInfiniteScrollElement.disabled = false;
-    }
-    if (data.done) {
-      this.paginationService.reset();
-    }
   }
 
   async search(event) {
@@ -112,9 +83,6 @@ export class CustomersPage implements OnInit, OnDestroy {
   cancelSearch(event) {
     console.log('cancelling');
     this.searching = false;
-    if (this.ionInfiniteScrollElement) {
-      this.ionInfiniteScrollElement.disabled = false;
-    }
   }
 
   seeDetails(){

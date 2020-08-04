@@ -41,6 +41,7 @@
     "core-js": "^2.5.4",
     "dayspan": "^1.1.0",
     "firebase": "^7.14.4",
+    "google-libphonenumber": "^3.2.10",
     "ionic4-date-picker": "^0.1.0",
     "moment": "^2.25.3",
     "rxjs": "~6.5.1",

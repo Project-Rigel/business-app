@@ -5,5 +5,5 @@ export interface User {
   displayName: string;
   avatar: string;
   email: string;
-  customers : Customer[]
+  customers: Customer[];
 }

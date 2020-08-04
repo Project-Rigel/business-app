@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonInput, ModalController } from '@ionic/angular';
+import { IonInput, ModalController, AlertController } from '@ionic/angular';
 import {
   AbstractControl,
   FormBuilder,
@@ -30,7 +30,8 @@ export class AddCustomerPage implements OnInit {
     private errorToastService: ErrorToastService,
     public readonly auth: AuthService,
     private keyboard: Keyboard,
-  ) {}
+    public readonly alertController: AlertController,
+    ) {}
 
   async ngOnInit() {
     // this.keyboard.show(); TODO this only shows in android. In Ios just need to focus the element
@@ -85,7 +86,9 @@ console.log(e);
         value.secondSurname.toString().toLowerCase(),
         value.email,
         value.phone,
-      );
+      ).then(() => {
+        this.presentSuccess(value.name.toString(), value.firstSurname.toString());
+      });
 
       await this.ctrl.dismiss({ done: true, values: this.customerForm.value });
       this.submitClicked = false;
@@ -128,5 +131,18 @@ console.log(e);
     }
 
     return false;
+  }
+
+  async presentSuccess(name: string, surname: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'alert',
+      mode: 'ios',
+      header: 'Confirmación',
+      subHeader: 'Cliente añadido con éxito.',
+      message: name + ' ' + surname,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 }

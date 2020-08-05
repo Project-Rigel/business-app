@@ -106,11 +106,6 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       .pipe(take(1))
       .subscribe(
         async (v: any) => {
-          console.log(this.selectedProduct.id);
-          console.log(this.agendaId);
-          console.log(this.daySelected.toISOString());
-          console.log(v);
-
           this.loading = false;
           await this.modalController.dismiss({
             done: true,

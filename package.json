@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "npm run eslint",
     "e2e": "ng e2e",
-    "eslint": "eslint src/**/*.{ts,html} --fix",
+    "eslint": "eslint src/**/*.ts --fix",
     "reformat": "prettier --write src/**/*.{ts,js,css,html}"
   },
   "private": true,
@@ -124,7 +124,7 @@
     "src/**/*.{ts,js,css,html}": [
       "prettier --write"
     ],
-    "src/**/*.{ts,html}": [
+    "src/**/*.ts": [
       "eslint --fix"
     ],
     "*.ts": [

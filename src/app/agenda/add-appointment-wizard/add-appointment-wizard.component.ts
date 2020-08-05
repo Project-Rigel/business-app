@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
+import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
@@ -32,6 +33,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   selectedCustomer: Customer;
   selectedProduct: Product;
   loading: boolean;
+  user: User;
 
   lastIdSelected: string;
 
@@ -51,13 +53,14 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
+        this.user = user;
         this.paginationService.init(
           'users/' + user.id + '/customers',
           'name',
           15,
         );
 
-        this.productsService.init('products', 'businessId', 'name', 15);
+        this.productsService.init('products', user.businessId, 'name', 15);
       }
     });
   }
@@ -95,7 +98,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.intervalsService
       .endpoint({
-        businessId: 'gpVwyDZEsgmVWyaBuwKx', //not needed yet
+        businessId: this.user.businessId, //not needed yet
         agendaId: this.agendaId,
         productId: this.selectedProduct.id,
         timestamp: this.daySelected.toISOString(),

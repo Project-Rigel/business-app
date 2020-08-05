@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Product } from '../interfaces/product';
 import { AuthService } from '../services/auth.service';
@@ -13,7 +13,6 @@ import { AddProductComponent } from './add-product/add-product.component';
   styleUrls: ['./products.page.scss'],
 })
 export class ProductsPage implements OnInit {
-  subscriptions: Subscription[];
   search$: Observable<Product[]>;
   searchValue: string;
   searching = false;
@@ -21,27 +20,14 @@ export class ProductsPage implements OnInit {
     private readonly auth: AuthService,
     private readonly modalCtrl: ModalController,
     public productService: ProductsService,
-  ) {
-    this.subscriptions = [];
-  }
+  ) {}
 
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
-        this.productService.init('products', 'businessId', 'name', 15);
+        this.productService.init('products', user.businessId, 'name', 15);
       }
     });
-  }
-
-  ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
-    }
-  }
-
-  loadData(event) {
-    // this.lastElement$.next(this.lastElement);
-    this.productService.more();
   }
 
   async addProduct() {
@@ -67,18 +53,14 @@ export class ProductsPage implements OnInit {
       this.search$ = this.auth.user$.pipe(
         switchMap(user => {
           if (user) {
-            return this.productService.findProductByField(
-              user.id, // businessId
-              'name',
-              input,
-            );
+            return this.productService.findProductByField('name', input);
           }
         }),
       );
     }
   }
 
-  cancelSearch(event) {
+  cancelSearch() {
     console.log('cancelling');
     this.searching = false;
   }

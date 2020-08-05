@@ -12,7 +12,7 @@
         <ion-button
           [disabled]="!submitEnabled"
           type="submit"
-          (click)="submitForm(productForm.value, user.id)"
+          (click)="submitForm(productForm.value, user.businessId)"
         >
           <ion-label color="primary">OK</ion-label>
         </ion-button>
@@ -61,7 +61,7 @@
               formControlName="duration"
             ></ion-input>
           </ion-item>
-        </ion-list>        
+        </ion-list>
       </form>
     </div>
   </ion-content>

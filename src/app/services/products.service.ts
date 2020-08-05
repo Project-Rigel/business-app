@@ -25,6 +25,7 @@ export class ProductsService {
   private _data = new BehaviorSubject([]);
 
   private query: QueryConfig;
+  private businessId: string;
 
   // Observable data
   data: Observable<any>;
@@ -40,6 +41,7 @@ export class ProductsService {
     limit: number,
     opts?: any,
   ) {
+    this.businessId = whereField;
     if (this.data) this.reset();
     this.query = {
       path,
@@ -52,7 +54,7 @@ export class ProductsService {
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
-        .where('businessId', '==', whereField)
+        .where('businessId', '==', this.businessId)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit);
     });
@@ -75,6 +77,7 @@ export class ProductsService {
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
+        .where('businessId', '==', this.businessId)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit);
     });
@@ -95,6 +98,7 @@ export class ProductsService {
 
     const more = this.afs.collection(this.query.path, ref => {
       return ref
+        .where('businessId', '==', this.businessId)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit)
         .startAfter(cursor);
@@ -165,17 +169,22 @@ export class ProductsService {
       businessId,
     };
 
-    await this.afs.collection(`products`).add(data);
+    // await this.afs.collection(`products`).add(data);
+    await this.afs
+      .collection(`products`)
+      .doc(id)
+      .set(data);
   }
 
-  public findProductByField(businessId: string, field: string, value: string) {
+  public findProductByField(field: string, value: string) {
     return this.afs
-      .collection<Product>('products', ref => {
+      .collection<Product>(`products`, ref => {
         return ref
-          .limit(10)
+          .where('businessId', '==', this.businessId)
+          .limit(15)
           .orderBy(field)
-          .startAt(value)
-          .endAt(value + '\uf8ff');
+          .startAt(value.toLowerCase())
+          .endAt(value.toLowerCase() + '\uf8ff');
       })
       .valueChanges();
   }

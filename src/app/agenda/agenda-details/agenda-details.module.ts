@@ -1,13 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { AgendaDetailsPageRoutingModule } from './agenda-details-routing.module';
-
-import { AgendaDetailsPage } from './agenda-details.page';
 import { ComponentsModule } from '../../components/components.module';
+import { AgendaDetailsPageRoutingModule } from './agenda-details-routing.module';
+import { AgendaDetailsPage } from './agenda-details.page';
 
 @NgModule({
   imports: [
@@ -17,6 +14,6 @@ import { ComponentsModule } from '../../components/components.module';
     AgendaDetailsPageRoutingModule,
     ComponentsModule,
   ],
-  declarations: [AgendaDetailsPage]
+  declarations: [AgendaDetailsPage],
 })
 export class AgendaDetailsPageModule {}

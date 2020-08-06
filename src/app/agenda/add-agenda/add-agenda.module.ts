@@ -1,11 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { AddAgendaPageRoutingModule } from './add-agenda-routing.module';
-
 import { AddAgendaPage } from './add-agenda.page';
 
 @NgModule({
@@ -15,8 +12,8 @@ import { AddAgendaPage } from './add-agenda.page';
     FormsModule,
     IonicModule.forRoot(),
     AddAgendaPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  declarations: [AddAgendaPage]
+  declarations: [AddAgendaPage],
 })
 export class AddAgendaPageModule {}

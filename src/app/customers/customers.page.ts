@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CustomersService } from '../services/customers.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Customer } from '../interfaces/customer';
 import { AuthService } from '../services/auth.service';
-import { switchMap, take } from 'rxjs/operators';
-import { IonInfiniteScroll, ModalController } from '@ionic/angular';
-import { AddCustomerPage } from './add-customer/add-customer.page';
+import { CustomersService } from '../services/customers.service';
 import { PaginationService } from '../services/pagination-service.service';
+import { AddCustomerPage } from './add-customer/add-customer.page';
 
 @Component({
   selector: 'app-customers',
@@ -14,8 +14,6 @@ import { PaginationService } from '../services/pagination-service.service';
   styleUrls: ['./customers.page.scss'],
 })
 export class CustomersPage implements OnInit, OnDestroy {
-
-
   subscriptions: Subscription[];
   search$: Observable<Customer[]>;
   searchValue: string;
@@ -26,8 +24,7 @@ export class CustomersPage implements OnInit, OnDestroy {
     private readonly auth: AuthService,
     private readonly modalCtrl: ModalController,
     public readonly paginationService: PaginationService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
@@ -39,12 +36,6 @@ export class CustomersPage implements OnInit, OnDestroy {
         );
       }
     });
-
-    
-  }
-
-  ngOnDestroy() {
-    
   }
 
   async addCustomer() {
@@ -83,9 +74,5 @@ export class CustomersPage implements OnInit, OnDestroy {
   cancelSearch(event) {
     console.log('cancelling');
     this.searching = false;
-  }
-
-  seeDetails(){
-
   }
 }

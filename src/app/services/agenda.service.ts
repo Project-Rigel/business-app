@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Agenda } from '../interfaces/agenda';
 import { Observable } from 'rxjs';
+import { Agenda } from '../interfaces/agenda';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class AgendaService {
       interval: minuteSelected,
       imageUrl: downloadUrl,
       businessId: businessId,
-      intervals: {}
+      intervals: {},
     };
 
     await this.firestore

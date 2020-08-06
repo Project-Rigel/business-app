@@ -1,8 +1,8 @@
+import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
 } from '@angular/fire/firestore';
-import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { scan, take, tap } from 'rxjs/operators';
 
@@ -33,6 +33,8 @@ export class PaginationService {
   // Initial query sets options and defines the Observable
   // passing opts will override the defaults
   init(path: string, field: string, limit: number, opts?: any) {
+    if (this.data) this.reset();
+
     this.query = {
       path,
       field,

@@ -1,13 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IonRouterOutlet, ModalController } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
-import { AgendaService } from '../services/agenda.service';
-import { IonRouterOutlet, IonTabBar, ModalController } from '@ionic/angular';
-import { AddAgendaPage } from './add-agenda/add-agenda.page';
-import { AuthService } from '../services/auth.service';
 import { switchMap } from 'rxjs/operators';
 import { Agenda } from '../interfaces/agenda';
+import { AgendaService } from '../services/agenda.service';
+import { AuthService } from '../services/auth.service';
+import { AddAgendaPage } from './add-agenda/add-agenda.page';
 
 @Component({
   selector: 'app-agenda',
@@ -32,7 +32,7 @@ export class AgendaPage implements OnInit {
     this.agendas$ = this.auth.user$.pipe(
       switchMap(user => {
         if (user) {
-          return this.service.getBusinessAgenda(user.id);
+          return this.service.getBusinessAgenda(user.businessId); // user de momento tiene un businessId
         } else {
           return of(null);
         }

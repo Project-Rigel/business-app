@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable, of } from 'rxjs';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
 } from '@angular/fire/firestore';
-import { User } from '../interfaces/user';
+import { Router } from '@angular/router';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { Platform } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
-import { Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { ErrorToastService } from './error-toast.service';
-import { Platform } from '@ionic/angular';
-import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import 'firebase/performance';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { User } from '../interfaces/user';
+import { ErrorToastService } from './error-toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -104,12 +104,15 @@ export class AuthService {
       `users/${user.uid}`,
     );
 
+    const businessId = this.firestore.createId();
+
     const data = {
       id: user.uid,
       email: user.email,
       displayName: user.displayName,
       avatar: user.photoURL,
       customers: [],
+      businessId: businessId,
     };
 
     return userRef.set(data, { merge: true });

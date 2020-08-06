@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { TimelineAppointmentComponent } from './timeline-appointment.component';
 
 describe('AgendaAppointmentComponent', () => {
@@ -9,8 +8,8 @@ describe('AgendaAppointmentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TimelineAppointmentComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [TimelineAppointmentComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TimelineAppointmentComponent);

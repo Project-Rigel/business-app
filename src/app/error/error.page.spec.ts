@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { ErrorPage } from './error.page';
 
 describe('ErrorPage', () => {
@@ -9,8 +8,8 @@ describe('ErrorPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ErrorPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ErrorPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ErrorPage);

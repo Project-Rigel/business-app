@@ -10,19 +10,22 @@ export interface GetAvailableTimesDto {
 }
 
 export interface AvailableTimesResponse {
-  intervals: { from: string, to: string }[]
+  intervals: { from: string; to: string }[];
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetAvailableIntervalsService {
-
-
-  private readonly _endpoint: (data: GetAvailableTimesDto) => Observable<AvailableTimesResponse>;
+  private readonly _endpoint: (
+    data: GetAvailableTimesDto,
+  ) => Observable<AvailableTimesResponse>;
 
   constructor(private functions: AngularFireFunctions) {
-    this._endpoint = this.functions.httpsCallable<GetAvailableTimesDto, AvailableTimesResponse>('getAvaliableTimeIntervals');
+    this._endpoint = this.functions.httpsCallable<
+      GetAvailableTimesDto,
+      AvailableTimesResponse
+    >('getAvaliableTimeIntervals');
   }
 
   get endpoint() {

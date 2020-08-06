@@ -1,17 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
-
-import { AgendaPageRoutingModule } from './agenda-routing.module';
-
-import { AgendaPage } from './agenda.page';
 import { HttpClientModule } from '@angular/common/http';
-import { AddAgendaPage } from './add-agenda/add-agenda.page';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { CustomersPageModule } from '../customers/customers.module';
+import { ProductsPageModule } from '../products/products.module';
 import { AddAgendaPageModule } from './add-agenda/add-agenda.module';
 import { AddAppointmentWizardComponent } from './add-appointment-wizard/add-appointment-wizard.component';
-import { CustomersPageModule } from '../customers/customers.module';
+import { AgendaPageRoutingModule } from './agenda-routing.module';
+import { AgendaPage } from './agenda.page';
 
 @NgModule({
   imports: [
@@ -22,6 +19,7 @@ import { CustomersPageModule } from '../customers/customers.module';
     AgendaPageRoutingModule,
     AddAgendaPageModule,
     CustomersPageModule,
+    ProductsPageModule,
   ],
   declarations: [AgendaPage, AddAppointmentWizardComponent],
 })

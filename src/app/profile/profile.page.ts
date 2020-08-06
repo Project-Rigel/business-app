@@ -7,6 +7,5 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage {
-  constructor(public readonly auth: AuthService) {
-  }
+  constructor(public readonly auth: AuthService) {}
 }

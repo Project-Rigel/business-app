@@ -19,7 +19,7 @@ import { PhoneValidatorService } from '../../services/phone-validator.service';
 })
 export class AddCustomerPage implements OnInit {
   customerForm: FormGroup;
-  submitEnabled: boolean = true;
+  submitEnabled = true;
   submitClicked = false;
   @ViewChild('inputNombre') input: IonInput;
 

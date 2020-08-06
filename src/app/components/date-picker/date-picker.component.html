@@ -1,4 +1,4 @@
-<div >
+<div>
   <!--  <ion-item *ngIf="showView === 'calendar'" [ngStyle]="backgroundStyle">-->
   <!--    <ion-button fill="clear" (click)="showMonthView()" class="calendar-button">-->
   <!--      {{monthLabels[monthSelected-1]}}-->
@@ -6,14 +6,30 @@
   <!--    <ion-button fill="clear" [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">-->
   <!--      {{yearSelected}}-->
   <!--    </ion-button>-->
-  <ion-item [ngStyle]="backgroundStyle" lines="none" *ngIf="hasPrevious() || hasNext()">
-      <ion-button  slot="start" fill="clear" [disabled]="!hasPrevious()" (click)="previous()">
-          <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
-      </ion-button>
-      <ion-label class="ion-text-center">{{getMonthName()}} de {{yearSelected}}</ion-label>
-      <ion-button slot="end" fill="clear" [disabled]="!hasNext()" (click)="next()">
-          <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-      </ion-button>
+  <ion-item
+    [ngStyle]="backgroundStyle"
+    lines="none"
+    *ngIf="hasPrevious() || hasNext()"
+  >
+    <ion-button
+      slot="start"
+      fill="clear"
+      [disabled]="!hasPrevious()"
+      (click)="previous()"
+    >
+      <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <ion-label class="ion-text-center"
+      >{{ getMonthName() }} de {{ yearSelected }}</ion-label
+    >
+    <ion-button
+      slot="end"
+      fill="clear"
+      [disabled]="!hasNext()"
+      (click)="next()"
+    >
+      <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+    </ion-button>
   </ion-item>
 
   <ion-grid *ngIf="showView === 'calendar'">
@@ -26,7 +42,10 @@
         {{ daylabel }}
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let week of weeks" class="ion-justify-content-center height-fixed">
+    <ion-row
+      *ngFor="let week of weeks"
+      class="ion-justify-content-center height-fixed"
+    >
       <ion-col
         *ngFor="let day of week"
         (click)="selectDay(day)"
@@ -39,7 +58,9 @@
             [ngStyle]="
               isValidDay(day) && !isOneOfTheValidDates(day) && invalidDateStyle
             "
-            ><div [ngStyle]="getDaySelectedStyle(day)"> {{ isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;' }}</div></span
+            ><div [ngStyle]="getDaySelectedStyle(day)">
+              {{ isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;' }}
+            </div></span
           >
         </span>
       </ion-col>

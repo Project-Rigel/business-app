@@ -8,6 +8,26 @@
   z-index: 5;
 }
 
+.hour-item-first-half{
+  background-color: #ff090985;
+  position: absolute;
+  padding: 2px 16px 16px;
+  width: 39.7%;
+  left: 0;
+  margin-left: 18%;
+  z-index: 5;
+}
+
+.hour-item-second-half{
+  background-color: #ff090985;
+  position: absolute;
+  padding: 2px 16px 16px;
+  width: 40%;
+  left: 40%;
+  margin-left: 18%;
+  z-index: 5;
+}
+
 .vertical-line{
   width: 3px;
   height: 100%;
@@ -32,4 +52,8 @@
 
 .time-range{
   padding-top: 16px;
+}
+
+.myh3 {
+  font-size: 12px;
 }

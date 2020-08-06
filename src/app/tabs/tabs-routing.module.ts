@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { TabsPage } from './tabs.page';
 import {
   AngularFireAuthGuard,
   redirectUnauthorizedTo,
 } from '@angular/fire/auth-guard';
+import { RouterModule, Routes } from '@angular/router';
+import { TabsPage } from './tabs.page';
 
 const redirectToLogin = () => redirectUnauthorizedTo(['app/login']);
 
@@ -50,6 +50,18 @@ const routes: Routes = [
             loadChildren: () =>
               import('../profile/profile.module').then(
                 m => m.ProfilePageModule,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'products',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../products/products.module').then(
+                m => m.ProductsPageModule,
               ),
           },
         ],

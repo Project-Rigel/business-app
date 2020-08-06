@@ -1,95 +1,119 @@
-<ng-container *ngIf="loadedData && loadedData.length > 0 else noData">
-    <ng-container *ngIf="isSearching; else noSearch">
-        <ng-container *ngIf="searchResult; else inSearch">
-            <ion-list *ngIf="searchResult.length > 0; else noSearchResults" [style.height.%]="maxHeightPercent">
-                <ion-radio-group *ngIf="isSelectable; else notSelectable " allow-empty-selection>
-                    <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of searchResult"
-                                          [customer]="customer"></app-customer-element>
-                </ion-radio-group>
-                <ng-template #notSelectable>
-                    <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of searchResult"
-                                          [customer]="customer" [isSelectable]="isSelectable"></app-customer-element>
-                </ng-template>
-            </ion-list>
-            <ng-template #noSearchResults >
-                <ion-item [style.height.%]="maxHeightPercent">
-                    <ion-text color="medium">
-                        <h4 class="ion-text-center ion-padding-top">
-                            No se han encontrado coincidencias
-                        </h4>
-                    </ion-text>
-                </ion-item>
-            </ng-template>
-        </ng-container>
-        <ng-template #inSearch>
-            <ion-list [style.height.%]="maxHeightPercent">
-                <ion-item *ngFor="let load of [1,1,1,1,1,1,1,1]">
-                    <ion-skeleton-text animated style="width: 20%">
-                        <ion-skeleton-text animated style="width: 35%">
-                        </ion-skeleton-text>
-                    </ion-skeleton-text>
-                    <ion-skeleton-text
-                            slot="end"
-                            animated
-                            style="width: 10%"
-                    ></ion-skeleton-text>
-                </ion-item>
-            </ion-list>
-        </ng-template>
-    </ng-container>
-    <ng-template #noSearch>
-        <ion-content [style.height.%]="maxHeightPercent">
-            <ion-list>
-                <ion-radio-group *ngIf="isSelectable; else notSelectable " allow-empty-selection>
-                    <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of loadedData"
-                                        [customer]="customer"></app-customer-element>
-                </ion-radio-group>
-                <ng-template #notSelectable>
-                    <app-customer-element (click)="selectCustomer(customer)" *ngFor="let customer of loadedData"
-                                        [customer]="customer" [isSelectable]="isSelectable"></app-customer-element>
-                </ng-template>
-            </ion-list>
-
-            <ion-infinite-scroll position="bottom" threshold="20%" (ionInfinite)="loadData($event)">
-                <ion-infinite-scroll-content
-                  loadingSpinner="bubbles"
-                  loadingText="Cargando clientes...">
-                </ion-infinite-scroll-content>
-            </ion-infinite-scroll>
-        </ion-content>
-
-        <ng-container
-                *ngIf="loadedData.length === 0 && !done"
+<ng-container *ngIf="loadedData && loadedData.length > 0; else noData">
+  <ng-container *ngIf="isSearching; else noSearch">
+    <ng-container *ngIf="searchResult; else inSearch">
+      <ion-list
+        *ngIf="searchResult.length > 0; else noSearchResults"
+        [style.height.%]="maxHeightPercent"
+      >
+        <ion-radio-group
+          *ngIf="isSelectable; else notSelectable"
+          allow-empty-selection
         >
-            <ion-text color="medium">
-                <h4 class="ion-text-center ion-padding-top">
-                    No hay pacientes registrados
-                </h4>
-            </ion-text>
-
-            <ion-text color="medium">
-                <p class="ion-text-center">
-                    Añádelos en el icono
-                    <ion-text color="primary"
-                    ><span class="plus-icon-size">+</span></ion-text
-                    >
-                </p>
-            </ion-text>
-        </ng-container>
+          <app-customer-element
+            (click)="selectCustomer(customer)"
+            *ngFor="let customer of searchResult"
+            [customer]="customer"
+          ></app-customer-element>
+        </ion-radio-group>
+        <ng-template #notSelectable>
+          <app-customer-element
+            (click)="selectCustomer(customer)"
+            *ngFor="let customer of searchResult"
+            [customer]="customer"
+            [isSelectable]="isSelectable"
+          ></app-customer-element>
+        </ng-template>
+      </ion-list>
+      <ng-template #noSearchResults>
+        <ion-item [style.height.%]="maxHeightPercent">
+          <ion-text color="medium">
+            <h4 class="ion-text-center ion-padding-top">
+              No se han encontrado coincidencias
+            </h4>
+          </ion-text>
+        </ion-item>
+      </ng-template>
+    </ng-container>
+    <ng-template #inSearch>
+      <ion-list [style.height.%]="maxHeightPercent">
+        <ion-item *ngFor="let load of [1, 1, 1, 1, 1, 1, 1, 1]">
+          <ion-skeleton-text animated style="width: 20%">
+            <ion-skeleton-text animated style="width: 35%"> </ion-skeleton-text>
+          </ion-skeleton-text>
+          <ion-skeleton-text
+            slot="end"
+            animated
+            style="width: 10%"
+          ></ion-skeleton-text>
+        </ion-item>
+      </ion-list>
     </ng-template>
+  </ng-container>
+  <ng-template #noSearch>
+    <ion-content [style.height.%]="maxHeightPercent">
+      <ion-list>
+        <ion-radio-group
+          *ngIf="isSelectable; else notSelectable"
+          allow-empty-selection
+        >
+          <app-customer-element
+            (click)="selectCustomer(customer)"
+            *ngFor="let customer of loadedData"
+            [customer]="customer"
+          ></app-customer-element>
+        </ion-radio-group>
+        <ng-template #notSelectable>
+          <app-customer-element
+            (click)="selectCustomer(customer)"
+            *ngFor="let customer of loadedData"
+            [customer]="customer"
+            [isSelectable]="isSelectable"
+          ></app-customer-element>
+        </ng-template>
+      </ion-list>
+
+      <ion-infinite-scroll
+        position="bottom"
+        threshold="20%"
+        (ionInfinite)="loadData($event)"
+      >
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="Cargando clientes..."
+        >
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-content>
+
+    <ng-container *ngIf="loadedData.length === 0 && !done">
+      <ion-text color="medium">
+        <h4 class="ion-text-center ion-padding-top">
+          No hay pacientes registrados
+        </h4>
+      </ion-text>
+
+      <ion-text color="medium">
+        <p class="ion-text-center">
+          Añádelos en el icono
+          <ion-text color="primary"
+            ><span class="plus-icon-size">+</span></ion-text
+          >
+        </p>
+      </ion-text>
+    </ng-container>
+  </ng-template>
 </ng-container>
 <ng-template #noData>
-    <ion-list [style.height.%]="maxHeightPercent">
-        <ion-item *ngFor="let load of [1,1,1,1,1,1,1,1]">
-            <ion-skeleton-text animated style="width: 20%">
-                <ion-skeleton-text animated style="width: 35%">
-                </ion-skeleton-text>
-            </ion-skeleton-text>
-            <ion-skeleton-text
-                    slot="end"
-                    animated
-                    style="width: 10%"
-            ></ion-skeleton-text>
-        </ion-item>
-    </ion-list>
+  <ion-list [style.height.%]="maxHeightPercent">
+    <ion-item *ngFor="let load of [1, 1, 1, 1, 1, 1, 1, 1]">
+      <ion-skeleton-text animated style="width: 20%">
+        <ion-skeleton-text animated style="width: 35%"> </ion-skeleton-text>
+      </ion-skeleton-text>
+      <ion-skeleton-text
+        slot="end"
+        animated
+        style="width: 10%"
+      ></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
 </ng-template>

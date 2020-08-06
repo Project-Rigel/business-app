@@ -1,11 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Duration, Moment } from 'moment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Appointment } from '../../interfaces/appointment';
 import { AppointmentsService } from '../../services/appointments.service';
 
 interface TimeBlock {
   start: Date;
+}
+
+interface AppointmentBlock {
+  startDate: Date;
+  endDate: Date;
+  name: string;
+  customerName: string;
+  sharesStartTimeWithOtherAppointment: boolean;
+  positionSharing: number;
 }
 
 @Component({
@@ -25,9 +34,11 @@ export class DayTimelineComponent implements OnInit {
   dayLengthMinutes: number;
   componentHeight: number = 1900;
 
-  constructor(private appointmentsService: AppointmentsService) {
-    // Map creado una lista de interfaz Appoinment propia
-  }
+  appointmentBlocks: BehaviorSubject<AppointmentBlock[]> = new BehaviorSubject<
+    AppointmentBlock[]
+  >([]);
+
+  constructor(private appointmentsService: AppointmentsService) {}
 
   ngOnInit() {
     this.dayLengthMinutes = this.endDate.diff(this.startDate, 'minutes');
@@ -39,5 +50,20 @@ export class DayTimelineComponent implements OnInit {
       .map(v => {
         return { start: v };
       });
+
+    this.appointments.subscribe(appointments => {
+      let appointmentBlockArray: AppointmentBlock[] = [];
+      appointments.map(appointment => {
+        appointmentBlockArray.push({
+          startDate: appointment.startDate,
+          endDate: appointment.endDate,
+          name: appointment.name,
+          customerName: appointment.customerName,
+          sharesStartTimeWithOtherAppointment: true,
+          positionSharing: 1,
+        });
+      });
+      this.appointmentBlocks.next(appointmentBlockArray);
+    });
   }
 }

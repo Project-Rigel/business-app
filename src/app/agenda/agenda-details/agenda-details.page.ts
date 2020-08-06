@@ -187,6 +187,18 @@ export class AgendaDetailsPage implements OnInit {
                 aux.add(productDuration.asMinutes(), 'minutes'),
               ) >= 0
             ) {
+              /* // if el intervalo tiene hueco (depende de las citas ya creadas)
+              let hasGap = true;
+              this.dayAppointments.forEach(element => {
+                // Posible error con los minutos a y media
+                if (this.isStartTimeFull(element, item) || this.isDurationBiggerThanGap(item, element, this.productDuration)) {
+                  hasGap = false;
+                }
+              });
+
+              if (hasGap) {
+                this.appoinmentGaps.push(item.format('HH:mm'));
+              } */
               this.appoinmentGaps.push(item.format('HH:mm'));
             }
           }
@@ -194,7 +206,7 @@ export class AgendaDetailsPage implements OnInit {
       }
     }
   }
-
+  /* 
   isStartTimeFull(element, item) {
     return (
       element.startDate.getHours() === item.hour() &&
@@ -223,7 +235,7 @@ export class AgendaDetailsPage implements OnInit {
       return true;
     }
     return false;
-  }
+  } */
 
   isBetweenAppointment(appointment: Appointment, date: Date): boolean {
     return (

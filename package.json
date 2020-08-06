@@ -8,9 +8,10 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "npm run eslint",
     "e2e": "ng e2e",
-    "prettify": "prettier src/**/**.{ts,json,html,css} --write"
+    "eslint": "eslint src/**/*.ts --fix",
+    "reformat": "prettier --write src/**/*.{ts,js,css,html}"
   },
   "private": true,
   "dependencies": {
@@ -56,8 +57,13 @@
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.1.2",
     "apollo-server-testing": "^2.13.1",
     "codelyzer": "^5.1.2",
     "cordova-plugin-device": "^2.0.3",
@@ -80,7 +86,8 @@
     "prettier": "^1.19.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "organize-imports-cli": "^0.7.0"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -104,6 +111,25 @@
       "android",
       "browser",
       "ios"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run-script build"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,js,css,html}": [
+      "prettier --write"
+    ],
+    "src/**/*.ts": [
+      "eslint --fix"
+    ],
+    "*.ts": [
+      "organize-imports-cli",
+      "prettier --write"
     ]
   }
 }

@@ -55,6 +55,18 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'products',
+        children: [
+          {
+            path: '',
+            loadChildren: () => 
+              import('../products/products.module').then( 
+                m => m.ProductsPageModule
+              ),
+          },
+        ],
+      },
+      {
         path: 'customers',
         children: [
           {

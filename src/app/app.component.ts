@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController, Platform, ToastController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { MenuController, Platform } from '@ionic/angular';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   appPages = [
     {
       title: 'Agenda',
@@ -37,8 +37,6 @@ export class AppComponent implements OnInit {
   ) {
     this.initializeApp();
   }
-
-  async ngOnInit() {}
 
   initializeApp() {
     this.platform.ready().then(() => {

@@ -67,7 +67,7 @@ export class AddAgendaPage implements OnInit {
         this.form.get('name').value,
         this.minuteSelected,
         imageUrl,
-        user.id,
+        user.id, // Esto tiene que ser el id de el bussiness
       );
 
       await this.modalController.dismiss({});

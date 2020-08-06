@@ -1,26 +1,30 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AlertController, AnimationController, IonDatetime, ModalController } from '@ionic/angular';
-import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
-import { Animation } from '@ionic/core';
-import { AppointmentsService } from '../../services/appointments.service';
-import { Appointment } from '../../interfaces/appointment';
-import { AgendaService } from '../../services/agenda.service';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Agenda } from '../../interfaces/agenda';
-import { map, switchMap, take, tap } from 'rxjs/operators';
-import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
+import {
+  AlertController,
+  AnimationController,
+  IonDatetime,
+  ModalController,
+} from '@ionic/angular';
+import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
+import { Observable } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
+import { Agenda } from '../../interfaces/agenda';
+import { Appointment } from '../../interfaces/appointment';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
-import { Time } from 'dayspan';
+import { AgendaService } from '../../services/agenda.service';
+import { AppointmentsService } from '../../services/appointments.service';
+import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 
 interface DisplayItem {
   appointment?: Appointment;
   interval: Date;
-  appointmentHeight?: number,
-  pxFromLast?: number
+  appointmentHeight?: number;
+  pxFromLast?: number;
 }
 
 @Component({
@@ -29,21 +33,24 @@ interface DisplayItem {
   styleUrls: ['./agenda-details.page.scss'],
 })
 export class AgendaDetailsPage implements OnInit {
-
   closeCalendar: Animation;
   openCalendar: Animation;
   closeConfirmApoointment: Animation;
   openConfirmAppoinment: Animation;
   isCalendarOpen: boolean = true;
-  isConfirmAppointmentOpen: boolean = false
+  isConfirmAppointmentOpen: boolean = false;
   display: DisplayItem[] = [];
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
   agenda$: Observable<Agenda>;
   addingAppointment = false;
-  addingAppointmentInfo: { intervals: { from: string, to: string }[], customer: Customer, product: Product };
-  appoinmentGaps: string[] = []
+  addingAppointmentInfo: {
+    intervals: { from: string; to: string }[];
+    customer: Customer;
+    product: Product;
+  };
+  appoinmentGaps: string[] = [];
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
@@ -67,7 +74,9 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
     this.interval = duration(30, 'minutes');
-    this.dateTimeInitialValue = moment(new Date().setHours(this.startDate.get('hours')));
+    this.dateTimeInitialValue = moment(
+      new Date().setHours(this.startDate.get('hours')),
+    );
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
   }
@@ -121,7 +130,6 @@ export class AgendaDetailsPage implements OnInit {
       ? await this.closeCalendar.play()
       : await this.openCalendar.play();
     this.isCalendarOpen = !this.isCalendarOpen;
-
   }
 
   async showConfirmApoointmentDialog() {
@@ -140,7 +148,7 @@ export class AgendaDetailsPage implements OnInit {
       componentProps: {
         display: this.display,
         agendaId: this.route.snapshot.paramMap.get('id'),
-        daySelected: this.dateTimeValue
+        daySelected: this.dateTimeValue,
       },
     });
 
@@ -155,12 +163,24 @@ export class AgendaDetailsPage implements OnInit {
         this.showConfirmApoointmentDialog();
         // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
-        const productDuration = this.addingAppointmentInfo.product.duration;
+        const productDuration = moment.duration(
+          this.addingAppointmentInfo.product.duration,
+          'minutes',
+        );
+        console.log(productDuration);
         for (const gap of intervals) {
-          for (let item = moment(gap.from, 'HH:mm'); moment(gap.to, "HH:mm").diff(item) > 0; item.add(this.interval.asMinutes(), 'minutes')) {
-            const aux = moment(item)
-            if (moment(gap.to, "HH:mm").diff(aux.add(productDuration.asMinutes(), 'minutes')) >= 0) {
-              this.appoinmentGaps.push(item.format("HH:mm"))
+          for (
+            let item = moment(gap.from, 'HH:mm');
+            moment(gap.to, 'HH:mm').diff(item) > 0;
+            item.add(this.interval.asMinutes(), 'minutes')
+          ) {
+            const aux = moment(item);
+            if (
+              moment(gap.to, 'HH:mm').diff(
+                aux.add(productDuration.asMinutes(), 'minutes'),
+              ) >= 0
+            ) {
+              this.appoinmentGaps.push(item.format('HH:mm'));
             }
           }
         }
@@ -169,9 +189,9 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   selectTime($event) {
-    this.updatePossibleAppointment($event)
-    this.selectedStartTime=!this.selectedStartTime;
-    this.showConfirmApoointmentDialog()
+    this.updatePossibleAppointment($event);
+    this.selectedStartTime = !this.selectedStartTime;
+    this.showConfirmApoointmentDialog();
   }
 
   async updatePossibleAppointment($event: any) {
@@ -189,10 +209,17 @@ export class AgendaDetailsPage implements OnInit {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
 
+    const productDuration = moment.duration(
+      this.addingAppointmentInfo.product.duration,
+      'minutes',
+    );
+
     this.appointment = {
       id: this.possibleAppointmentId,
       startDate: this.dateTimeValue,
-      endDate: moment(this.dateTimeValue).add(this.addingAppointmentInfo.product.duration).toDate(),
+      endDate: moment(this.dateTimeValue)
+        .add(productDuration)
+        .toDate(),
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
@@ -210,10 +237,11 @@ export class AgendaDetailsPage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'secondary',
-          handler: (blah) => {
+          handler: blah => {
             console.log('Confirm Cancel: blah');
           },
-        }, {
+        },
+        {
           text: 'Ok',
           handler: async () => {
             try {
@@ -241,13 +269,15 @@ export class AgendaDetailsPage implements OnInit {
             date,
           );
         }),
-        take(1)).subscribe(v => v);
+        take(1),
+      )
+      .subscribe(v => v);
   }
 
   cancelAddAppointment() {
     this.addingAppointment = false;
     this.addingAppointmentInfo = null;
-    this.appoinmentGaps = []
+    this.appoinmentGaps = [];
     this.appointmentsService.cancelAppointment(this.appointment);
   }
 }

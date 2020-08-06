@@ -33,6 +33,8 @@ export class PaginationService {
   // Initial query sets options and defines the Observable
   // passing opts will override the defaults
   init(path: string, field: string, limit: number, opts?: any) {
+    if (this.data) this.reset();
+    
     this.query = {
       path,
       field,

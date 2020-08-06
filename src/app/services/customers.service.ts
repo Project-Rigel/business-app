@@ -11,31 +11,6 @@ import { map } from 'rxjs/operators';
 export class CustomersService {
   constructor(private firestore: AngularFirestore) {}
 
-  public getCustomers(
-    clientId: string,
-    orderByField: string,
-    limit: number,
-    lastCustomer?: Customer,
-  ): Observable<Customer[]> {
-    return this.firestore
-      .collection<Customer>(`users/${clientId}/customers`, ref => {
-        let query:
-          | firebase.firestore.CollectionReference
-          | firebase.firestore.Query = ref;
-        query = query.orderBy(orderByField);
-        query = query.limit(limit);
-
-        if (lastCustomer && lastCustomer[orderByField]) {
-          console.log(lastCustomer[orderByField]);
-
-          query = query.startAfter(lastCustomer[orderByField]);
-        }
-
-        return query;
-      })
-      .valueChanges();
-  }
-
   public async addCustomer(
     clientId: string,
     name: string,

@@ -1,48 +1,41 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { Customer } from '../../interfaces/customer';
-import { PaginationService } from 'src/app/services/pagination-service.service';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 import { Product } from '../../interfaces/product';
+import { Subscription } from 'rxjs';
+import { PaginationService } from '../../services/pagination-service.service';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
-  selector: 'app-customers-list',
-  templateUrl: './customers-list.component.html',
-  styleUrls: ['./customers-list.component.scss'],
+  selector: 'app-products-list',
+  templateUrl: './products-list.component.html',
+  styleUrls: ['./products-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomersListComponent implements OnInit {
+export class ProductsListComponent implements OnInit {
 
   @ViewChild(IonInfiniteScroll, { static: false }) public ionInfiniteScrollElement: IonInfiniteScroll;
 
-  @Input() loadedData: Customer[];
+  @Input() loadedData: Product[];
   @Input() loading: boolean;
   @Input() done: boolean;
   @Input() isSearching: boolean;
-  @Input() searchResult: Customer[];
-  @Input() maxHeightPercent : number = 60;
+  @Input() searchResult: Product[];
+  @Input() maxHeightPercent : number = 80;
   @Input() isSelectable: boolean;
 
-  @Output() onCustomerClicked: EventEmitter<Customer> = new EventEmitter<Customer>();
+  @Output() onProductClicked: EventEmitter<Product> = new EventEmitter<Product>();
 
   subscriptions: Subscription[];
   lastIdSelected: string;
 
-  constructor(private paginationService: PaginationService) {
-    this.subscriptions = [];
+  constructor(private productService: ProductsService) {
+    this.subscriptions = [];    
+    this.lastIdSelected = "";
   }
 
   ngOnInit() {
     this.subscriptions.push(
-      this.paginationService.done.subscribe(done => {
+      this.productService.done.subscribe(done => {
         if (done === true && this.ionInfiniteScrollElement) {
           this.ionInfiniteScrollElement.disabled = true;
         }
@@ -50,7 +43,7 @@ export class CustomersListComponent implements OnInit {
     );
 
     this.subscriptions.push(
-      this.paginationService.loading.subscribe(async loading => {
+      this.productService.loading.subscribe(async loading => {
         if (!loading && this.ionInfiniteScrollElement) {
           await this.ionInfiniteScrollElement.complete();
         }
@@ -63,20 +56,21 @@ export class CustomersListComponent implements OnInit {
       this.subscriptions.forEach(sub => sub.unsubscribe());
     }
     // Reset para que si se cierra el modal y se vuelve a entrar la lista contenga solo los primeros 15 elementos.
-    this.paginationService.reset();
+    this.productService.reset();
   }
 
-  selectCustomer(event) {
+  selectProduct(event) {
     if (event.id === this.lastIdSelected) {
-      this.onCustomerClicked.emit(null);
+      this.onProductClicked.emit(null);
       this.lastIdSelected = "";
     } else {
-      this.onCustomerClicked.emit(event);
+      this.onProductClicked.emit(event);
       this.lastIdSelected = event.id;
     }
   }
 
   loadData(event) {
-    this.paginationService.more();
+    this.productService.more();
   }
+
 }

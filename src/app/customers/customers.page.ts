@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { AddCustomerPage } from './add-customer/add-customer.page';
   templateUrl: './customers.page.html',
   styleUrls: ['./customers.page.scss'],
 })
-export class CustomersPage implements OnInit, OnDestroy {
+export class CustomersPage implements OnInit {
   subscriptions: Subscription[];
   search$: Observable<Customer[]>;
   searchValue: string;

@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonInput, ModalController } from '@ionic/angular';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { IonInput, ModalController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
-import { AuthService } from '../../services/auth.service';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-customer',
@@ -51,20 +50,18 @@ export class AddCustomerPage implements OnInit {
 
   async cancel() {
     this.keyboard.hide();
-    try{
+    try {
       await this.errorToastService.dismiss();
-    }catch (e) {
-console.log(e);
-    }finally {
+    } catch (e) {
+      console.log(e);
+    } finally {
       setTimeout(async () => {
-
         await this.ctrl.dismiss({ done: false });
         this.submitClicked = false;
       }, 100);
     }
 
     //theres a bug in the animation of the keyboard which starts at the same time as the modal.
-
   }
 
   async submitForm(value: any, clientId: string) {

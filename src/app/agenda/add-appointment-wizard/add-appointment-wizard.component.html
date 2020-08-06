@@ -1,57 +1,83 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-title>Añadir una cita</ion-title>
-        <ion-buttons slot="end">
-            <ion-button (click)="cancel()">
-                <ion-label color="primary"> Cancelar</ion-label>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>Añadir una cita</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-label color="primary"> Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen [scrollY]="false" class="ion-padding">
-    <ion-slides mode="ios" pager="ios" [options]="sliderOptions" class="slider-content">
-        <ion-slide>
-            <div class="slide">
-                <div>
-                    <ion-text class="ion-margin-top ion-text-center"><h1>Seleccione un cliente</h1></ion-text>
-                    <ion-searchbar
-                            class = "ion-text-left"
-                            debounce="500"
-                            placeholder="Nombre Apellido Apellido"
-                            (ionChange)="search($event)"
-                    ></ion-searchbar>
-                </div>         
-                <app-customers-list #customerList class="customers-list ion-padding"
-                                [maxHeightPercent]="60"
-                                [loadedData]="(paginationService.data | async)"
-                                [isSearching]="searching"
-                                [done]="(paginationService.done | async)"
-                                [loading]="(paginationService.loading | async)"
-                                [searchResult]="(search$ | async)"
-                                [isSelectable]="true"
-                                (onCustomerClicked)="selectedCustomer = $event"></app-customers-list>                                             
-                <ion-button [disabled]="!selectedCustomer" expand="block" color="primary" (click)="nextSlide()"> Siguiente</ion-button>
-            </div>
-        </ion-slide>
+  <ion-slides
+    mode="ios"
+    pager="ios"
+    [options]="sliderOptions"
+    class="slider-content"
+  >
+    <ion-slide>
+      <div class="slide">
+        <div>
+          <ion-text class="ion-margin-top ion-text-center"
+            ><h1>Seleccione un cliente</h1></ion-text
+          >
+          <ion-searchbar
+            class="ion-text-left"
+            debounce="500"
+            placeholder="Nombre Apellido Apellido"
+            (ionChange)="search($event)"
+          ></ion-searchbar>
+        </div>
+        <app-customers-list
+          #customerList
+          class="customers-list ion-padding"
+          [maxHeightPercent]="60"
+          [loadedData]="paginationService.data | async"
+          [isSearching]="searching"
+          [done]="paginationService.done | async"
+          [loading]="paginationService.loading | async"
+          [searchResult]="search$ | async"
+          [isSelectable]="true"
+          (onCustomerClicked)="selectedCustomer = $event"
+        ></app-customers-list>
+        <ion-button
+          [disabled]="!selectedCustomer"
+          expand="block"
+          color="primary"
+          (click)="nextSlide()"
+        >
+          Siguiente</ion-button
+        >
+      </div>
+    </ion-slide>
 
-        <ion-slide class="slide">
-            <ion-text class="ion-margin-top ion-text-center"><h1>Seleccione un producto</h1></ion-text>
-            <app-products-list #productsList class="customers-list ion-padding"
-                                [maxHeightPercent]="70"
-                                [loadedData]="(productsService.data | async)"
-                                [isSearching]="searching"
-                                [done]="(productsService.done | async)"
-                                [loading]="(productsService.loading | async)"
-                                [searchResult]="(search$ | async)"
-                                [isSelectable]="true"
-                                (onProductClicked)="selectedProduct = $event"></app-products-list>                                             
+    <ion-slide class="slide">
+      <ion-text class="ion-margin-top ion-text-center"
+        ><h1>Seleccione un producto</h1></ion-text
+      >
+      <app-products-list
+        #productsList
+        class="customers-list ion-padding"
+        [maxHeightPercent]="70"
+        [loadedData]="productsService.data | async"
+        [isSearching]="searching"
+        [done]="productsService.done | async"
+        [loading]="productsService.loading | async"
+        [searchResult]="search$ | async"
+        [isSelectable]="true"
+        (onProductClicked)="selectedProduct = $event"
+      ></app-products-list>
 
-            <ion-button [disabled]="!selectedProduct" expand="block" color="primary" (click)="closeModal()">
-                <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
-                <ion-label *ngIf="!loading"> Siguiente</ion-label>
-            </ion-button>
-        </ion-slide>
-
-    </ion-slides>
+      <ion-button
+        [disabled]="!selectedProduct"
+        expand="block"
+        color="primary"
+        (click)="closeModal()"
+      >
+        <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+        <ion-label *ngIf="!loading"> Siguiente</ion-label>
+      </ion-button>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

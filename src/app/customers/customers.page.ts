@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CustomersService } from '../services/customers.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { IonInfiniteScroll, ModalController } from '@ionic/angular';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Customer } from '../interfaces/customer';
 import { AuthService } from '../services/auth.service';
-import { switchMap, take } from 'rxjs/operators';
-import { IonInfiniteScroll, ModalController } from '@ionic/angular';
-import { AddCustomerPage } from './add-customer/add-customer.page';
+import { CustomersService } from '../services/customers.service';
 import { PaginationService } from '../services/pagination-service.service';
+import { AddCustomerPage } from './add-customer/add-customer.page';
 
 @Component({
   selector: 'app-customers',
@@ -115,9 +115,5 @@ export class CustomersPage implements OnInit, OnDestroy {
     if (this.ionInfiniteScrollElement) {
       this.ionInfiniteScrollElement.disabled = false;
     }
-  }
-
-  seeDetails(){
-
   }
 }

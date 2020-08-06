@@ -37,8 +37,8 @@ export class AgendaDetailsPage implements OnInit {
   openCalendar: Animation;
   closeConfirmApoointment: Animation;
   openConfirmAppoinment: Animation;
-  isCalendarOpen: boolean = true;
-  isConfirmAppointmentOpen: boolean = false;
+  isCalendarOpen = true;
+  isConfirmAppointmentOpen = false;
   display: DisplayItem[] = [];
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
@@ -56,7 +56,7 @@ export class AgendaDetailsPage implements OnInit {
   interval: Duration;
   dateTimeInitialValue: Moment;
   dateTimeValue = new Date();
-  selectedStartTime: boolean = false;
+  selectedStartTime = false;
   possibleAppointmentId: string;
   appointment;
   exisitingAppointment = null;
@@ -208,7 +208,7 @@ export class AgendaDetailsPage implements OnInit {
     appointment: Appointment,
     productDuration: Duration,
   ) {
-    let end = moment(item)
+    const end = moment(item)
       .add(productDuration.asMinutes(), 'minutes')
       .toDate();
     end.setMonth(this.dateTimeValue.getMonth());

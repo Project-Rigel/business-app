@@ -34,13 +34,4 @@
     [loading]="(paginationService.loading | async)"
     [searchResult]="(search$ | async)"
   ></app-customers-list>
-
-  <ion-infinite-scroll
-    threshold="150px"
-    position="bot"
-    (ionInfinite)="loadData($event)"
-  >
-    <ion-infinite-scroll-content loadingSpinner="crescent">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 </ion-content>

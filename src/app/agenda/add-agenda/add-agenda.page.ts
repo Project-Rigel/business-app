@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import {
@@ -7,20 +9,18 @@ import {
   PickerController,
   Platform,
 } from '@ionic/angular';
-import { AgendaService } from '../../services/agenda.service';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AuthService } from '../../services/auth.service';
 import { take } from 'rxjs/operators';
+import { AgendaService } from '../../services/agenda.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-add-agenda',
   templateUrl: './add-agenda.page.html',
   styleUrls: ['./add-agenda.page.scss'],
 })
-export class AddAgendaPage implements OnInit {
+export class AddAgendaPage {
   form: FormGroup;
-  minuteSelected: string = '30';
+  minuteSelected = '30';
   minutes = ['15', '30', '60', '120'];
   loading = false;
   imageUrl;
@@ -41,8 +41,6 @@ export class AddAgendaPage implements OnInit {
       name: ['', [Validators.required]],
     });
   }
-
-  ngOnInit() {}
 
   ionViewDidEnter() {
     setTimeout(() => this.input.setFocus(), 100);
@@ -123,7 +121,7 @@ export class AddAgendaPage implements OnInit {
   }
 
   private getColumnOptions() {
-    let options = [];
+    const options = [];
     this.minutes.forEach(x => {
       if (x === this.minuteSelected) {
         options.push({ text: x + ' minutes', value: x, selected: true });

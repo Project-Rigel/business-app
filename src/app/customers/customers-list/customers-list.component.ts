@@ -27,7 +27,7 @@ export class CustomersListComponent implements OnInit {
   @Input() done: boolean;
   @Input() isSearching: boolean;
   @Input() searchResult: Customer[];
-  @Input() maxHeightPercent: number = 60;
+  @Input() maxHeightPercent = 80;
   @Input() isSelectable: boolean;
 
   @Output() onCustomerClicked: EventEmitter<Customer> = new EventEmitter<

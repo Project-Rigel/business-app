@@ -262,8 +262,6 @@ export class AgendaDetailsPage implements OnInit {
       sharingPosition = 0; // enum
       console.log('Cita sola');
     } else if (numberOfAppointmentsAtStartDate === 1) {
-      this.dayAppointments[index].sharesStartTimeWithOtherAppointment = true; // Wrong? sharing = 1
-      this.dayAppointments[index].positionSharing = 1;
       this.appointmentsService.updateTemporallyExisitingAppointment(
         this.dayAppointments[index],
       );

@@ -43,7 +43,7 @@ export class CustomersPage implements OnInit {
       component: AddCustomerPage,
     });
     await modal.present();
-    const { data } = await modal.onDidDismiss();
+    await modal.onDidDismiss();
   }
 
   async search(event) {
@@ -71,7 +71,7 @@ export class CustomersPage implements OnInit {
     }
   }
 
-  cancelSearch(event) {
+  cancelSearch() {
     console.log('cancelling');
     this.searching = false;
   }

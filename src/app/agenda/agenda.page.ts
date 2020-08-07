@@ -26,7 +26,7 @@ export class AgendaPage implements OnInit {
   ) {}
 
   agendas$: Observable<Agenda[]>;
-  loading: boolean = false;
+  loading = false;
 
   ngOnInit() {
     this.agendas$ = this.auth.user$.pipe(

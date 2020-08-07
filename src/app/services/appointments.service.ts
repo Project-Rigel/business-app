@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
+import { AngularFireFunctions } from '@angular/fire/functions';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -22,8 +22,12 @@ export class AppointmentsService {
   startHour = 7;
   endHour = 23;
   appointmentToBeConfirmed: Appointment;
+  callable = this.functions.httpsCallable('bookAppointment');
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(
+    private afs: AngularFirestore,
+    private functions: AngularFireFunctions,
+  ) {}
 
   getAllPossibleAppointments() {
     const total: Date[] = [];
@@ -65,9 +69,6 @@ export class AppointmentsService {
                     endDate: v.endDate.toDate(),
                     customerId: v.customerId,
                     name: v.name,
-                    sharesStartTimeWithOtherAppointment:
-                      v.sharesStartTimeWithOtherAppointment,
-                    positionSharing: v.positionSharing,
                   };
                 },
               ),
@@ -75,7 +76,6 @@ export class AppointmentsService {
           } else {
             this.appointments.next([]);
           }
-
           return this.appointments.value;
         }),
       );
@@ -109,23 +109,27 @@ export class AppointmentsService {
     this.appointments.next(appointToShow);
   }
 
-  async updateExisitingAppointment(
+  async confirmNewAppointment(
+    businessId: string,
     agendaId: string,
-    appointments: Appointment[],
+    productId: string,
   ) {
-    await this.afs
-      .doc(`agendas/${agendaId}`)
-      .collection<AgendaDay>('appointments')
-      .doc<any>(`${this.getStringDate(appointments[0].startDate)}-${agendaId}`)
-      .set({
-        appointments: appointments,
+    if (this.appointmentToBeConfirmed) {
+      this.callable({
+        uid: this.appointmentToBeConfirmed.id,
+        businessId: businessId,
+        productId: productId,
+        timestamp: new Date().toString(),
+        agendaId: agendaId,
+      }).subscribe(a => {
+        console.log(a);
       });
+    }
+    this.appointmentToBeConfirmed = null;
   }
 
   restoreExistingAppointment(appointment: Appointment) {
     if (appointment) {
-      appointment.sharesStartTimeWithOtherAppointment = false;
-      appointment.positionSharing = 0;
       const appointToShow = this.appointments?.value;
       let i = -1;
       appointToShow.forEach((element, index) => {
@@ -136,28 +140,6 @@ export class AppointmentsService {
       if (i != -1) appointToShow[i] = appointment;
       this.appointments.next(appointToShow);
     }
-  }
-
-  async confirmAppointments(agendaId: string) {
-    if (this.appointmentToBeConfirmed) {
-      await this.afs
-        .doc(`agendas/${agendaId}`)
-        .collection<AgendaDay>('appointments')
-        .doc<any>(
-          `${this.getStringDate(
-            this.appointmentToBeConfirmed.startDate,
-          )}-${agendaId}`,
-        )
-        .set(
-          {
-            appointments: firebase.firestore.FieldValue.arrayUnion(
-              this.appointmentToBeConfirmed,
-            ),
-          },
-          { merge: true },
-        );
-    }
-    this.appointmentToBeConfirmed = null;
   }
 
   cancelAppointment(appointment: Appointment) {

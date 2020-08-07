@@ -18,6 +18,7 @@ import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
 import { AppointmentsService } from '../../services/appointments.service';
+import { AuthService } from '../../services/auth.service';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 
 interface DisplayItem {
@@ -62,6 +63,7 @@ export class AgendaDetailsPage implements OnInit {
   exisitingAppointment = null;
   dayAppointments: Appointment[] = [];
   productDuration: Duration;
+  businessId: string;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
   public loading: boolean;
@@ -73,6 +75,7 @@ export class AgendaDetailsPage implements OnInit {
     public route: ActivatedRoute,
     private modalController: ModalController,
     public alertController: AlertController,
+    private auth: AuthService,
   ) {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
@@ -85,6 +88,12 @@ export class AgendaDetailsPage implements OnInit {
 
     this.appointmentsService.appointments$.subscribe(data => {
       this.dayAppointments = data;
+    });
+
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.businessId = user.businessId;
+      }
     });
   }
 
@@ -187,18 +196,6 @@ export class AgendaDetailsPage implements OnInit {
                 aux.add(productDuration.asMinutes(), 'minutes'),
               ) >= 0
             ) {
-              /* // if el intervalo tiene hueco (depende de las citas ya creadas)
-              let hasGap = true;
-              this.dayAppointments.forEach(element => {
-                // Posible error con los minutos a y media
-                if (this.isStartTimeFull(element, item) || this.isDurationBiggerThanGap(item, element, this.productDuration)) {
-                  hasGap = false;
-                }
-              });
-
-              if (hasGap) {
-                this.appoinmentGaps.push(item.format('HH:mm'));
-              } */
               this.appoinmentGaps.push(item.format('HH:mm'));
             }
           }
@@ -206,36 +203,6 @@ export class AgendaDetailsPage implements OnInit {
       }
     }
   }
-  /* 
-  isStartTimeFull(element, item) {
-    return (
-      element.startDate.getHours() === item.hour() &&
-      element.startDate.getMinutes() === item.minute() &&
-      element.sharesStartTimeWithOtherAppointment
-    );
-  }
-
-  isDurationBiggerThanGap(
-    item: Moment,
-    appointment: Appointment,
-    productDuration: Duration,
-  ) {
-    const end = moment(item)
-      .add(productDuration.asMinutes(), 'minutes')
-      .toDate();
-    end.setMonth(this.dateTimeValue.getMonth());
-    end.setFullYear(this.dateTimeValue.getFullYear());
-    end.setDate(this.dateTimeValue.getDate());
-
-    if (
-      this.isBetweenAppointment(appointment, end) &&
-      appointment.sharesStartTimeWithOtherAppointment &&
-      appointment.positionSharing === 2
-    ) {
-      return true;
-    }
-    return false;
-  } */
 
   isBetweenAppointment(appointment: Appointment, date: Date): boolean {
     return (
@@ -351,11 +318,11 @@ export class AgendaDetailsPage implements OnInit {
           handler: async () => {
             try {
               this.loading = true;
-              await this.appointmentsService.updateExisitingAppointment(
+              await this.appointmentsService.confirmNewAppointment(
+                this.businessId,
                 agendaId,
-                this.dayAppointments,
+                this.addingAppointmentInfo.product.id,
               );
-
               this.loading = false;
               this.addingAppointmentInfo = null;
               this.addingAppointment = false;

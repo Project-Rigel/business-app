@@ -28,11 +28,11 @@ export class DayTimelineComponent implements OnInit {
   @Input() startDate: Moment;
   @Input() endDate: Moment;
   @Input() intervalsLength: Duration;
-  @Input() padding: number = 16;
+  @Input() padding = 16;
 
   timeBlocks: TimeBlock[] = [];
   dayLengthMinutes: number;
-  componentHeight: number = 1900;
+  componentHeight = 1900;
 
   appointmentBlocks: BehaviorSubject<AppointmentBlock[]> = new BehaviorSubject<
     AppointmentBlock[]
@@ -52,7 +52,7 @@ export class DayTimelineComponent implements OnInit {
       });
 
     this.appointments.subscribe(appointments => {
-      let appointmentBlockArray: AppointmentBlock[] = [];
+      const appointmentBlockArray: AppointmentBlock[] = [];
       appointments.map(appointment => {
         appointmentBlockArray.push({
           startDate: appointment.startDate,

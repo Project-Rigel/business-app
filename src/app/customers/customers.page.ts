@@ -71,7 +71,8 @@ export class CustomersPage implements OnInit {
     }
   }
 
-  cancelSearch() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  cancelSearch($event) {
     console.log('cancelling');
     this.searching = false;
   }

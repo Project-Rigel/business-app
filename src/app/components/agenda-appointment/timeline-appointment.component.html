@@ -1,8 +1,4 @@
 <div
-  *ngIf="
-    appointment.sharesStartTimeWithOtherAppointment &&
-    appointment.positionSharing === 1
-  "
   [style.height.px]="heightPx"
   [style.top.px]="topPx"
   class="hour-item-first-half"
@@ -27,10 +23,6 @@
 </div>
 
 <div
-  *ngIf="
-    appointment.sharesStartTimeWithOtherAppointment &&
-    appointment.positionSharing === 2
-  "
   [style.height.px]="heightPx"
   [style.top.px]="topPx"
   class="hour-item-second-half"
@@ -54,12 +46,7 @@
   </div>
 </div>
 
-<div
-  *ngIf="!appointment.sharesStartTimeWithOtherAppointment"
-  [style.height.px]="heightPx"
-  [style.top.px]="topPx"
-  class="hour-item"
->
+<div [style.height.px]="heightPx" [style.top.px]="topPx" class="hour-item">
   <div *ngIf="appointment" class="vertical-line"></div>
 
   <div class="ion-no-padding item-appointment">

@@ -29,11 +29,7 @@ export class CustomersPage implements OnInit {
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
-        this.paginationService.init(
-          'users/' + user.id + '/customers',
-          'name',
-          15,
-        );
+        this.paginationService.init('customers', 'name', 15);
       }
     });
   }

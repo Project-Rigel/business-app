@@ -58,10 +58,12 @@ export class AppointmentsService {
       .valueChanges()
       .pipe(
         map(v => {
-          if (v && v.appointments) {
+          if (v) {
             this.appointments.next(
-              v.appointments.map(
+              Object.values(v).map(
                 (v: any): Appointment => {
+                  console.log(v);
+
                   return {
                     startDate: v.startDate.toDate(),
                     id: v.id,
@@ -82,11 +84,11 @@ export class AppointmentsService {
   }
 
   private getStringDate(date: Date) {
-    const month = date.getMonth() + 1; //months from 1-12
+    const month = date.getMonth(); //months from 1-12
     const day = date.getDate();
     const year = date.getFullYear();
 
-    const strDate = year + '_' + month + '_' + day;
+    const strDate = day + '_' + month + '_' + year;
     return strDate;
   }
 
@@ -113,13 +115,14 @@ export class AppointmentsService {
     businessId: string,
     agendaId: string,
     productId: string,
+    customerId: string,
   ) {
     if (this.appointmentToBeConfirmed) {
       this.callable({
-        uid: this.appointmentToBeConfirmed.id,
+        uid: customerId,
         businessId: businessId,
         productId: productId,
-        timestamp: this.appointmentToBeConfirmed.startDate,
+        timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
         agendaId: agendaId,
       }).subscribe(a => {
         console.log(a);

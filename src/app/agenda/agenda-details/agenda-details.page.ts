@@ -177,13 +177,13 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointmentInfo = data;
 
         this.showConfirmApoointmentDialog();
-        // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
         const intervals = this.addingAppointmentInfo.intervals;
         const productDuration = moment.duration(
           this.addingAppointmentInfo.product.duration,
           'minutes',
         );
-        console.log(productDuration);
+        console.log('Product duration' + productDuration);
+        console.log('Intervals from functions' + intervals);
         for (const gap of intervals) {
           for (
             let item = moment(gap.from, 'HH:mm');
@@ -204,12 +204,12 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
-  isBetweenAppointment(appointment: Appointment, date: Date): boolean {
+  /* isBetweenAppointment(appointment: Appointment, date: Date): boolean {
     return (
       appointment.startDate.getTime() < date.getTime() &&
       appointment.endDate.getTime() >= date.getTime()
     );
-  }
+  } */
 
   selectTime($event) {
     this.updatePossibleAppointment($event);
@@ -233,7 +233,7 @@ export class AgendaDetailsPage implements OnInit {
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
-
+    /* 
     /////////////////
     let sharesStartDate: boolean;
     let sharingPosition: number;
@@ -276,7 +276,7 @@ export class AgendaDetailsPage implements OnInit {
       // return error o alerta
     }
 
-    ////////////////
+    //////////////// */
     const productDuration = moment.duration(
       this.addingAppointmentInfo.product.duration,
       'minutes',
@@ -290,8 +290,8 @@ export class AgendaDetailsPage implements OnInit {
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
-      sharesStartTimeWithOtherAppointment: sharesStartDate,
-      positionSharing: sharingPosition,
+      /* sharesStartTimeWithOtherAppointment: sharesStartDate,
+      positionSharing: sharingPosition, */
       // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
@@ -320,6 +320,7 @@ export class AgendaDetailsPage implements OnInit {
                 this.businessId,
                 agendaId,
                 this.addingAppointmentInfo.product.id,
+                this.addingAppointmentInfo.customer.id,
               );
               this.loading = false;
               this.addingAppointmentInfo = null;

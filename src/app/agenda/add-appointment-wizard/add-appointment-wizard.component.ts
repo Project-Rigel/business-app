@@ -54,11 +54,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.user = user;
-        this.paginationService.init(
-          'users/' + user.id + '/customers',
-          'name',
-          15,
-        );
+        this.paginationService.init('customers', 'name', 15);
 
         this.productsService.init('products', user.businessId, 'name', 15);
       }

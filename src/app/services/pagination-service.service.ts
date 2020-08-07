@@ -5,6 +5,7 @@ import {
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { scan, take, tap } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 interface QueryConfig {
   path: string; //  path to collection
@@ -22,13 +23,18 @@ export class PaginationService {
   private _data = new BehaviorSubject([]);
 
   private query: QueryConfig;
+  private businessId;
 
   // Observable data
   data: Observable<any>;
   done: Observable<boolean> = this._done.asObservable();
   loading: Observable<boolean> = this._loading.asObservable();
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(private afs: AngularFirestore, private auth: AuthService) {
+    this.auth.user$.subscribe(user => {
+      this.businessId = user.businessId;
+    });
+  }
 
   // Initial query sets options and defines the Observable
   // passing opts will override the defaults
@@ -46,6 +52,7 @@ export class PaginationService {
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
+        .where('businessId', '==', this.businessId)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit);
     });
@@ -68,6 +75,7 @@ export class PaginationService {
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
+        .where('businessId', '==', this.businessId)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit);
     });
@@ -88,6 +96,7 @@ export class PaginationService {
 
     const more = this.afs.collection(this.query.path, ref => {
       return ref
+        .where('businessId', '==', this.businessId)
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit)
         .startAfter(cursor);

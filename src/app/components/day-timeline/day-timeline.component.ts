@@ -51,7 +51,7 @@ export class DayTimelineComponent implements OnInit {
         return { start: v };
       });
 
-    this.appointments.subscribe(appointments => {
+    /* this.appointments.subscribe(appointments => {
       const appointmentBlockArray: AppointmentBlock[] = [];
       appointments.map(appointment => {
         // mirar si coinciden
@@ -65,6 +65,6 @@ export class DayTimelineComponent implements OnInit {
         });
       });
       this.appointmentBlocks.next(appointmentBlockArray);
-    });
+    }); */
   }
 }

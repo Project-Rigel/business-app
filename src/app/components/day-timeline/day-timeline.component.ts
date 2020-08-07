@@ -54,6 +54,7 @@ export class DayTimelineComponent implements OnInit {
     this.appointments.subscribe(appointments => {
       const appointmentBlockArray: AppointmentBlock[] = [];
       appointments.map(appointment => {
+        // mirar si coinciden
         appointmentBlockArray.push({
           startDate: appointment.startDate,
           endDate: appointment.endDate,

@@ -119,7 +119,7 @@ export class AppointmentsService {
         uid: this.appointmentToBeConfirmed.id,
         businessId: businessId,
         productId: productId,
-        timestamp: new Date().toString(),
+        timestamp: this.appointmentToBeConfirmed.startDate,
         agendaId: agendaId,
       }).subscribe(a => {
         console.log(a);

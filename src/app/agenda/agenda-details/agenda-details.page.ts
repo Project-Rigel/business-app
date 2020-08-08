@@ -182,8 +182,8 @@ export class AgendaDetailsPage implements OnInit {
           this.addingAppointmentInfo.product.duration,
           'minutes',
         );
-        console.log('Product duration' + productDuration);
-        console.log('Intervals from functions' + intervals);
+        console.log('Product duration: ' + productDuration);
+        console.log('Intervals from functions: ' + intervals);
         for (const gap of intervals) {
           for (
             let item = moment(gap.from, 'HH:mm');

@@ -1,11 +1,78 @@
-<div [style.height.px]="heightPx" [style.top.px]="topPx" class="hour-item">
+<div
+  *ngIf="
+    appointment.sharesStartTimeWithOtherAppointment &&
+    appointment.positionSharing === 1
+  "
+  [style.height.px]="heightPx"
+  [style.top.px]="topPx"
+  class="hour-item-first-half"
+>
   <div *ngIf="appointment" class="vertical-line"></div>
 
   <div class="ion-no-padding item-appointment">
     <ion-label *ngIf="appointment">
       <div class="appointment-container">
-        <h2 [style.color]="'#b50f0f'" class="text-bold">{{ appointment.customerName | titlecase }}</h2>
-        <h3 [style.color]="'#b50f0f'">{{ appointment.startDate | date:"HH:mm" }}-{{ appointment.endDate | date:"HH:mm" }} </h3>
+        <h2 [style.color]="'#b50f0f'" class="text-bold">
+          {{ appointment.customerName | titlecase }}
+        </h2>
+      </div>
+      <p [style.color]="'#b50f0f'">{{ appointment.name | titlecase }}</p>
+      <h3 class="myh3" [style.color]="'#b50f0f'">
+        {{ appointment.startDate | date: 'HH:mm' }}-{{
+          appointment.endDate | date: 'HH:mm'
+        }}
+      </h3>
+    </ion-label>
+  </div>
+</div>
+
+<div
+  *ngIf="
+    appointment.sharesStartTimeWithOtherAppointment &&
+    appointment.positionSharing === 2
+  "
+  [style.height.px]="heightPx"
+  [style.top.px]="topPx"
+  class="hour-item-second-half"
+>
+  <div *ngIf="appointment" class="vertical-line"></div>
+
+  <div class="ion-no-padding item-appointment">
+    <ion-label *ngIf="appointment">
+      <div class="appointment-container">
+        <h2 [style.color]="'#b50f0f'" class="text-bold">
+          {{ appointment.customerName | titlecase }}
+        </h2>
+      </div>
+      <p [style.color]="'#b50f0f'">{{ appointment.name | titlecase }}</p>
+      <h3 class="myh3" [style.color]="'#b50f0f'">
+        {{ appointment.startDate | date: 'HH:mm' }}-{{
+          appointment.endDate | date: 'HH:mm'
+        }}
+      </h3>
+    </ion-label>
+  </div>
+</div>
+
+<div
+  *ngIf="!appointment.sharesStartTimeWithOtherAppointment"
+  [style.height.px]="heightPx"
+  [style.top.px]="topPx"
+  class="hour-item"
+>
+  <div *ngIf="appointment" class="vertical-line"></div>
+
+  <div class="ion-no-padding item-appointment">
+    <ion-label *ngIf="appointment">
+      <div class="appointment-container">
+        <h2 [style.color]="'#b50f0f'" class="text-bold">
+          {{ appointment.customerName | titlecase }}
+        </h2>
+        <h3 [style.color]="'#b50f0f'">
+          {{ appointment.startDate | date: 'HH:mm' }}-{{
+            appointment.endDate | date: 'HH:mm'
+          }}
+        </h3>
       </div>
       <p [style.color]="'#b50f0f'">{{ appointment.name | titlecase }}</p>
     </ion-label>

@@ -37,8 +37,8 @@ export class AgendaDetailsPage implements OnInit {
   openCalendar: Animation;
   closeConfirmApoointment: Animation;
   openConfirmAppoinment: Animation;
-  isCalendarOpen: boolean = true;
-  isConfirmAppointmentOpen: boolean = false;
+  isCalendarOpen = true;
+  isConfirmAppointmentOpen = false;
   display: DisplayItem[] = [];
   @ViewChild(DatePickerComponent)
   datePicker: DatePickerComponent;
@@ -56,9 +56,12 @@ export class AgendaDetailsPage implements OnInit {
   interval: Duration;
   dateTimeInitialValue: Moment;
   dateTimeValue = new Date();
-  selectedStartTime: boolean = false;
+  selectedStartTime = false;
   possibleAppointmentId: string;
   appointment;
+  exisitingAppointment = null;
+  dayAppointments: Appointment[] = [];
+  productDuration: Duration;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
   public loading: boolean;
@@ -79,6 +82,10 @@ export class AgendaDetailsPage implements OnInit {
     );
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
+
+    this.appointmentsService.appointments$.subscribe(data => {
+      this.dayAppointments = data;
+    });
   }
 
   ngOnInit() {
@@ -146,7 +153,7 @@ export class AgendaDetailsPage implements OnInit {
       component: AddAppointmentWizardComponent,
       swipeToClose: true,
       componentProps: {
-        display: this.display,
+        //display: this.display,
         agendaId: this.route.snapshot.paramMap.get('id'),
         daySelected: this.dateTimeValue,
       },
@@ -188,6 +195,43 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
+  isStartTimeFull(element, item) {
+    return (
+      element.startDate.getHours() === item.hour() &&
+      element.startDate.getMinutes() === item.minute() &&
+      element.sharesStartTimeWithOtherAppointment
+    );
+  }
+
+  isDurationBiggerThanGap(
+    item: Moment,
+    appointment: Appointment,
+    productDuration: Duration,
+  ) {
+    const end = moment(item)
+      .add(productDuration.asMinutes(), 'minutes')
+      .toDate();
+    end.setMonth(this.dateTimeValue.getMonth());
+    end.setFullYear(this.dateTimeValue.getFullYear());
+    end.setDate(this.dateTimeValue.getDate());
+
+    if (
+      this.isBetweenAppointment(appointment, end) &&
+      appointment.sharesStartTimeWithOtherAppointment &&
+      appointment.positionSharing === 2
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isBetweenAppointment(appointment: Appointment, date: Date): boolean {
+    return (
+      appointment.startDate.getTime() < date.getTime() &&
+      appointment.endDate.getTime() >= date.getTime()
+    );
+  }
+
   selectTime($event) {
     this.updatePossibleAppointment($event);
     this.selectedStartTime = !this.selectedStartTime;
@@ -204,16 +248,62 @@ export class AgendaDetailsPage implements OnInit {
 
     this.dateTimeValue.setHours(hour);
     this.dateTimeValue.setMinutes(minutes);
+    this.dateTimeValue.setSeconds(0);
+    this.dateTimeValue.setMilliseconds(0);
 
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
 
+    /////////////////
+    let sharesStartDate: boolean;
+    let sharingPosition: number;
+    let numberOfAppointmentsAtStartDate = 0;
+    let index = 0;
+
+    this.dayAppointments.forEach((element, i) => {
+      element.startDate.setSeconds(this.dateTimeValue.getSeconds());
+      element.startDate.setMilliseconds(this.dateTimeValue.getMilliseconds());
+      element.endDate.setSeconds(this.dateTimeValue.getSeconds());
+      element.endDate.setMilliseconds(this.dateTimeValue.getMilliseconds());
+
+      if (
+        element.startDate.getTime() <= this.dateTimeValue.getTime() &&
+        element.endDate.getTime() > this.dateTimeValue.getTime()
+      ) {
+        // Cambiar por en rato de cita entero
+        numberOfAppointmentsAtStartDate++; // Parte derecha
+        index = i;
+      }
+    });
+
+    if (numberOfAppointmentsAtStartDate === 0) {
+      // Si array de citas contiene x elementos, entonces ...
+      sharesStartDate = false;
+      sharingPosition = 0; // enum
+      console.log('Cita sola');
+    } else if (numberOfAppointmentsAtStartDate === 1) {
+      this.dayAppointments[index].sharesStartTimeWithOtherAppointment = true; // Wrong? sharing = 1
+      this.dayAppointments[index].positionSharing = 1;
+      this.appointmentsService.updateTemporallyExisitingAppointment(
+        this.dayAppointments[index],
+      );
+      this.exisitingAppointment = this.dayAppointments[index];
+
+      sharesStartDate = true;
+      sharingPosition = 2;
+      console.log('Cita doble');
+    } else {
+      console.log('Error, más de 2 citas');
+      return;
+      // return error o alerta
+    }
+
+    ////////////////
     const productDuration = moment.duration(
       this.addingAppointmentInfo.product.duration,
       'minutes',
     );
-
     this.appointment = {
       id: this.possibleAppointmentId,
       startDate: this.dateTimeValue,
@@ -223,6 +313,9 @@ export class AgendaDetailsPage implements OnInit {
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
+      sharesStartTimeWithOtherAppointment: sharesStartDate,
+      positionSharing: sharingPosition,
+      // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
   }
@@ -246,7 +339,11 @@ export class AgendaDetailsPage implements OnInit {
           handler: async () => {
             try {
               this.loading = true;
-              await this.appointmentsService.confirmAppointments(agendaId);
+              await this.appointmentsService.updateExisitingAppointment(
+                agendaId,
+                this.dayAppointments,
+              );
+
               this.loading = false;
               this.addingAppointmentInfo = null;
               this.addingAppointment = false;
@@ -258,6 +355,10 @@ export class AgendaDetailsPage implements OnInit {
       ],
     });
     await alert.present();
+    this.selectedStartTime = !this.selectedStartTime;
+    this.possibleAppointmentId = null;
+    this.appointment = null;
+    this.exisitingAppointment = null;
   }
 
   private updateAppointments(date: Date) {
@@ -278,6 +379,17 @@ export class AgendaDetailsPage implements OnInit {
     this.addingAppointment = false;
     this.addingAppointmentInfo = null;
     this.appoinmentGaps = [];
-    this.appointmentsService.cancelAppointment(this.appointment);
+    if (this.appointment != null) {
+      this.appointmentsService.cancelAppointment(this.appointment);
+      this.appointment = null;
+    }
+    if (this.exisitingAppointment != null) {
+      this.appointmentsService.restoreExistingAppointment(
+        this.exisitingAppointment,
+      );
+      this.exisitingAppointment = null;
+    }
+    this.selectedStartTime = !this.selectedStartTime;
+    this.possibleAppointmentId = null;
   }
 }

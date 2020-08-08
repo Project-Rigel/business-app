@@ -1,17 +1,18 @@
 <ion-item>
-    <ion-label>
-        {{customer.name | titlecase}}
-        <ion-label class="surnames"
-        >{{customer.firstSurname | titlecase}} {{customer.secondSurname
-          | titlecase}}
-        </ion-label>
+  <ion-label>
+    {{ customer.name | titlecase }}
+    <ion-label class="surnames"
+      >{{ customer.firstSurname | titlecase }}
+      {{ customer.secondSurname | titlecase }}
     </ion-label>
-    <ion-icon *ngIf="isSelectable; else selectable"
-            slot="end"
-            color="primary"
-            name="information-circle-outline"
-    ></ion-icon>
-    <ng-template #selectable>
-        <ion-radio slot="end" color="primary" value="{{customer.id}}"></ion-radio>
-    </ng-template>
+  </ion-label>
+  <ion-icon
+    *ngIf="isSelectable; else selectable"
+    slot="end"
+    color="primary"
+    name="information-circle-outline"
+  ></ion-icon>
+  <ng-template #selectable>
+    <ion-radio slot="end" color="primary" value="{{ customer.id }}"></ion-radio>
+  </ng-template>
 </ion-item>

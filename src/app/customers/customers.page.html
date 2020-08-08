@@ -1,40 +1,37 @@
 <ion-header translucent="true">
-    <ion-toolbar class="ion-margin-top">
-        <ion-title>Customers</ion-title>
+  <ion-toolbar class="ion-margin-top">
+    <ion-title>Customers</ion-title>
 
-        <ion-buttons slot="end">
-            <ion-button (click)="addCustomer()">
-                <ion-icon name="add-outline"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="addCustomer()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
-    <ion-header collapse="condense">
-        <ion-toolbar>
-            <ion-title size="large">Customers</ion-title>
-        </ion-toolbar>
-        <ion-toolbar>
-            <ion-searchbar
-                    debounce="500"
-                    placeholder="Nombre Apellido Apellido"
-                    (ionChange)="search($event)"
-                    (ionCancel)="cancelSearch($event)"
-                    (ionClear)="cancelSearch($event)"
-                    [(ngModel)]="searchValue"
-            ></ion-searchbar>
-        </ion-toolbar>
-    </ion-header>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Customers</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar
+        debounce="500"
+        placeholder="Nombre Apellido Apellido"
+        (ionChange)="search($event)"
+        (ionCancel)="cancelSearch($event)"
+        (ionClear)="cancelSearch($event)"
+        [(ngModel)]="searchValue"
+      ></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
 
-    <app-customers-list [loadedData]="(paginationService.data | async)" [isSearching]="searching"
-                        [done]="(paginationService.done | async)"
-                        [loading]="(paginationService.loading | async)"
-                        [searchResult]="(search$ | async)"></app-customers-list>
-
-
-    <ion-infinite-scroll threshold="150px" position="bot" (ionInfinite)="loadData($event)">
-        <ion-infinite-scroll-content loadingSpinner="crescent">
-        </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+  <app-customers-list
+    [loadedData]="(paginationService.data | async)"
+    [isSearching]="searching"
+    [done]="(paginationService.done | async)"
+    [loading]="(paginationService.loading | async)"
+    [searchResult]="(search$ | async)"
+  ></app-customers-list>
 </ion-content>

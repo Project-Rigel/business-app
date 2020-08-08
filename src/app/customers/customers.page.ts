@@ -1,22 +1,19 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CustomersService } from '../services/customers.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Customer } from '../interfaces/customer';
 import { AuthService } from '../services/auth.service';
-import { switchMap, take } from 'rxjs/operators';
-import { IonInfiniteScroll, ModalController } from '@ionic/angular';
-import { AddCustomerPage } from './add-customer/add-customer.page';
+import { CustomersService } from '../services/customers.service';
 import { PaginationService } from '../services/pagination-service.service';
+import { AddCustomerPage } from './add-customer/add-customer.page';
 
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.page.html',
   styleUrls: ['./customers.page.scss'],
 })
-export class CustomersPage implements OnInit, OnDestroy {
-  @ViewChild(IonInfiniteScroll)
-  ionInfiniteScrollElement: IonInfiniteScroll;
-
+export class CustomersPage implements OnInit {
   subscriptions: Subscription[];
   search$: Observable<Customer[]>;
   searchValue: string;
@@ -27,9 +24,7 @@ export class CustomersPage implements OnInit, OnDestroy {
     private readonly auth: AuthService,
     private readonly modalCtrl: ModalController,
     public readonly paginationService: PaginationService,
-  ) {
-    this.subscriptions = [];
-  }
+  ) {}
 
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
@@ -41,33 +36,6 @@ export class CustomersPage implements OnInit, OnDestroy {
         );
       }
     });
-
-    this.subscriptions.push(
-      this.paginationService.done.subscribe(done => {
-        if (done === true) {
-          this.ionInfiniteScrollElement.disabled = true;
-        }
-      }),
-    );
-
-    this.subscriptions.push(
-      this.paginationService.loading.subscribe(async loading => {
-        if (!loading && this.ionInfiniteScrollElement) {
-          await this.ionInfiniteScrollElement.complete();
-        }
-      }),
-    );
-  }
-
-  ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
-    }
-  }
-
-  loadData(event) {
-    // this.lastElement$.next(this.lastElement);
-    this.paginationService.more();
   }
 
   async addCustomer() {
@@ -76,12 +44,6 @@ export class CustomersPage implements OnInit, OnDestroy {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (this.ionInfiniteScrollElement) {
-      this.ionInfiniteScrollElement.disabled = false;
-    }
-    if (data.done) {
-      this.paginationService.reset();
-    }
   }
 
   async search(event) {
@@ -112,12 +74,5 @@ export class CustomersPage implements OnInit, OnDestroy {
   cancelSearch(event) {
     console.log('cancelling');
     this.searching = false;
-    if (this.ionInfiniteScrollElement) {
-      this.ionInfiniteScrollElement.disabled = false;
-    }
-  }
-
-  seeDetails(){
-
   }
 }

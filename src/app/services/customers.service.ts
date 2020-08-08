@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { merge, Observable } from 'rxjs';
-import { Customer } from '../interfaces/customer';
-import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { Customer } from '../interfaces/customer';
 
 @Injectable({
   providedIn: 'root',
@@ -64,20 +63,27 @@ export class CustomersService {
       );
     }
 
-    if(firstSurname){
-      return merge(searchByName$, searchBySurname$).pipe(map(val => {
-        return val.filter((v, i) => val.indexOf(v) === i);
-      }));
+    if (firstSurname) {
+      return merge(searchByName$, searchBySurname$).pipe(
+        map(val => {
+          return val.filter((v, i) => val.indexOf(v) === i);
+        }),
+      );
     }
 
-    if(secondSurname){
-      return merge(searchByName$, searchBySurname$, searchBySecondSurname$).pipe(map(val => {
-        return val.filter((v, i) => val.indexOf(v) === i);
-      }));
+    if (secondSurname) {
+      return merge(
+        searchByName$,
+        searchBySurname$,
+        searchBySecondSurname$,
+      ).pipe(
+        map(val => {
+          return val.filter((v, i) => val.indexOf(v) === i);
+        }),
+      );
     }
 
     return searchByName$;
-
   }
 
   private findCustomersByField(userId: string, field: string, value: string) {

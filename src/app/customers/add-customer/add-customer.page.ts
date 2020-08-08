@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonInput, ModalController } from '@ionic/angular';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { AlertController, IonInput, ModalController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
-import { AuthService } from '../../services/auth.service';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { take } from 'rxjs/operators';
+import { PhoneValidatorService } from '../../services/phone-validator.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -19,7 +19,7 @@ import { take } from 'rxjs/operators';
 })
 export class AddCustomerPage implements OnInit {
   customerForm: FormGroup;
-  submitEnabled: boolean = true;
+  submitEnabled = true;
   submitClicked = false;
   @ViewChild('inputNombre') input: IonInput;
 
@@ -30,6 +30,7 @@ export class AddCustomerPage implements OnInit {
     private errorToastService: ErrorToastService,
     public readonly auth: AuthService,
     private keyboard: Keyboard,
+    public readonly alertController: AlertController,
   ) {}
 
   async ngOnInit() {
@@ -39,7 +40,10 @@ export class AddCustomerPage implements OnInit {
       name: ['', [Validators.required]],
       firstSurname: ['', [Validators.required]],
       secondSurname: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
+      phone: [
+        '',
+        [Validators.required, PhoneValidatorService.validCountryPhone('ES')],
+      ],
       email: ['', [Validators.email]],
     });
   }
@@ -51,41 +55,44 @@ export class AddCustomerPage implements OnInit {
 
   async cancel() {
     this.keyboard.hide();
-    try{
+    try {
       await this.errorToastService.dismiss();
-    }catch (e) {
-console.log(e);
-    }finally {
+    } catch (e) {
+      console.log(e);
+    } finally {
       setTimeout(async () => {
-
         await this.ctrl.dismiss({ done: false });
         this.submitClicked = false;
       }, 100);
     }
 
     //theres a bug in the animation of the keyboard which starts at the same time as the modal.
-
   }
 
   async submitForm(value: any, clientId: string) {
     this.submitClicked = true;
     if (!this.customerForm.valid) {
       await this.errorToastService.present({
-        message: this.email.invalid
-          ? 'El email no tiene el formato correcto.'
-          : 'Rellene los campos obligatorios.',
+        message: this.getErrorMessage(),
       });
     } else {
       this.keyboard.hide();
       this.submitEnabled = false;
-      await this.customersService.addCustomer(
-        clientId,
-        value.name.toString().toLowerCase(),
-        value.firstSurname.toString().toLowerCase(),
-        value.secondSurname.toString().toLowerCase(),
-        value.email,
-        value.phone,
-      );
+      await this.customersService
+        .addCustomer(
+          clientId,
+          value.name.toString().toLowerCase(),
+          value.firstSurname.toString().toLowerCase(),
+          value.secondSurname.toString().toLowerCase(),
+          value.email,
+          value.phone,
+        )
+        .then(() => {
+          this.presentSuccess(
+            value.name.toString(),
+            value.firstSurname.toString(),
+          );
+        });
 
       await this.ctrl.dismiss({ done: true, values: this.customerForm.value });
       this.submitClicked = false;
@@ -128,5 +135,36 @@ console.log(e);
     }
 
     return false;
+  }
+
+  async presentSuccess(name: string, surname: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'alert',
+      mode: 'ios',
+      header: 'Confirmación',
+      subHeader: 'Cliente añadido con éxito.',
+      message: name + ' ' + surname,
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+
+  getErrorMessage(): string {
+    let message: string;
+    console.log(this.customerForm);
+
+    if (this.email.invalid) {
+      message = 'El email no tiene el formato correcto.';
+    } else if (
+      this.name.invalid ||
+      this.firstSurname.invalid ||
+      this.secondSurname.invalid
+    ) {
+      message = 'Rellene los campos obligatorios';
+    } else {
+      message = 'El número de telefono no es correcto';
+    }
+    return message;
   }
 }

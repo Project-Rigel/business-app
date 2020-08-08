@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { AddAgendaPage } from './add-agenda.page';
 
 describe('AddAgendaPage', () => {
@@ -9,8 +8,8 @@ describe('AddAgendaPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddAgendaPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [AddAgendaPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddAgendaPage);

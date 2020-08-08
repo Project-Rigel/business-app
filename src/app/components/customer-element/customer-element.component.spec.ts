@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { CustomerElementComponent } from './customer-element.component';
 
 describe('CustomerElementComponent', () => {
@@ -9,8 +8,8 @@ describe('CustomerElementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerElementComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [CustomerElementComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CustomerElementComponent);

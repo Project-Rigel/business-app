@@ -1,36 +1,45 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, Input, EventEmitter, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
-import { Product } from '../../interfaces/product';
 import { Subscription } from 'rxjs';
-import { PaginationService } from '../../services/pagination-service.service';
+import { Product } from '../../interfaces/product';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-products-list',
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsListComponent implements OnInit {
-
-  @ViewChild(IonInfiniteScroll, { static: false }) public ionInfiniteScrollElement: IonInfiniteScroll;
+  @ViewChild(IonInfiniteScroll, { static: false })
+  public ionInfiniteScrollElement: IonInfiniteScroll;
 
   @Input() loadedData: Product[];
   @Input() loading: boolean;
   @Input() done: boolean;
   @Input() isSearching: boolean;
   @Input() searchResult: Product[];
-  @Input() maxHeightPercent : number = 80;
+  @Input() maxHeightPercent: number = 80;
   @Input() isSelectable: boolean;
 
-  @Output() onProductClicked: EventEmitter<Product> = new EventEmitter<Product>();
+  @Output() onProductClicked: EventEmitter<Product> = new EventEmitter<
+    Product
+  >();
 
   subscriptions: Subscription[];
   lastIdSelected: string;
 
   constructor(private productService: ProductsService) {
-    this.subscriptions = [];    
-    this.lastIdSelected = "";
+    this.subscriptions = [];
+    this.lastIdSelected = '';
   }
 
   ngOnInit() {
@@ -39,7 +48,7 @@ export class ProductsListComponent implements OnInit {
         if (done === true && this.ionInfiniteScrollElement) {
           this.ionInfiniteScrollElement.disabled = true;
         }
-      })
+      }),
     );
 
     this.subscriptions.push(
@@ -47,7 +56,7 @@ export class ProductsListComponent implements OnInit {
         if (!loading && this.ionInfiniteScrollElement) {
           await this.ionInfiniteScrollElement.complete();
         }
-      })
+      }),
     );
   }
 
@@ -62,7 +71,7 @@ export class ProductsListComponent implements OnInit {
   selectProduct(event) {
     if (event.id === this.lastIdSelected) {
       this.onProductClicked.emit(null);
-      this.lastIdSelected = "";
+      this.lastIdSelected = '';
     } else {
       this.onProductClicked.emit(event);
       this.lastIdSelected = event.id;
@@ -72,5 +81,4 @@ export class ProductsListComponent implements OnInit {
   loadData(event) {
     this.productService.more();
   }
-
 }

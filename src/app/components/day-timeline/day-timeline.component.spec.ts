@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { DayTimelineComponent } from './day-timeline.component';
 
 describe('DayTimelineComponent', () => {
@@ -9,8 +8,8 @@ describe('DayTimelineComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DayTimelineComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [DayTimelineComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DayTimelineComponent);

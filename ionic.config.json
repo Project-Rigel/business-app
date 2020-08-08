@@ -1,5 +1,7 @@
 {
   "name": "green-and-in",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

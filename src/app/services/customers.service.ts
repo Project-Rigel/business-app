@@ -4,6 +4,7 @@ import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Customer } from '../interfaces/customer';
 import { AuthService } from './auth.service';
+import { PaginationService } from './pagination-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,11 @@ import { AuthService } from './auth.service';
 export class CustomersService {
   private businessId: string;
 
-  constructor(private firestore: AngularFirestore, private auth: AuthService) {
+  constructor(
+    private firestore: AngularFirestore,
+    private auth: AuthService,
+    private paginationService: PaginationService,
+  ) {
     this.auth.user$.subscribe(user => {
       this.businessId = user.businessId;
     });
@@ -40,6 +45,8 @@ export class CustomersService {
       .collection(`customers`)
       .doc(id)
       .set(data);
+
+    this.paginationService.reset();
   }
 
   public findCustomerByNameTokens(

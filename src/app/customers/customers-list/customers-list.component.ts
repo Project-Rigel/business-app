@@ -36,6 +36,7 @@ export class CustomersListComponent implements OnInit {
 
   subscriptions: Subscription[];
   lastIdSelected: string;
+  isLoadingCustomers = true;
 
   constructor(private paginationService: PaginationService) {
     this.subscriptions = [];
@@ -44,14 +45,20 @@ export class CustomersListComponent implements OnInit {
   ngOnInit() {
     this.subscriptions.push(
       this.paginationService.done.subscribe(done => {
-        if (done === true && this.ionInfiniteScrollElement) {
-          this.ionInfiniteScrollElement.disabled = true;
+        if (done === true) {
+          this.isLoadingCustomers = false;
+          if (this.ionInfiniteScrollElement) {
+            this.ionInfiniteScrollElement.disabled = true;
+          }
         }
       }),
     );
 
     this.subscriptions.push(
       this.paginationService.loading.subscribe(async loading => {
+        if (this.isLoadingCustomers === false) {
+          this.isLoadingCustomers = loading;
+        }
         if (!loading && this.ionInfiniteScrollElement) {
           await this.ionInfiniteScrollElement.complete();
         }

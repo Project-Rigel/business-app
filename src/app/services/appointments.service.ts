@@ -101,7 +101,7 @@ export class AppointmentsService {
     this.appointmentToBeConfirmed = appointment;
   }
 
-  updateTemporallyExisitingAppointment(appointment: Appointment) {
+  /* updateTemporallyExisitingAppointment(appointment: Appointment) {
     const appointToShow = this.appointments?.value;
     appointToShow.forEach((element, index) => {
       if (element.id === appointment.id) {
@@ -109,7 +109,7 @@ export class AppointmentsService {
       }
     });
     this.appointments.next(appointToShow);
-  }
+  } */
 
   async confirmNewAppointment(
     businessId: string,

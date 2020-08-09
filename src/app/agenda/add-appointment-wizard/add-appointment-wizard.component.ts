@@ -96,7 +96,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       .endpoint({
         businessId: this.user.businessId, //not needed yet
         agendaId: this.agendaId,
-        productId: 'U45erCOyCNz5TWw9SNjB',
+        productId: this.selectedProduct.id,
         timestamp: this.daySelected.toISOString(),
       })
       .pipe(take(1))

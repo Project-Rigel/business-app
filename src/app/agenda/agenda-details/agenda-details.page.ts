@@ -177,18 +177,31 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointmentInfo = data;
 
         this.showConfirmApoointmentDialog();
-        const intervals = this.addingAppointmentInfo.intervals;
+        let intervals = this.addingAppointmentInfo.intervals;
+        console.log('Intervals received from functions: ');
+        console.log(intervals);
+
+        intervals = [
+          {
+            from: '08:00',
+            to: '14:00',
+          },
+          {
+            from: '17:00',
+            to: '20:00',
+          },
+        ];
+
         const productDuration = moment.duration(
           this.addingAppointmentInfo.product.duration,
           'minutes',
         );
-        console.log('Product duration: ' + productDuration);
-        console.log('Intervals from functions: ' + intervals);
+
         for (const gap of intervals) {
           for (
             let item = moment(gap.from, 'HH:mm');
             moment(gap.to, 'HH:mm').diff(item) > 0;
-            item.add(this.interval.asMinutes(), 'minutes')
+            item.add(productDuration.asMinutes(), 'minutes')
           ) {
             const aux = moment(item);
             if (
@@ -196,7 +209,58 @@ export class AgendaDetailsPage implements OnInit {
                 aux.add(productDuration.asMinutes(), 'minutes'),
               ) >= 0
             ) {
-              this.appoinmentGaps.push(item.format('HH:mm'));
+              if (!this.dayAppointments || this.dayAppointments.length === 0) {
+                this.appoinmentGaps.push(item.format('HH:mm'));
+              } else {
+                const possibleEndMoment = moment(item, 'HH:mm').add(
+                  productDuration.asMinutes(),
+                  'minutes',
+                );
+                let canAdd = true;
+                const itemDate = item.toDate();
+                itemDate.setDate(this.dayAppointments[0].startDate.getDate());
+                itemDate.setMonth(this.dayAppointments[0].startDate.getMonth());
+                itemDate.setFullYear(
+                  this.dayAppointments[0].startDate.getFullYear(),
+                );
+
+                const possibleEndDate = possibleEndMoment.toDate();
+                possibleEndDate.setDate(
+                  this.dayAppointments[0].startDate.getDate(),
+                );
+                possibleEndDate.setMonth(
+                  this.dayAppointments[0].startDate.getMonth(),
+                );
+                possibleEndDate.setFullYear(
+                  this.dayAppointments[0].startDate.getFullYear(),
+                );
+
+                this.dayAppointments.forEach(appointment => {
+                  if (
+                    !(
+                      appointment.startDate.getTime() <= itemDate.getTime() &&
+                      appointment.endDate.getTime() > itemDate.getTime()
+                    ) && // Si el item esta entre una cita
+                    !(
+                      appointment.startDate.getTime() <
+                        possibleEndDate.getTime() &&
+                      appointment.endDate.getTime() > possibleEndDate.getTime()
+                    ) && // Si el posibleFin esta entre una cita
+                    !(
+                      appointment.startDate.getTime() > itemDate.getTime() &&
+                      appointment.endDate.getTime() < possibleEndDate.getTime()
+                    )
+                  )
+                    // Si hay una cita entre el item y el posible final
+                    console.log('No añadir tramo');
+                  else {
+                    canAdd = false;
+                  }
+                });
+                if (canAdd) {
+                  this.appoinmentGaps.push(item.format('HH:mm'));
+                }
+              }
             }
           }
         }
@@ -337,6 +401,7 @@ export class AgendaDetailsPage implements OnInit {
     this.possibleAppointmentId = null;
     this.appointment = null;
     this.exisitingAppointment = null;
+    this.appoinmentGaps = [];
   }
 
   private updateAppointments(date: Date) {
@@ -367,7 +432,11 @@ export class AgendaDetailsPage implements OnInit {
       );
       this.exisitingAppointment = null;
     }
-    this.selectedStartTime = !this.selectedStartTime;
+
+    if (this.selectedStartTime) {
+      this.selectedStartTime = !this.selectedStartTime;
+    }
+
     this.possibleAppointmentId = null;
   }
 }

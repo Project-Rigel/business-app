@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { AddBusinessWizardComponent } from './add-business-wizard/add-business-wizard.component';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +12,20 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginPage implements OnInit {
   userForm;
+  userId: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     public authService: AuthService,
-  ) {}
+    public modalController: ModalController,
+  ) {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.userId = user.id;
+      }
+    });
+  }
 
   ngOnInit() {
     this.userForm = this.formBuilder.group({
@@ -28,10 +38,13 @@ export class LoginPage implements OnInit {
   async registerUser() {
     await this.authService
       .createUser(this.userForm.value.email, this.userForm.value.password)
-      .then(isNewUser => {
-        console.log(isNewUser);
+      .then(async isNewUser => {
+        if (isNewUser) {
+          this.startAddBusinessWizard();
+        } else {
+          await this.router.navigate(['app', 'tabs']);
+        }
       });
-    await this.router.navigate(['app', 'tabs']);
   }
 
   async logOut() {
@@ -39,9 +52,33 @@ export class LoginPage implements OnInit {
   }
 
   async loginWithGoogle() {
-    await this.authService.loginWithGoogle().then(isNewUser => {
-      console.log(isNewUser);
+    await this.authService.loginWithGoogle().then(async isNewUser => {
+      if (isNewUser) {
+        this.startAddBusinessWizard();
+      } else {
+        await this.router.navigate(['app', 'tabs']);
+      }
     });
-    await this.router.navigate(['app', 'tabs']);
+  }
+
+  async startAddBusinessWizard() {
+    const modal = await this.modalController.create({
+      component: AddBusinessWizardComponent,
+      swipeToClose: true,
+      //componentProps: {
+      //  userId: this.userId,
+      //},
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (!data.done) {
+      await this.logOut();
+      // Borrar datos
+      console.log('BORRAR datos creados del usuario');
+    } else {
+      await this.router.navigate(['app', 'tabs']);
+    }
   }
 }

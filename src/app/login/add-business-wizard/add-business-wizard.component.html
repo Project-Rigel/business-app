@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Añadir un negocio</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-label color="primary">Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-slides
+  mode="ios"
+  pager="ios"
+  [options]="sliderOptions"
+  class="slider-content"
+>
+  <ion-slide #businessName class="slide"> </ion-slide>
+
+  <ion-slide #businessCIF class="slide"> </ion-slide>
+
+  <ion-slide #businessAddress class="slide"> </ion-slide>
+
+  <ion-slide #businessPhoneNumber class="slide"> </ion-slide>
+
+  <ion-slide #businessPhoneValidation class="slide"> </ion-slide>
+</ion-slides>

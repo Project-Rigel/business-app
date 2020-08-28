@@ -26,10 +26,12 @@ export class LoginPage implements OnInit {
   }
 
   async registerUser() {
-    await this.authService.createUser(
-      this.userForm.value.email,
-      this.userForm.value.password,
-    );
+    await this.authService
+      .createUser(this.userForm.value.email, this.userForm.value.password)
+      .then(isNewUser => {
+        console.log(isNewUser);
+      });
+    await this.router.navigate(['app', 'tabs']);
   }
 
   async logOut() {
@@ -37,7 +39,9 @@ export class LoginPage implements OnInit {
   }
 
   async loginWithGoogle() {
-    await this.authService.loginWithGoogle();
+    await this.authService.loginWithGoogle().then(isNewUser => {
+      console.log(isNewUser);
+    });
     await this.router.navigate(['app', 'tabs']);
   }
 }

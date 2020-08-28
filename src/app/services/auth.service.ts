@@ -42,47 +42,55 @@ export class AuthService {
     );
   }
 
-  async loginWithGoogle() {
-    try {
-      let credential;
-      if (this.platform.is('cordova')) {
-        const gPlusUser = await this.googlePlus.login({
-          webClientId:
-            '457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com',
-          offline: true,
-          scopes: 'profile email',
+  async loginWithGoogle(): Promise<boolean> {
+    return new Promise(async resolve => {
+      try {
+        let credential;
+        if (this.platform.is('cordova')) {
+          const gPlusUser = await this.googlePlus.login({
+            webClientId:
+              '457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com',
+            offline: true,
+            scopes: 'profile email',
+          });
+          credential = await this.fireAuth.signInWithCredential(
+            firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken),
+          );
+        } else {
+          credential = await this.fireAuth.signInWithPopup(
+            new firebase.auth.GoogleAuthProvider(),
+          );
+        }
+        await this.updateUserData(credential.user).then(isANewUser => {
+          resolve(isANewUser);
         });
-        credential = await this.fireAuth.signInWithCredential(
-          firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken),
-        );
-      } else {
-        credential = await this.fireAuth.signInWithPopup(
-          new firebase.auth.GoogleAuthProvider(),
-        );
+      } catch (e) {
+        console.error(e);
+        await this.errorToastService.present({ message: e.message });
+        throw e;
       }
-      await this.updateUserData(credential.user);
-    } catch (e) {
-      console.error(e);
-      await this.errorToastService.present({ message: e.message });
-      throw e;
-    }
+    });
   }
 
   async login(email: string, password: string) {
     await this.fireAuth.signInWithEmailAndPassword(email, password);
   }
 
-  async createUser(email: string, password: string) {
-    try {
-      const credential = await this.fireAuth.createUserWithEmailAndPassword(
-        email,
-        password,
-      );
-      await this.updateUserData(credential.user);
-    } catch (e) {
-      await this.errorToastService.present({ message: e.message });
-      throw e;
-    }
+  async createUser(email: string, password: string): Promise<boolean> {
+    return new Promise(async resolve => {
+      try {
+        const credential = await this.fireAuth.createUserWithEmailAndPassword(
+          email,
+          password,
+        );
+        await this.updateUserData(credential.user).then(isANewUser => {
+          resolve(isANewUser);
+        });
+      } catch (e) {
+        await this.errorToastService.present({ message: e.message });
+        throw e;
+      }
+    });
   }
 
   async logOut() {
@@ -91,30 +99,38 @@ export class AuthService {
         await this.googlePlus.logout();
       }
       await this.fireAuth.signOut();
-      await this.router.navigate(['/']);
+      await this.router.navigate(['/login']);
     } catch (e) {
       await this.errorToastService.present({ message: e.message });
       throw e;
     }
   }
 
-  private updateUserData(user) {
-    // Sets user data to firestore on login
-    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
-      `users/${user.uid}`,
-    );
+  private updateUserData(user): Promise<boolean> {
+    return new Promise(resolve => {
+      // Sets user data to firestore on login
+      const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
+        `users/${user.uid}`,
+      );
 
-    const businessId = this.firestore.createId();
-
-    const data = {
-      id: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      avatar: user.photoURL,
-      customers: [],
-      businessId: businessId,
-    };
-
-    return userRef.set(data, { merge: true });
+      // Sets businessId depending of the user existance in the database
+      userRef.ref.get().then(doc => {
+        if (!doc.exists) {
+          const businessId = this.firestore.createId();
+          const data = {
+            id: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            avatar: user.photoURL,
+            customers: [],
+            businessId: businessId,
+          };
+          userRef.set(data, { merge: true });
+          resolve(true); // New user
+        } else {
+          resolve(false); // User already exists
+        }
+      });
+    });
   }
 }

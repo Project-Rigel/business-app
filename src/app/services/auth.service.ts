@@ -20,6 +20,7 @@ import { ErrorToastService } from './error-toast.service';
 })
 export class AuthService {
   user$: Observable<User>;
+  temporalUser;
 
   constructor(
     private readonly fireAuth: AngularFireAuth,
@@ -33,6 +34,7 @@ export class AuthService {
       switchMap(user => {
         // Logged in
         if (user) {
+          this.temporalUser = user;
           return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
           // Logged out
@@ -132,5 +134,17 @@ export class AuthService {
         }
       });
     });
+  }
+
+  deleteCurrentUser() {
+    this.deleteUserData(this.temporalUser.uid);
+    this.temporalUser.delete().then(() => console.log('Borrado de Auth'));
+  }
+
+  deleteUserData(userId: string) {
+    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
+      `users/${userId}`,
+    );
+    userRef.delete().then(() => console.log('Borrado de la base de datos'));
   }
 }

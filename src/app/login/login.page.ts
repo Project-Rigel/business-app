@@ -64,7 +64,7 @@ export class LoginPage implements OnInit {
   async startAddBusinessWizard() {
     const modal = await this.modalController.create({
       component: AddBusinessWizardComponent,
-      swipeToClose: true,
+      swipeToClose: false,
       //componentProps: {
       //  userId: this.userId,
       //},
@@ -75,8 +75,8 @@ export class LoginPage implements OnInit {
 
     if (!data.done) {
       await this.logOut();
-      // Borrar datos
-      console.log('BORRAR datos creados del usuario');
+      // Delete temporal user since he/she the canceled business wizard
+      this.authService.deleteCurrentUser();
     } else {
       await this.router.navigate(['app', 'tabs']);
     }

@@ -1,3 +1,26 @@
-<p>
-  business-name-slide works!
-</p>
+<ion-text class="title">¿Cómo se llama tu negocio?</ion-text>
+
+<form [formGroup]="businessNameForm" class="fixed-center">
+  <ion-list lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item>
+      <ion-input
+        #businessName
+        enterkeyhint="enter"
+        [color]="isInputInvalid(name) ? 'danger' : 'undefined'"
+        placeholder="Introduzca el nombre aquí"
+        required
+        type="text"
+        formControlName="name"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+  </ion-list>
+</form>
+
+<ion-button
+  expand="block"
+  (click)="submitForm(businessNameForm.value)"
+  class="bottom rounded"
+  >Siguiente</ion-button
+>

@@ -1,3 +1,26 @@
-<p>
-  business-cif-slide works!
-</p>
+<ion-text class="title">¿Cúal es el NIF/NIE/CIF de tu negocio?</ion-text>
+
+<form [formGroup]="businessCIFForm" class="fixed-center">
+  <ion-list lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item>
+      <ion-input
+        #businessCIF
+        enterkeyhint="enter"
+        [color]="isInputInvalid(cif) ? 'danger' : 'undefined'"
+        placeholder="Introduzca el NIF/NIE/CIF aquí"
+        required
+        type="text"
+        formControlName="cif"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+  </ion-list>
+</form>
+
+<ion-button
+  expand="block"
+  (click)="submitForm(businessCIFForm.value)"
+  class="bottom rounded"
+  >Siguiente</ion-button
+>

@@ -10,6 +10,9 @@ export class AddBusinessWizardComponent implements AfterViewInit {
   @ViewChild(IonSlides) ionSlides: IonSlides;
   slideOpts: any = {};
   businessName: string;
+  businessNIF: string;
+  businessAddress: string;
+  businessPhoneNumber: number;
 
   constructor(private modalController: ModalController) {}
 
@@ -21,6 +24,21 @@ export class AddBusinessWizardComponent implements AfterViewInit {
 
   async saveBusinessName(name) {
     this.businessName = name;
+    await this.nextSlide();
+  }
+
+  async saveBusinessNIF(nif) {
+    this.businessNIF = nif;
+    await this.nextSlide();
+  }
+
+  async saveBusinessAddress(address) {
+    this.businessAddress = address;
+    await this.nextSlide();
+  }
+
+  async saveBusinessPhone(phone) {
+    this.businessPhoneNumber = phone;
     await this.nextSlide();
   }
 

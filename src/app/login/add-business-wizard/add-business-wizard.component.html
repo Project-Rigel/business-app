@@ -18,8 +18,11 @@
       ></app-business-name-slide>
     </ion-slide>
 
-    <ion-slide class="slide">
-      <app-business-cif-slide></app-business-cif-slide>
+    <ion-slide>
+      <app-business-cif-slide
+        class="slide"
+        (onBusinessCIFChosen)="saveBusinessNIF($event)"
+      ></app-business-cif-slide>
     </ion-slide>
 
     <ion-slide class="slide">

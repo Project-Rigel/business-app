@@ -7,15 +7,13 @@ import libphonenumber from 'google-libphonenumber';
 })
 export class PhoneValidatorService {
   static validCountryPhone = (country: string): ValidatorFn => {
-    let subscribe: boolean = false;
-
     return (phoneControl: AbstractControl): { [key: string]: boolean } => {
       if (phoneControl.value !== '') {
         try {
           const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
-          let phoneNumber = '' + phoneControl.value + '';
-          let number = phoneUtil.parse(phoneNumber, country);
-          let isValidNumber = phoneUtil.isValidNumber(number);
+          const phoneNumber = '' + phoneControl.value + '';
+          const number = phoneUtil.parse(phoneNumber, country);
+          const isValidNumber = phoneUtil.isValidNumber(number);
           if (isValidNumber) {
             return null;
           }

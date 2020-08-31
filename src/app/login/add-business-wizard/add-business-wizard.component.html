@@ -9,24 +9,29 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-slides mode="ios" pager="ios" class="slider-content">
-  <ion-slide class="slide">
-    <app-business-name-slide></app-business-name-slide>
-  </ion-slide>
+<ion-content>
+  <ion-slides mode="ios" [options]="slideOpts" class="slider-content">
+    <ion-slide>
+      <app-business-name-slide
+        class="slide"
+        (onBusinessNameChosen)="saveBusinessName($event)"
+      ></app-business-name-slide>
+    </ion-slide>
 
-  <ion-slide class="slide">
-    <app-business-cif-slide></app-business-cif-slide>
-  </ion-slide>
+    <ion-slide class="slide">
+      <app-business-cif-slide></app-business-cif-slide>
+    </ion-slide>
 
-  <ion-slide class="slide">
-    <app-business-address-slide></app-business-address-slide>
-  </ion-slide>
+    <ion-slide class="slide">
+      <app-business-address-slide></app-business-address-slide>
+    </ion-slide>
 
-  <ion-slide class="slide">
-    <app-business-phone-number-slide></app-business-phone-number-slide>
-  </ion-slide>
+    <ion-slide class="slide">
+      <app-business-phone-number-slide></app-business-phone-number-slide>
+    </ion-slide>
 
-  <ion-slide class="slide">
-    <app-business-phone-validation-slide></app-business-phone-validation-slide>
-  </ion-slide>
-</ion-slides>
+    <ion-slide class="slide">
+      <app-business-phone-validation-slide></app-business-phone-validation-slide>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

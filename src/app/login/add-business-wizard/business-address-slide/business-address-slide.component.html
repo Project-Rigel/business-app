@@ -1,3 +1,26 @@
-<p>
-  business-address-slide works!
-</p>
+<ion-text class="title">¿Cúal es la dirección de tu negocio?</ion-text>
+
+<form [formGroup]="businessAddressForm" class="fixed-center">
+  <ion-list lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item>
+      <ion-input
+        #businessAddress
+        enterkeyhint="enter"
+        [color]="isInputInvalid(address) ? 'danger' : 'undefined'"
+        placeholder="Introduzca la dirección aquí"
+        required
+        type="text"
+        formControlName="address"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+  </ion-list>
+</form>
+
+<ion-button
+  expand="block"
+  (click)="submitForm(businessAddressForm.value)"
+  class="bottom rounded"
+  >Siguiente</ion-button
+>

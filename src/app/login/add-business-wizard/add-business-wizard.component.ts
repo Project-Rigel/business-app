@@ -40,6 +40,7 @@ export class AddBusinessWizardComponent implements AfterViewInit {
   async saveBusinessPhone(phone) {
     this.businessPhoneNumber = phone;
     await this.nextSlide();
+    console.log(phone);
   }
 
   async nextSlide() {

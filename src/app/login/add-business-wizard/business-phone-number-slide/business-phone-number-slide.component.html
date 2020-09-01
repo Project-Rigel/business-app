@@ -1,3 +1,26 @@
-<p>
-  business-phone-number-slide works!
-</p>
+<ion-text class="title">¿Cúal es el teléfono de tu negocio?</ion-text>
+
+<form [formGroup]="businessPhoneForm" class="fixed-center">
+  <ion-list lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item>
+      <ion-input
+        #businessPhone
+        enterkeyhint="enter"
+        [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
+        placeholder="Introduzca el nº de teléfono aquí"
+        required
+        type="text"
+        formControlName="phone"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+  </ion-list>
+</form>
+
+<ion-button
+  expand="block"
+  (click)="submitForm(businessPhoneForm.value)"
+  class="bottom rounded"
+  >Siguiente</ion-button
+>

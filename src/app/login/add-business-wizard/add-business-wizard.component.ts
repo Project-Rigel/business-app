@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { IonSlides, ModalController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-add-business-wizard',
@@ -14,7 +15,10 @@ export class AddBusinessWizardComponent implements AfterViewInit {
   businessAddress: string;
   businessPhoneNumber: number;
 
-  constructor(private modalController: ModalController) {}
+  constructor(
+    private modalController: ModalController,
+    private authService: AuthService,
+  ) {}
 
   //ngOnInit() {}
 
@@ -39,8 +43,19 @@ export class AddBusinessWizardComponent implements AfterViewInit {
 
   async saveBusinessPhone(phone) {
     this.businessPhoneNumber = phone;
+    await this.authService.sendPhoneVerificationCode(phone);
     await this.nextSlide();
-    console.log(phone);
+  }
+
+  async checkVerificationCode(code) {
+    await this.authService.verifyPhoneNumber(code).then(success => {
+      if (success) {
+        console.log('Hecho');
+        // this.ionSlides.slideTo(1, 600)
+      } else {
+        console.log('Código incorrecto');
+      }
+    });
   }
 
   async nextSlide() {

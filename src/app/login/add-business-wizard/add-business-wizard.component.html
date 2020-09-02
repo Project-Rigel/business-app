@@ -39,8 +39,11 @@
       ></app-business-phone-number-slide>
     </ion-slide>
 
-    <ion-slide class="slide">
-      <app-business-phone-validation-slide></app-business-phone-validation-slide>
+    <ion-slide>
+      <app-business-phone-validation-slide
+        class="slide"
+        (onBusinessCodeSet)="checkVerificationCode($event)"
+      ></app-business-phone-validation-slide>
     </ion-slide>
   </ion-slides>
 </ion-content>

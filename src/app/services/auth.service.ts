@@ -21,6 +21,7 @@ import { ErrorToastService } from './error-toast.service';
 export class AuthService {
   user$: Observable<User>;
   temporalUser;
+  verificationId: string;
 
   constructor(
     private readonly fireAuth: AngularFireAuth,
@@ -71,6 +72,40 @@ export class AuthService {
         await this.errorToastService.present({ message: e.message });
         throw e;
       }
+    });
+  }
+
+  sendPhoneVerificationCode(phoneNumber: string) {
+    const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      'recaptcha-container',
+      {
+        size: 'invisible',
+      },
+    );
+    const provider = new firebase.auth.PhoneAuthProvider();
+    provider
+      .verifyPhoneNumber(phoneNumber, recaptchaVerifier)
+      .then(verificationId => {
+        this.verificationId = verificationId;
+      });
+  }
+
+  verifyPhoneNumber(code: string): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      const credential = firebase.auth.PhoneAuthProvider.credential(
+        this.verificationId,
+        code,
+      );
+      firebase
+        .auth()
+        .currentUser.linkWithCredential(credential)
+        .then(result => {
+          console.log(result);
+          resolve(true);
+        })
+        .catch(err => {
+          resolve(false);
+        });
     });
   }
 

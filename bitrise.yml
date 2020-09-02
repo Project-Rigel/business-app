@@ -32,6 +32,8 @@ workflows:
         inputs:
         - distribution_type: app-store
         - configuration: Release
+
+        - generate_profiles: 'yes'
         - team_id: $DEVELOPER_TEAM_ID
     - generate-cordova-build-configuration@0:
         inputs:

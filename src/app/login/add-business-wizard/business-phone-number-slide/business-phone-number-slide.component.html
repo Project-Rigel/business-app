@@ -3,15 +3,16 @@
 <form [formGroup]="businessPhoneForm" class="fixed-center">
   <ion-list lines="inset" class="ion-item-round ion-no-margin">
     <ion-item>
+      <ion-label position="fixed" class="ion-text-right">+34</ion-label>
       <ion-input
+        autocomplete="tel"
         #businessPhone
         enterkeyhint="enter"
         [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
-        placeholder="Introduzca el nº de teléfono aquí"
+        placeholder="Nº de teléfono aquí"
         required
-        type="text"
+        type="tel"
         formControlName="phone"
-        class="ion-text-center"
       >
       </ion-input>
     </ion-item>

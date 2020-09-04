@@ -3,14 +3,57 @@
 <form [formGroup]="businessAddressForm" class="fixed-center">
   <ion-list lines="inset" class="ion-item-round ion-no-margin">
     <ion-item>
+      <ion-label position="stacked">Dirección</ion-label>
       <ion-input
-        #businessAddress
+        autocomplete="street-address"
         enterkeyhint="enter"
         [color]="isInputInvalid(address) ? 'danger' : 'undefined'"
-        placeholder="Introduzca la dirección aquí"
+        placeholder="C/ Bernat Artola nº24 6º 12ª"
         required
         type="text"
         formControlName="address"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Código postal</ion-label>
+      <ion-input
+        autocomplete="postal-code"
+        enterkeyhint="enter"
+        [color]="isInputInvalid(postalCode) ? 'danger' : 'undefined'"
+        placeholder="12004"
+        required
+        type="number"
+        formControlName="postalCode"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Ciudad</ion-label>
+      <ion-input
+        autocomplete="address-level2"
+        enterkeyhint="enter"
+        [color]="isInputInvalid(province) ? 'danger' : 'undefined'"
+        placeholder="Almería"
+        required
+        type="text"
+        formControlName="province"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Provincia</ion-label>
+      <ion-input
+        autocomplete="address-level1"
+        enterkeyhint="enter"
+        [color]="isInputInvalid(ca) ? 'danger' : 'undefined'"
+        placeholder="Andalucía"
+        required
+        type="text"
+        formControlName="ca"
         class="ion-text-center"
       >
       </ion-input>

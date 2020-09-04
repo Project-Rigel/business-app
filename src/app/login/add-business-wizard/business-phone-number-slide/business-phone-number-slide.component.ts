@@ -5,8 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { IonInput } from '@ionic/angular';
-import { ErrorToastService } from '../../../services/error-toast.service';
+import { AlertController, IonInput } from '@ionic/angular';
 import { PhoneValidatorService } from '../../../services/phone-validator.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class BusinessPhoneNumberSlideComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private toastService: ErrorToastService,
+    private alertController: AlertController,
   ) {}
 
   ngOnInit() {
@@ -38,14 +37,16 @@ export class BusinessPhoneNumberSlideComponent {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessPhoneForm.valid) {
-      await this.toastService.present({
-        message: 'Error Tiene que indicar un nº de teléfono válido',
-        color: 'danger',
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Tiene que indicar un nº de teléfono válido',
+        buttons: ['OK'],
       });
+      await alert.present();
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;
-      this.onBusinessPhoneNumberChosen.emit(this.phone.value);
+      this.onBusinessPhoneNumberChosen.emit('+34' + this.phone.value);
     }
   }
 

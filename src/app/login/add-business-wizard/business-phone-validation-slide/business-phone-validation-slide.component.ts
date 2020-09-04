@@ -5,8 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { IonInput } from '@ionic/angular';
-import { ErrorToastService } from '../../../services/error-toast.service';
+import { AlertController, IonInput } from '@ionic/angular';
 
 @Component({
   selector: 'app-business-phone-validation-slide',
@@ -22,7 +21,7 @@ export class BusinessPhoneValidationSlideComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private toastService: ErrorToastService,
+    private alertController: AlertController,
   ) {}
 
   ngOnInit() {
@@ -34,10 +33,12 @@ export class BusinessPhoneValidationSlideComponent {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessCodeForm.valid) {
-      await this.toastService.present({
-        message: 'Error Complete el campo de código',
-        color: 'danger',
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Tiene que escribir el código recibido por sms',
+        buttons: ['OK'],
       });
+      await alert.present();
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;

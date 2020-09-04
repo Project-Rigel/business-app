@@ -11,8 +11,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { IonInput } from '@ionic/angular';
-import { ErrorToastService } from '../../../services/error-toast.service';
+import { AlertController, IonInput } from '@ionic/angular';
 
 @Component({
   selector: 'app-business-name-slide',
@@ -28,7 +27,7 @@ export class BusinessNameSlideComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private toastService: ErrorToastService,
+    private alertController: AlertController,
   ) {}
 
   ngOnInit() {
@@ -40,10 +39,12 @@ export class BusinessNameSlideComponent implements OnInit {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessNameForm.valid) {
-      await this.toastService.present({
-        message: 'Error Tiene que indicar un nombre',
-        color: 'danger',
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Tiene que indicar un nombre',
+        buttons: ['OK'],
       });
+      await alert.present();
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;

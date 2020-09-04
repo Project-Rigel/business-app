@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 
@@ -12,12 +13,13 @@ export class AddBusinessWizardComponent implements AfterViewInit {
   slideOpts: any = {};
   businessName: string;
   businessNIF: string;
-  businessAddress: string;
+  businessAddress: any;
   businessPhoneNumber: number;
 
   constructor(
     private modalController: ModalController,
     private authService: AuthService,
+    private router: Router,
   ) {}
 
   //ngOnInit() {}
@@ -48,12 +50,21 @@ export class AddBusinessWizardComponent implements AfterViewInit {
   }
 
   async checkVerificationCode(code) {
-    await this.authService.verifyPhoneNumber(code).then(success => {
+    await this.authService.verifyPhoneNumber(code).then(async success => {
       if (success) {
-        console.log('Hecho');
-        // this.ionSlides.slideTo(1, 600)
+        // save business
+
+        await this.modalController.dismiss({
+          done: true,
+          values: {
+            name: this.businessName,
+            nif: this.businessNIF,
+            address: this.businessAddress,
+            phone: this.businessPhoneNumber,
+          },
+        });
       } else {
-        console.log('Código incorrecto');
+        await this.cancel();
       }
     });
   }

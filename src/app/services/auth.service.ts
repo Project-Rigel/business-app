@@ -5,6 +5,7 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform } from '@ionic/angular';
 import * as firebase from 'firebase/app';
@@ -30,6 +31,7 @@ export class AuthService {
     private errorToastService: ErrorToastService,
     private platform: Platform,
     private googlePlus: GooglePlus,
+    private firebaseAuth: FirebaseAuthentication,
   ) {
     this.user$ = this.fireAuth.authState.pipe(
       switchMap(user => {
@@ -76,18 +78,28 @@ export class AuthService {
   }
 
   sendPhoneVerificationCode(phoneNumber: string) {
-    const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      'recaptcha-container',
-      {
-        size: 'invisible',
-      },
-    );
-    const provider = new firebase.auth.PhoneAuthProvider();
-    provider
-      .verifyPhoneNumber(phoneNumber, recaptchaVerifier)
-      .then(verificationId => {
-        this.verificationId = verificationId;
-      });
+    console.log(this.platform.platforms());
+    console.log(this.platform);
+    if (this.platform.is('cordova')) {
+      this.firebaseAuth
+        .verifyPhoneNumber(phoneNumber, 3000)
+        .then(verificationId => {
+          this.verificationId = verificationId;
+        });
+    } else {
+      const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        'recaptcha-container',
+        {
+          size: 'invisible',
+        },
+      );
+      const provider = new firebase.auth.PhoneAuthProvider();
+      provider
+        .verifyPhoneNumber(phoneNumber, recaptchaVerifier)
+        .then(verificationId => {
+          this.verificationId = verificationId;
+        });
+    }
   }
 
   verifyPhoneNumber(code: string): Promise<boolean> {

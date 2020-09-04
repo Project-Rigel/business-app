@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
@@ -54,6 +55,7 @@ import { PaginationService } from './services/pagination-service.service';
     ScreenTrackingService,
     Keyboard,
     ImagePicker,
+    FirebaseAuthentication,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: REGION, useValue: 'europe-west1' },
   ],

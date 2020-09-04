@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AlertController, IonInput } from '@ionic/angular';
+// import { SmsRetriever } from '@ionic-native/sms-retriever/ngx';
 
 @Component({
   selector: 'app-business-phone-validation-slide',
@@ -21,13 +22,31 @@ export class BusinessPhoneValidationSlideComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertController: AlertController,
-  ) {}
+    private alertController: AlertController, // private platform: Platform,
+  ) // private smsRetriever: SmsRetriever
+  {}
 
   ngOnInit() {
     this.businessCodeForm = this.formBuilder.group({
       code: ['', [Validators.required]],
     });
+
+    /*if (this.platform.is('android')) {
+      this.smsRetriever.getAppHash()
+        .then((res: any) => {
+          console.log("Escuchando SMS")
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+      this.smsRetriever.startWatching()
+        .then((res: any) => {
+          console.log(res);
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+    }*/
   }
 
   async submitForm(value: any) {

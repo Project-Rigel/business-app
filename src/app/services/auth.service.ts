@@ -13,7 +13,9 @@ import 'firebase/auth';
 import 'firebase/performance';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Business } from '../interfaces/business';
 import { User } from '../interfaces/user';
+import { BusinessService } from './business.service';
 import { ErrorToastService } from './error-toast.service';
 
 @Injectable({
@@ -32,7 +34,16 @@ export class AuthService {
     private platform: Platform,
     private googlePlus: GooglePlus,
     private firebaseAuth: FirebaseAuthentication,
+    private businessService: BusinessService,
   ) {
+    if (this.platform.is('cordova')) {
+      this.googlePlus
+        .trySilentLogin({
+          offline: false,
+        })
+        .then(res => console.log(res));
+    }
+
     this.user$ = this.fireAuth.authState.pipe(
       switchMap(user => {
         // Logged in
@@ -166,6 +177,7 @@ export class AuthService {
       userRef.ref.get().then(doc => {
         if (!doc.exists) {
           const businessId = this.firestore.createId();
+          this.businessService.setBusinessId(businessId);
           const data = {
             id: user.uid,
             email: user.email,
@@ -193,5 +205,9 @@ export class AuthService {
       `users/${userId}`,
     );
     userRef.delete().then(() => console.log('Borrado de la base de datos'));
+  }
+
+  saveBusiness(data: Business) {
+    this.businessService.addBusiness(data);
   }
 }

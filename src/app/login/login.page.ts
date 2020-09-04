@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
       .createUser(this.userForm.value.email, this.userForm.value.password)
       .then(async isNewUser => {
         if (isNewUser) {
-          this.startAddBusinessWizard();
+          await this.startAddBusinessWizard();
         } else {
           await this.router.navigate(['app', 'tabs']);
         }
@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
   async loginWithGoogle() {
     await this.authService.loginWithGoogle().then(async isNewUser => {
       if (isNewUser) {
-        this.startAddBusinessWizard();
+        await this.startAddBusinessWizard();
       } else {
         await this.router.navigate(['app', 'tabs']);
       }
@@ -75,6 +75,8 @@ export class LoginPage implements OnInit {
       // Delete temporal user since he/she the canceled business wizard
       this.authService.deleteCurrentUser();
     } else {
+      // this.businessService.saveBussiness(data.values);
+      this.authService.saveBusiness(data.values);
       console.log(data.values);
       await this.router.navigate(['app', 'tabs']);
     }

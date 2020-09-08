@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>457735200635-6p58cpjsc8l348n7f4n7i8nh78qm5966.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAqWb--GfRH5A_t6k8uCmMY5-wLbgDUkD4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>457735200635</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.rigel.business</string>
+	<key>PROJECT_ID</key>
+	<string>rigel-admin</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rigel-admin.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:457735200635:ios:d373b654120eb8588427de</string>
+	<key>DATABASE_URL</key>
+	<string>https://rigel-admin.firebaseio.com</string>
+</dict>
+</plist>

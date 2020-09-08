@@ -35,6 +35,7 @@
     "@teamhive/lottie-player": "^1.0.0",
     "cordova-android": "8.1.0",
     "cordova-browser": "^6.0.0",
+    "cordova-plugin-googleplus": "8.4.0",
     "cordova-ios-plugin-no-export-compliance": "0.0.6",
     "cordova-plugin-telerik-imagepicker": "^2.3.3",
     "core-js": "^2.5.4",
@@ -104,6 +105,10 @@
       "cordova-ios-plugin-no-export-compliance": {},
       "cordova-plugin-telerik-imagepicker": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Permiso para poder seleccionar tus fotos"
+      },
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b",
+        "WEB_APPLICATION_CLIENT_ID": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com"
       },
       "cordova-plugin-firebase-authentication": {},
       "cordova-plugin-androidx": {},

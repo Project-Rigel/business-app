@@ -52,6 +52,9 @@
         <edit-config file="*-Info.plist" mode="add" target="NSPhotoLibraryUsageDescription">
             <string>Utilizamos el acceso a la galería para que puedas personalizar tus datos dentro de la aplicación.</string>
         </edit-config>
+        <edit-config file="*-Info.plist" mode="add" target="ITSAppUsesNonExemptEncryption">
+            <false />
+        </edit-config>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
@@ -161,5 +164,9 @@
     <plugin name="cordova-ios-plugin-no-export-compliance" spec="~0.0.5" />
     <plugin name="cordova-plugin-telerik-imagepicker" spec="~2.3.3">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Permiso para poder seleccionar tus fotos" />
+    </plugin>
+    <plugin name="cordova-plugin-googleplus" spec="~8.4.0">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.457735200635-jk4esdsp6fl98gg42illp44t17lsqj7t" />
+        <variable name="WEB_APPLICATION_CLIENT_ID" value="457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com" />
     </plugin>
 </widget>

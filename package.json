@@ -35,10 +35,8 @@
     "@teamhive/lottie-player": "^1.0.0",
     "cordova-android": "8.1.0",
     "cordova-browser": "^6.0.0",
-    "cordova-ios-plugin-no-export-compliance": "0.0.6",
-    "cordova-plugin-androidx": "^2.0.0",
-    "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-googleplus": "8.4.0",
+    "cordova-ios-plugin-no-export-compliance": "0.0.6",
     "cordova-plugin-telerik-imagepicker": "^2.3.3",
     "core-js": "^2.5.4",
     "dayspan": "^1.1.0",
@@ -66,7 +64,9 @@
     "@typescript-eslint/parser": "^2.33.0",
     "apollo-server-testing": "^2.13.1",
     "codelyzer": "^5.1.2",
-    "cordova-ios": "^6.1.0",
+    "cordova-ios": "^6.1.1",
+    "cordova-plugin-androidx": "^2.0.0",
+    "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
@@ -102,13 +102,13 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b",
-        "WEB_APPLICATION_CLIENT_ID": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com"
-      },
       "cordova-ios-plugin-no-export-compliance": {},
       "cordova-plugin-telerik-imagepicker": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Permiso para poder seleccionar tus fotos"
+      },
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.457735200635-kvtquthh6dt6m00hh9ou7hjtcrnn2l7b",
+        "WEB_APPLICATION_CLIENT_ID": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com"
       },
       "cordova-plugin-firebase-authentication": {},
       "cordova-plugin-androidx": {},
@@ -116,8 +116,8 @@
     },
     "platforms": [
       "browser",
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
   "husky": {

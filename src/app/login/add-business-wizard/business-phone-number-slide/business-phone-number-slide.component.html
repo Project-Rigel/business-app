@@ -1,0 +1,29 @@
+<ion-text class="title">¿Cúal es el teléfono de tu negocio?</ion-text>
+
+<form [formGroup]="businessPhoneForm" class="fixed-center">
+  <ion-list lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item>
+      <ion-label position="fixed" class="ion-text-right">+34</ion-label>
+      <ion-input
+        autocomplete="tel"
+        #businessPhone
+        enterkeyhint="enter"
+        [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
+        placeholder="Nº de teléfono aquí"
+        required
+        type="tel"
+        formControlName="phone"
+      >
+      </ion-input>
+    </ion-item>
+  </ion-list>
+</form>
+
+<div id="recaptcha-container"></div>
+
+<ion-button
+  expand="block"
+  (click)="submitForm(businessPhoneForm.value)"
+  class="bottom rounded"
+  >Siguiente</ion-button
+>

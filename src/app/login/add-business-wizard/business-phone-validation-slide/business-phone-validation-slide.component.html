@@ -1,0 +1,26 @@
+<ion-text class="title">Introduzca el código del móvil</ion-text>
+
+<form [formGroup]="businessCodeForm" class="fixed-center">
+  <ion-list lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item>
+      <ion-input
+        #businessValidationCode
+        enterkeyhint="enter"
+        [color]="isInputInvalid(code) ? 'danger' : 'undefined'"
+        placeholder="Introduzca el código aquí"
+        required
+        type="text"
+        formControlName="code"
+        class="ion-text-center"
+      >
+      </ion-input>
+    </ion-item>
+  </ion-list>
+</form>
+
+<ion-button
+  expand="block"
+  (click)="submitForm(businessCodeForm.value)"
+  class="bottom rounded"
+  >Finalizar</ion-button
+>

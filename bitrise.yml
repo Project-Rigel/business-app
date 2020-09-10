@@ -26,13 +26,11 @@ workflows:
             - ios_bundle_version: $BITRISE_BUILD_NUMBER
       - ionic-prepare@1:
           inputs:
-            - platform: ios
             - cache_local_deps: 'true'
       - ios-auto-provision@1:
           inputs:
             - distribution_type: app-store
             - configuration: Release
-
             - generate_profiles: 'yes'
             - team_id: $DEVELOPER_TEAM_ID
       - generate-cordova-build-configuration@0:
@@ -46,15 +44,17 @@ workflows:
           inputs:
             - cache_local_deps: 'true'
             - run_ionic_prepare: 'false'
-            - platform: ios
-            - options: '--prod -- --buildFlag="-UseModernBuildSystem=0"'
+            - options: '--prod --release -- --buildFlag="-UseModernBuildSystem=0"'
             - workdir: $BITRISE_SOURCE_DIR
       - deploy-to-itunesconnect-application-loader@0:
           inputs:
             - password: $APPLE_PASSWORD
             - app_password: $BITRISE_APPLE_2FA_PASSWORD
             - itunescon_user: $APPLE_ID
-      - deploy-to-bitrise-io@1: {}
+      - google-play-deploy@3:
+          inputs:
+            - package_name: $APP_PACKAGE_ID
+            - service_account_json_key_path: $BITRISEIO_ANDROID_GOOGLE_SERVICE_JSON
       - cache-push@2: {}
 app:
   envs:
@@ -68,3 +68,6 @@ app:
     - opts:
         is_expand: false
       BITRISE_SCHEME: ProjectRigelBusiness
+    - opts:
+        is_expand: false
+      APP_PACKAGE_ID: com.rigel.business

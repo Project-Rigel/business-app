@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Añadir un negocio</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-label color="primary">Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides mode="ios" [options]="slideOpts" class="slider-content">
+    <ion-slide>
+      <app-business-name-slide
+        class="slide"
+        (onBusinessNameChosen)="saveBusinessName($event)"
+      ></app-business-name-slide>
+    </ion-slide>
+
+    <ion-slide>
+      <app-business-cif-slide
+        class="slide"
+        (onBusinessCIFChosen)="saveBusinessNIF($event)"
+      ></app-business-cif-slide>
+    </ion-slide>
+
+    <ion-slide>
+      <app-business-address-slide
+        class="slide"
+        (onBusinessAddressChosen)="saveBusinessAddress($event)"
+      ></app-business-address-slide>
+    </ion-slide>
+
+    <ion-slide>
+      <app-business-phone-number-slide
+        class="slide"
+        (onBusinessPhoneNumberChosen)="saveBusinessPhone($event)"
+      ></app-business-phone-number-slide>
+    </ion-slide>
+
+    <ion-slide>
+      <app-business-phone-validation-slide
+        class="slide"
+        (onBusinessCodeSet)="checkVerificationCode($event)"
+      ></app-business-phone-validation-slide>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

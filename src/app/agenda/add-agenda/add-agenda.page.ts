@@ -65,7 +65,7 @@ export class AddAgendaPage {
         this.form.get('name').value,
         this.minuteSelected,
         imageUrl,
-        user.id, // Esto tiene que ser el id de el bussiness
+        user.businessId, // Esto tiene que ser el id de el bussiness
       );
 
       await this.modalController.dismiss({});

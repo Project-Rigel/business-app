@@ -54,7 +54,7 @@ workflows:
       - google-play-deploy@3:
           inputs:
             - package_name: $APP_PACKAGE_ID
-            - service_account_json_key_path: $BITRISEIO_ANDROID_GOOGLE_SERVICE_JSON
+            - service_account_json_key_path: $BITRISEIO_BITRISEIO_ANDROID_GOOGLE_SERVICE_JSON_URL
       - cache-push@2: {}
 app:
   envs:

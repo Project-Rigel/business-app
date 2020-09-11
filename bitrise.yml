@@ -23,6 +23,7 @@ workflows:
           is_always_run: true
       - cordova-config@0:
           inputs:
+            - android_version_code: $BITRISE_BUILD_NUMBER
             - ios_bundle_version: $BITRISE_BUILD_NUMBER
       - ionic-prepare@1:
           inputs:

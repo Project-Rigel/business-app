@@ -19,6 +19,7 @@
           <ion-input
             #businessValidationCode
             enterkeyhint="enter"
+            (keyup.enter)="submitForm(businessCodeForm.value)"
             [color]="isInputInvalid(code) ? 'danger' : 'undefined'"
             required
             type="text"

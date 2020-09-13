@@ -22,6 +22,7 @@
             <ion-input
               #businessPhone
               enterkeyhint="enter"
+              (keyup.enter)="submitForm(businessPhoneForm.value)"
               [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
               required
               type="text"

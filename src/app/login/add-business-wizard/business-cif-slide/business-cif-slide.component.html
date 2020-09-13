@@ -19,6 +19,7 @@
           <ion-input
             #businessCIF
             enterkeyhint="enter"
+            (keyup.enter)="submitForm(businessCIFForm.value)"
             [color]="isInputInvalid(cif) ? 'danger' : 'undefined'"
             required
             type="text"

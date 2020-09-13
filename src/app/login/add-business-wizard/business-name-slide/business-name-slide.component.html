@@ -19,6 +19,7 @@
           <ion-input
             #businessName
             enterkeyhint="enter"
+            (keyup.enter)="submitForm(businessNameForm.value)"
             [color]="isInputInvalid(name) ? 'danger' : 'undefined'"
             required
             type="text"

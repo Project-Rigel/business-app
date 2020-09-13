@@ -22,9 +22,8 @@ export class BusinessPhoneValidationSlideComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertController: AlertController, // private platform: Platform,
-  ) // private smsRetriever: SmsRetriever
-  {}
+    private alertController: AlertController, // private platform: Platform, // private smsRetriever: SmsRetriever
+  ) {}
 
   ngOnInit() {
     this.businessCodeForm = this.formBuilder.group({

@@ -45,13 +45,15 @@ workflows:
           inputs:
             - cache_local_deps: 'true'
             - run_ionic_prepare: 'false'
-            - options: '--prod --release -- --buildFlag="-UseModernBuildSystem=0"'
+            - options: >-
+                --prod --release -- --buildFlag="-UseModernBuildSystem=0"
+                --packageType=bundle
             - workdir: $BITRISE_SOURCE_DIR
       - firebase-app-distribution@0:
           inputs:
             - app: $FIREBASE_APP_ID
             - release_notes: New testing build
-            - groups: Internal Testers
+            - groups: internal-testers
             - upgrade_firebase_tools: 'true'
             - is_debug: 'true'
             - app_path: $BITRISE_APK_PATH

@@ -1,69 +1,88 @@
-<ion-text class="title">¿Cúal es la dirección de tu negocio?</ion-text>
+<ion-grid>
+  <ion-row
+    id="title"
+    class="ion-align-items-center ion-justify-content-evenly ion-text-center"
+  >
+    <ion-col size="12">
+      <h1 class="login-title">¿Cúal es la dirección de tu negocio?</h1>
+    </ion-col>
+  </ion-row>
+  <ion-row
+    id="content"
+    class="ion-align-items-center ion-justify-content-evenly"
+  >
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <form [formGroup]="businessAddressForm" class="ion-padding">
+        <ion-item>
+          <ion-label position="floating">Dirección</ion-label>
+          <ion-input
+            enterkeyhint="enter"
+            [color]="isInputInvalid(address) ? 'danger' : 'undefined'"
+            required
+            type="text"
+            formControlName="address"
+            autocomplete="street-address"
+          >
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Código postal</ion-label>
+          <ion-input
+            enterkeyhint="enter"
+            [color]="isInputInvalid(postalCode) ? 'danger' : 'undefined'"
+            required
+            type="text"
+            formControlName="postalCode"
+            autocomplete="postal-code"
+          >
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Ciudad</ion-label>
+          <ion-input
+            enterkeyhint="enter"
+            [color]="isInputInvalid(province) ? 'danger' : 'undefined'"
+            required
+            type="text"
+            formControlName="province"
+            autocomplete="address-level2"
+          >
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Provincia</ion-label>
+          <ion-input
+            enterkeyhint="enter"
+            [color]="isInputInvalid(ca) ? 'danger' : 'undefined'"
+            required
+            type="text"
+            formControlName="ca"
+            autocomplete="address-level1"
+          >
+          </ion-input>
+        </ion-item>
+      </form>
+    </ion-col>
+  </ion-row>
 
-<form [formGroup]="businessAddressForm" class="fixed-center">
-  <ion-list lines="inset" class="ion-item-round ion-no-margin">
-    <ion-item>
-      <ion-label position="stacked">Dirección</ion-label>
-      <ion-input
-        autocomplete="street-address"
-        enterkeyhint="enter"
-        [color]="isInputInvalid(address) ? 'danger' : 'undefined'"
-        placeholder="C/ Bernat Artola nº24 6º 12ª"
-        required
-        type="text"
-        formControlName="address"
-        class="ion-text-center"
+  <ion-row
+    id="button"
+    class="ion-align-items-center ion-justify-content-evenly"
+  >
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <ion-button expand="block" (click)="submitForm(businessAddressForm.value)"
+        >Siguiente</ion-button
       >
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Código postal</ion-label>
-      <ion-input
-        autocomplete="postal-code"
-        enterkeyhint="enter"
-        [color]="isInputInvalid(postalCode) ? 'danger' : 'undefined'"
-        placeholder="12004"
-        required
-        type="number"
-        formControlName="postalCode"
-        class="ion-text-center"
-      >
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Ciudad</ion-label>
-      <ion-input
-        autocomplete="address-level2"
-        enterkeyhint="enter"
-        [color]="isInputInvalid(province) ? 'danger' : 'undefined'"
-        placeholder="Almería"
-        required
-        type="text"
-        formControlName="province"
-        class="ion-text-center"
-      >
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Provincia</ion-label>
-      <ion-input
-        autocomplete="address-level1"
-        enterkeyhint="enter"
-        [color]="isInputInvalid(ca) ? 'danger' : 'undefined'"
-        placeholder="Andalucía"
-        required
-        type="text"
-        formControlName="ca"
-        class="ion-text-center"
-      >
-      </ion-input>
-    </ion-item>
-  </ion-list>
-</form>
-
-<ion-button
-  expand="block"
-  (click)="submitForm(businessAddressForm.value)"
-  class="bottom rounded"
-  >Siguiente</ion-button
->
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -46,7 +46,11 @@ export class BusinessPhoneNumberSlideComponent {
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;
-      this.onBusinessPhoneNumberChosen.emit('+34' + this.phone.value);
+      if (this.phone.value.charAt(0) === '+') {
+        this.onBusinessPhoneNumberChosen.emit(this.phone.value);
+      } else {
+        this.onBusinessPhoneNumberChosen.emit('+34' + this.phone.value);
+      }
     }
   }
 

@@ -1,29 +1,57 @@
-<ion-text class="title">¿Cúal es el teléfono de tu negocio?</ion-text>
-
-<form [formGroup]="businessPhoneForm" class="fixed-center">
-  <ion-list lines="inset" class="ion-item-round ion-no-margin">
-    <ion-item>
-      <ion-label position="fixed" class="ion-text-right">+34</ion-label>
-      <ion-input
-        autocomplete="tel"
-        #businessPhone
-        enterkeyhint="enter"
-        [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
-        placeholder="Nº de teléfono aquí"
-        required
-        type="tel"
-        formControlName="phone"
-      >
-      </ion-input>
-    </ion-item>
-  </ion-list>
-</form>
-
 <div id="recaptcha-container"></div>
 
-<ion-button
-  expand="block"
-  (click)="submitForm(businessPhoneForm.value)"
-  class="bottom rounded"
-  >Siguiente</ion-button
->
+<ion-grid>
+  <ion-row
+    id="title"
+    class="ion-align-items-center ion-justify-content-evenly ion-text-center"
+  >
+    <ion-col size="12">
+      <h1 class="login-title">¿Cúal es el teléfono de tu negocio?</h1>
+    </ion-col>
+  </ion-row>
+  <ion-row
+    id="content"
+    class="ion-align-items-center ion-justify-content-evenly"
+  >
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <form [formGroup]="businessPhoneForm" class="ion-padding">
+        <ion-item>
+          <ion-label position="floating">Teléfono</ion-label>
+          <div>
+            <ion-input
+              #businessPhone
+              enterkeyhint="enter"
+              [color]="isInputInvalid(phone) ? 'danger' : 'undefined'"
+              required
+              type="text"
+              formControlName="phone"
+              autocomplete="tel"
+            >
+            </ion-input>
+          </div>
+        </ion-item>
+      </form>
+    </ion-col>
+  </ion-row>
+
+  <ion-row
+    id="button"
+    class="ion-align-items-center ion-justify-content-evenly"
+  >
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <ion-button expand="block" (click)="submitForm(businessPhoneForm.value)"
+        >Siguiente</ion-button
+      >
+    </ion-col>
+  </ion-row>
+</ion-grid>

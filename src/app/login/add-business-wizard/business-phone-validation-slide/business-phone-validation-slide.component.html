@@ -1,26 +1,52 @@
-<ion-text class="title">Introduzca el código del móvil</ion-text>
+<ion-grid>
+  <ion-row
+    id="title"
+    class="ion-align-items-center ion-justify-content-evenly ion-text-center"
+  >
+    <ion-col size="12">
+      <h1 class="login-title">Introduzca el código del móvil</h1>
+    </ion-col>
+  </ion-row>
+  <ion-row
+    id="content"
+    class="ion-align-items-center ion-justify-content-evenly"
+  >
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <form [formGroup]="businessCodeForm" class="ion-padding">
+        <ion-item>
+          <ion-label position="floating">Código</ion-label>
+          <ion-input
+            #businessValidationCode
+            enterkeyhint="enter"
+            [color]="isInputInvalid(code) ? 'danger' : 'undefined'"
+            required
+            type="text"
+            formControlName="code"
+          >
+          </ion-input>
+        </ion-item>
+      </form>
+    </ion-col>
+  </ion-row>
 
-<form [formGroup]="businessCodeForm" class="fixed-center">
-  <ion-list lines="inset" class="ion-item-round ion-no-margin">
-    <ion-item>
-      <ion-input
-        #businessValidationCode
-        enterkeyhint="enter"
-        [color]="isInputInvalid(code) ? 'danger' : 'undefined'"
-        placeholder="Introduzca el código aquí"
-        required
-        type="text"
-        formControlName="code"
-        class="ion-text-center"
+  <ion-row
+    id="button"
+    class="ion-align-items-center ion-justify-content-evenly"
+  >
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <ion-button expand="block" (click)="submitForm(businessCodeForm.value)"
+        >Finalizar</ion-button
       >
-      </ion-input>
-    </ion-item>
-  </ion-list>
-</form>
-
-<ion-button
-  expand="block"
-  (click)="submitForm(businessCodeForm.value)"
-  class="bottom rounded"
-  >Finalizar</ion-button
->
+    </ion-col>
+  </ion-row>
+</ion-grid>

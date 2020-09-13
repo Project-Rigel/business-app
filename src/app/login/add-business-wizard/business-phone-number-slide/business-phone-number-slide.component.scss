@@ -1,1 +1,12 @@
-
+ion-grid {
+  height: 100%;
+  ion-row#title {
+    height: 10%;
+  }
+  ion-row#content {
+    height: 70%;
+  }
+  ion-row#button {
+    height: 20%;
+  }
+}

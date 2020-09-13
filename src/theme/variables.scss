@@ -435,30 +435,12 @@
   --height: 50%
 }
 
-.title {
-  font-size: large;
-  font-weight: bold;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50px;
-}
-
 .bottom {
   position: absolute;
-  left: 0;
-  bottom: 10px;
-  right: 0;
+  bottom: 20px;
 }
 
 .rounded {
   border: 1px solid lightgray;
   border-radius: 50%;
-}
-
-.fixed-center {
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  top: 40%;
 }

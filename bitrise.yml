@@ -54,6 +54,7 @@ workflows:
             - groups: Internal Testers
             - upgrade_firebase_tools: 'true'
             - is_debug: 'true'
+            - app_path: $BITRISE_APK_PATH
             - firebase_token: $FIREBASE_TOKEN
       - deploy-to-itunesconnect-application-loader@0:
           inputs:
@@ -64,7 +65,8 @@ workflows:
           inputs:
             - package_name: $APP_PACKAGE_ID
             - service_account_json_key_path: $BITRISEIO_BITRISEIO_ANDROID_GOOGLE_SERVICE_JSON_URL
-      - cache-push@2: {}
+      - cache-push@2:
+          is_always_run: true
 app:
   envs:
     - opts:

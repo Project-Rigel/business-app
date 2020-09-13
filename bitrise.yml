@@ -15,6 +15,7 @@ workflows:
           inputs:
             - verbose: 'false'
       - git-clone@4: {}
+      - cache-pull@2: {}
       - npm@1:
           inputs:
             - command: ci
@@ -45,9 +46,7 @@ workflows:
           inputs:
             - cache_local_deps: 'true'
             - run_ionic_prepare: 'false'
-            - options: >-
-                --prod --release -- --buildFlag="-UseModernBuildSystem=0"
-                --packageType=bundle
+            - options: '--prod --release -- --buildFlag="-UseModernBuildSystem=0"'
             - workdir: $BITRISE_SOURCE_DIR
       - firebase-app-distribution@0:
           inputs:

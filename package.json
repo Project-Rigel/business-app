@@ -12,7 +12,7 @@
     "e2e": "ng e2e",
     "eslint": "eslint src/**/*.ts --fix",
     "reformat": "prettier --write src/**/*.{ts,js,css,html}",
-    "cordova-build:android:release" : "cordova build android --prod --release --buildConfig -- --packageType=bundle"
+    "cordova-build:android:release": "cordova build android --prod --release --buildConfig -- --packageType=bundle"
   },
   "private": true,
   "dependencies": {

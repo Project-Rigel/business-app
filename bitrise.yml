@@ -15,6 +15,7 @@ workflows:
           inputs:
             - verbose: 'false'
       - git-clone@4: {}
+      - cache-pull@2: {}
       - npm@1:
           inputs:
             - command: ci
@@ -23,6 +24,7 @@ workflows:
           is_always_run: true
       - cordova-config@0:
           inputs:
+            - android_version_code: $BITRISE_BUILD_NUMBER
             - ios_bundle_version: $BITRISE_BUILD_NUMBER
       - ionic-prepare@1:
           inputs:
@@ -46,6 +48,15 @@ workflows:
             - run_ionic_prepare: 'false'
             - options: '--prod --release -- --buildFlag="-UseModernBuildSystem=0"'
             - workdir: $BITRISE_SOURCE_DIR
+      - firebase-app-distribution@0:
+          inputs:
+            - app: $FIREBASE_APP_ID
+            - release_notes: New testing build
+            - groups: internal-testers
+            - upgrade_firebase_tools: 'true'
+            - is_debug: 'true'
+            - app_path: $BITRISE_APK_PATH
+            - firebase_token: $FIREBASE_TOKEN
       - deploy-to-itunesconnect-application-loader@0:
           inputs:
             - password: $APPLE_PASSWORD
@@ -55,7 +66,8 @@ workflows:
           inputs:
             - package_name: $APP_PACKAGE_ID
             - service_account_json_key_path: $BITRISEIO_BITRISEIO_ANDROID_GOOGLE_SERVICE_JSON_URL
-      - cache-push@2: {}
+      - cache-push@2:
+          is_always_run: true
 app:
   envs:
     - opts:
@@ -71,3 +83,6 @@ app:
     - opts:
         is_expand: false
       APP_PACKAGE_ID: com.rigel.business
+    - opts:
+        is_expand: false
+      FIREBASE_APP_ID: '1:457735200635:android:b9a15882b747fc1d8427de'

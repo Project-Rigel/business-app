@@ -1,0 +1,117 @@
+{
+  "project_info": {
+    "project_number": "457735200635",
+    "firebase_url": "https://rigel-admin.firebaseio.com",
+    "project_id": "rigel-admin",
+    "storage_bucket": "rigel-admin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457735200635:android:010ab054bda906b08427de",
+        "android_client_info": {
+          "package_name": "com.greenandin.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457735200635-i672uevucj4fsiilsikh233j7f205f94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greenandin.app",
+            "certificate_hash": "ca625a58c8c24a85b3e75225e642b8230a1a80d7"
+          }
+        },
+        {
+          "client_id": "457735200635-5tnj3ff4hkmlc3ugd3bpmrku2q5j733d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greenandin.app",
+            "certificate_hash": "e8914c64f99ad68aa93e7b1ddf5f0a74f9eb36f0"
+          }
+        },
+        {
+          "client_id": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgVgvD1fegr3ouOfARC5fbr8hRKJBESZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "457735200635-6k4de0emqa669h46813da3714g4f2f4u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.greenandin.app",
+                "app_store_id": "1524145190"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457735200635:android:b9a15882b747fc1d8427de",
+        "android_client_info": {
+          "package_name": "com.rigel.business"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457735200635-6p58cpjsc8l348n7f4n7i8nh78qm5966.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rigel.business",
+            "certificate_hash": "14f6d5b2b1ada4427d1bcbbbbecf77fb3c3fa034"
+          }
+        },
+        {
+          "client_id": "457735200635-48ke11bkoea64ue09h6qfg1mk3hb8g4h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rigel.business",
+            "certificate_hash": "1b892e667195d5b5ef1f2d7cbcfe716cb8ec0c19"
+          }
+        },
+        {
+          "client_id": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgVgvD1fegr3ouOfARC5fbr8hRKJBESZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "457735200635-6k4de0emqa669h46813da3714g4f2f4u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.greenandin.app",
+                "app_store_id": "1524145190"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

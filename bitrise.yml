@@ -47,6 +47,14 @@ workflows:
             - run_ionic_prepare: 'false'
             - options: '--prod --release -- --buildFlag="-UseModernBuildSystem=0"'
             - workdir: $BITRISE_SOURCE_DIR
+      - firebase-app-distribution@0:
+          inputs:
+            - app: $FIREBASE_APP_ID
+            - release_notes: New testing build
+            - groups: Internal Testers
+            - upgrade_firebase_tools: 'true'
+            - is_debug: 'true'
+            - firebase_token: $FIREBASE_TOKEN
       - deploy-to-itunesconnect-application-loader@0:
           inputs:
             - password: $APPLE_PASSWORD
@@ -72,3 +80,6 @@ app:
     - opts:
         is_expand: false
       APP_PACKAGE_ID: com.rigel.business
+    - opts:
+        is_expand: false
+      FIREBASE_APP_ID: '1:457735200635:android:b9a15882b747fc1d8427de'

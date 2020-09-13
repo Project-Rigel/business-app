@@ -11,7 +11,8 @@
     "lint": "npm run eslint",
     "e2e": "ng e2e",
     "eslint": "eslint src/**/*.ts --fix",
-    "reformat": "prettier --write src/**/*.{ts,js,css,html}"
+    "reformat": "prettier --write src/**/*.{ts,js,css,html}",
+    "cordova-build:android:release" : "cordova build android --prod --release --buildConfig"
   },
   "private": true,
   "dependencies": {
@@ -63,6 +64,7 @@
     "@typescript-eslint/parser": "^2.33.0",
     "apollo-server-testing": "^2.13.1",
     "codelyzer": "^5.1.2",
+    "cordova-android": "^9.0.0",
     "cordova-ios": "^6.1.1",
     "cordova-plugin-androidx": "^2.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.1",
@@ -115,7 +117,8 @@
     },
     "platforms": [
       "browser",
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "husky": {

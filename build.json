@@ -1,0 +1,11 @@
+{
+  "android": {
+    "release": {
+      "keystore": "./codesigndoc_exports/greenandin.keystore",
+      "storePassword": "greenandin2020",
+      "alias": "release",
+      "password" : "greenandin2020",
+      "keystoreType": "jks"
+    }
+  }
+}

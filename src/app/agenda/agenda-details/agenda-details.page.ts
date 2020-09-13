@@ -297,7 +297,7 @@ export class AgendaDetailsPage implements OnInit {
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
-    /* 
+    /*
     /////////////////
     let sharesStartDate: boolean;
     let sharingPosition: number;

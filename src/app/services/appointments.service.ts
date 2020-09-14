@@ -62,13 +62,11 @@ export class AppointmentsService {
             this.appointments.next(
               Object.values(v).map(
                 (v: any): Appointment => {
-                  console.log(v);
-
                   return {
-                    startDate: v.startDate.toDate(),
+                    startDate: new Date(Date.parse(v.startDate)),
                     id: v.id,
                     customerName: v.customerName,
-                    endDate: v.endDate.toDate(),
+                    endDate: new Date(Date.parse(v.endDate)),
                     customerId: v.customerId,
                     name: v.name,
                   };

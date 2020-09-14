@@ -101,11 +101,11 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       })
       .pipe(take(1))
       .subscribe(
-        async (v: any) => {
+        async (intervals: any) => {
           this.loading = false;
           await this.modalController.dismiss({
             done: true,
-            intervals: v.intervals,
+            intervals: intervals,
             customer: this.selectedCustomer,
             product: this.selectedProduct,
           });

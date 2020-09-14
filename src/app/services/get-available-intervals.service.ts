@@ -10,7 +10,8 @@ export interface GetAvailableTimesDto {
 }
 
 export interface AvailableTimesResponse {
-  intervals: { from: string; to: string }[];
+  //intervals: { from: string; to: string }[];
+  result: { from: string; to: string }[];
 }
 
 @Injectable({

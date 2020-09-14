@@ -75,7 +75,6 @@ export class LoginPage implements OnInit {
       // Delete temporal user since he/she the canceled business wizard
       this.authService.deleteCurrentUser();
     } else {
-      // this.businessService.saveBussiness(data.values);
       this.authService.saveBusiness(data.values);
       console.log(data.values);
       await this.router.navigate(['app', 'tabs']);

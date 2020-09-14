@@ -108,6 +108,7 @@
       "cordova-plugin-telerik-imagepicker": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Permiso para poder seleccionar tus fotos"
       },
+      "cordova-plugin-firebase-authentication": {},
       "cordova-plugin-androidx": {},
       "cordova-plugin-androidx-adapter": {},
       "cordova-plugin-googleplus": {
@@ -117,8 +118,8 @@
     },
     "platforms": [
       "browser",
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
   "husky": {

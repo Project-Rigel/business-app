@@ -38,7 +38,7 @@ export class BusinessAddressSlideComponent implements OnInit {
     if (!this.businessAddressForm.valid) {
       const alert = await this.alertController.create({
         header: 'Error',
-        message: 'Por favor, rellene todos lso campos',
+        message: 'Por favor, rellene todos los campos correctamente',
         buttons: ['OK'],
       });
       await alert.present();

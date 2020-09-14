@@ -172,4 +172,8 @@
     <plugin name="cordova-plugin-telerik-imagepicker" spec="~2.3.3">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Permiso para poder seleccionar tus fotos" />
     </plugin>
+    <plugin name="cordova-plugin-googleplus" spec="~8.4.0">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.457735200635-jk4esdsp6fl98gg42illp44t17lsqj7t" />
+        <variable name="WEB_APPLICATION_CLIENT_ID" value="457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com" />
+    </plugin>
 </widget>

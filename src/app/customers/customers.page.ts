@@ -29,11 +29,7 @@ export class CustomersPage implements OnInit {
   ngOnInit() {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
-        this.paginationService.init(
-          'users/' + user.id + '/customers',
-          'name',
-          15,
-        );
+        this.paginationService.init('customers', 'name', 15);
       }
     });
   }
@@ -43,7 +39,7 @@ export class CustomersPage implements OnInit {
       component: AddCustomerPage,
     });
     await modal.present();
-    const { data } = await modal.onDidDismiss();
+    await modal.onDidDismiss();
   }
 
   async search(event) {
@@ -71,7 +67,8 @@ export class CustomersPage implements OnInit {
     }
   }
 
-  cancelSearch(event) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  cancelSearch($event) {
     console.log('cancelling');
     this.searching = false;
   }

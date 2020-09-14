@@ -5,4 +5,5 @@ export interface Customer {
   firstSurname: string;
   secondSurname: string;
   phone: string;
+  businessId: string;
 }

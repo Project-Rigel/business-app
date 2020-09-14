@@ -3,12 +3,24 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Customer } from '../interfaces/customer';
+import { AuthService } from './auth.service';
+import { PaginationService } from './pagination-service.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomersService {
-  constructor(private firestore: AngularFirestore) {}
+  private businessId: string;
+
+  constructor(
+    private firestore: AngularFirestore,
+    private auth: AuthService,
+    private paginationService: PaginationService,
+  ) {
+    this.auth.user$.subscribe(user => {
+      this.businessId = user.businessId;
+    });
+  }
 
   public async addCustomer(
     clientId: string,
@@ -27,9 +39,14 @@ export class CustomersService {
       firstSurname,
       secondSurname,
       phone,
+      businessId: this.businessId,
     };
+    await this.firestore
+      .collection(`customers`)
+      .doc(id)
+      .set(data);
 
-    await this.firestore.collection(`users/${clientId}/customers`).add(data);
+    this.paginationService.reset();
   }
 
   public findCustomerByNameTokens(
@@ -38,11 +55,7 @@ export class CustomersService {
     firstSurname?: string,
     secondSurname?: string,
   ) {
-    let searchByName$: Observable<Customer[]> = this.findCustomersByField(
-      userId,
-      'name',
-      name,
-    );
+    const searchByName$ = this.findCustomersByField(userId, 'name', name);
 
     let searchBySurname$: Observable<Customer[]>,
       searchBySecondSurname$: Observable<Customer[]>;
@@ -88,8 +101,9 @@ export class CustomersService {
 
   private findCustomersByField(userId: string, field: string, value: string) {
     return this.firestore
-      .collection<Customer>('users/' + userId + '/customers', ref => {
+      .collection<Customer>('customers', ref => {
         return ref
+          .where('businessId', '==', this.businessId)
           .limit(10)
           .orderBy(field)
           .startAt(value)

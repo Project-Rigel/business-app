@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
+import { AngularFireFunctions } from '@angular/fire/functions';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -22,8 +22,12 @@ export class AppointmentsService {
   startHour = 7;
   endHour = 23;
   appointmentToBeConfirmed: Appointment;
+  callable = this.functions.httpsCallable('bookAppointment');
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(
+    private afs: AngularFirestore,
+    private functions: AngularFireFunctions,
+  ) {}
 
   getAllPossibleAppointments() {
     const total: Date[] = [];
@@ -54,10 +58,12 @@ export class AppointmentsService {
       .valueChanges()
       .pipe(
         map(v => {
-          if (v && v.appointments) {
+          if (v) {
             this.appointments.next(
-              v.appointments.map(
+              Object.values(v).map(
                 (v: any): Appointment => {
+                  console.log(v);
+
                   return {
                     startDate: v.startDate.toDate(),
                     id: v.id,
@@ -65,9 +71,6 @@ export class AppointmentsService {
                     endDate: v.endDate.toDate(),
                     customerId: v.customerId,
                     name: v.name,
-                    sharesStartTimeWithOtherAppointment:
-                      v.sharesStartTimeWithOtherAppointment,
-                    positionSharing: v.positionSharing,
                   };
                 },
               ),
@@ -75,18 +78,17 @@ export class AppointmentsService {
           } else {
             this.appointments.next([]);
           }
-
           return this.appointments.value;
         }),
       );
   }
 
   private getStringDate(date: Date) {
-    const month = date.getMonth() + 1; //months from 1-12
+    const month = date.getMonth(); //months from 1-12
     const day = date.getDate();
     const year = date.getFullYear();
 
-    const strDate = year + '_' + month + '_' + day;
+    const strDate = day + '_' + month + '_' + year;
     return strDate;
   }
 
@@ -99,7 +101,7 @@ export class AppointmentsService {
     this.appointmentToBeConfirmed = appointment;
   }
 
-  updateTemporallyExisitingAppointment(appointment: Appointment) {
+  /* updateTemporallyExisitingAppointment(appointment: Appointment) {
     const appointToShow = this.appointments?.value;
     appointToShow.forEach((element, index) => {
       if (element.id === appointment.id) {
@@ -107,25 +109,30 @@ export class AppointmentsService {
       }
     });
     this.appointments.next(appointToShow);
-  }
+  } */
 
-  async updateExisitingAppointment(
+  async confirmNewAppointment(
+    businessId: string,
     agendaId: string,
-    appointments: Appointment[],
+    productId: string,
+    customerId: string,
   ) {
-    await this.afs
-      .doc(`agendas/${agendaId}`)
-      .collection<AgendaDay>('appointments')
-      .doc<any>(`${this.getStringDate(appointments[0].startDate)}-${agendaId}`)
-      .set({
-        appointments: appointments,
+    if (this.appointmentToBeConfirmed) {
+      this.callable({
+        uid: customerId,
+        businessId: businessId,
+        productId: productId,
+        timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
+        agendaId: agendaId,
+      }).subscribe(a => {
+        console.log(a);
       });
+    }
+    this.appointmentToBeConfirmed = null;
   }
 
   restoreExistingAppointment(appointment: Appointment) {
     if (appointment) {
-      appointment.sharesStartTimeWithOtherAppointment = false;
-      appointment.positionSharing = 0;
       const appointToShow = this.appointments?.value;
       let i = -1;
       appointToShow.forEach((element, index) => {
@@ -136,28 +143,6 @@ export class AppointmentsService {
       if (i != -1) appointToShow[i] = appointment;
       this.appointments.next(appointToShow);
     }
-  }
-
-  async confirmAppointments(agendaId: string) {
-    if (this.appointmentToBeConfirmed) {
-      await this.afs
-        .doc(`agendas/${agendaId}`)
-        .collection<AgendaDay>('appointments')
-        .doc<any>(
-          `${this.getStringDate(
-            this.appointmentToBeConfirmed.startDate,
-          )}-${agendaId}`,
-        )
-        .set(
-          {
-            appointments: firebase.firestore.FieldValue.arrayUnion(
-              this.appointmentToBeConfirmed,
-            ),
-          },
-          { merge: true },
-        );
-    }
-    this.appointmentToBeConfirmed = null;
   }
 
   cancelAppointment(appointment: Appointment) {

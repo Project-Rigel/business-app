@@ -27,7 +27,7 @@ export class ProductsListComponent implements OnInit {
   @Input() done: boolean;
   @Input() isSearching: boolean;
   @Input() searchResult: Product[];
-  @Input() maxHeightPercent: number = 80;
+  @Input() maxHeightPercent = 80;
   @Input() isSelectable: boolean;
 
   @Output() onProductClicked: EventEmitter<Product> = new EventEmitter<
@@ -36,6 +36,7 @@ export class ProductsListComponent implements OnInit {
 
   subscriptions: Subscription[];
   lastIdSelected: string;
+  isLoadingProducts = true;
 
   constructor(private productService: ProductsService) {
     this.subscriptions = [];
@@ -45,14 +46,20 @@ export class ProductsListComponent implements OnInit {
   ngOnInit() {
     this.subscriptions.push(
       this.productService.done.subscribe(done => {
-        if (done === true && this.ionInfiniteScrollElement) {
-          this.ionInfiniteScrollElement.disabled = true;
+        if (done === true) {
+          this.isLoadingProducts = false;
+          if (this.ionInfiniteScrollElement) {
+            this.ionInfiniteScrollElement.disabled = true;
+          }
         }
       }),
     );
 
     this.subscriptions.push(
       this.productService.loading.subscribe(async loading => {
+        if (this.isLoadingProducts === false) {
+          this.isLoadingProducts = loading;
+        }
         if (!loading && this.ionInfiniteScrollElement) {
           await this.ionInfiniteScrollElement.complete();
         }

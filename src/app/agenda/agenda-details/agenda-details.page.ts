@@ -18,6 +18,7 @@ import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
 import { AppointmentsService } from '../../services/appointments.service';
+import { AuthService } from '../../services/auth.service';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 
 interface DisplayItem {
@@ -62,6 +63,7 @@ export class AgendaDetailsPage implements OnInit {
   exisitingAppointment = null;
   dayAppointments: Appointment[] = [];
   productDuration: Duration;
+  businessId: string;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
   public loading: boolean;
@@ -73,6 +75,7 @@ export class AgendaDetailsPage implements OnInit {
     public route: ActivatedRoute,
     private modalController: ModalController,
     public alertController: AlertController,
+    private auth: AuthService,
   ) {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
@@ -85,6 +88,12 @@ export class AgendaDetailsPage implements OnInit {
 
     this.appointmentsService.appointments$.subscribe(data => {
       this.dayAppointments = data;
+    });
+
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.businessId = user.businessId;
+      }
     });
   }
 
@@ -168,18 +177,31 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointmentInfo = data;
 
         this.showConfirmApoointmentDialog();
-        // Calculamos las horas disponibles teniendo en cuenta los intervalos y la duración de los productos
-        const intervals = this.addingAppointmentInfo.intervals;
+        let intervals = this.addingAppointmentInfo.intervals;
+        console.log('Intervals received from functions: ');
+        console.log(intervals);
+
+        intervals = [
+          {
+            from: '08:00',
+            to: '14:00',
+          },
+          {
+            from: '17:00',
+            to: '20:00',
+          },
+        ];
+
         const productDuration = moment.duration(
           this.addingAppointmentInfo.product.duration,
           'minutes',
         );
-        console.log(productDuration);
+
         for (const gap of intervals) {
           for (
             let item = moment(gap.from, 'HH:mm');
             moment(gap.to, 'HH:mm').diff(item) > 0;
-            item.add(this.interval.asMinutes(), 'minutes')
+            item.add(productDuration.asMinutes(), 'minutes')
           ) {
             const aux = moment(item);
             if (
@@ -187,7 +209,58 @@ export class AgendaDetailsPage implements OnInit {
                 aux.add(productDuration.asMinutes(), 'minutes'),
               ) >= 0
             ) {
-              this.appoinmentGaps.push(item.format('HH:mm'));
+              if (!this.dayAppointments || this.dayAppointments.length === 0) {
+                this.appoinmentGaps.push(item.format('HH:mm'));
+              } else {
+                const possibleEndMoment = moment(item, 'HH:mm').add(
+                  productDuration.asMinutes(),
+                  'minutes',
+                );
+                let canAdd = true;
+                const itemDate = item.toDate();
+                itemDate.setDate(this.dayAppointments[0].startDate.getDate());
+                itemDate.setMonth(this.dayAppointments[0].startDate.getMonth());
+                itemDate.setFullYear(
+                  this.dayAppointments[0].startDate.getFullYear(),
+                );
+
+                const possibleEndDate = possibleEndMoment.toDate();
+                possibleEndDate.setDate(
+                  this.dayAppointments[0].startDate.getDate(),
+                );
+                possibleEndDate.setMonth(
+                  this.dayAppointments[0].startDate.getMonth(),
+                );
+                possibleEndDate.setFullYear(
+                  this.dayAppointments[0].startDate.getFullYear(),
+                );
+
+                this.dayAppointments.forEach(appointment => {
+                  if (
+                    !(
+                      appointment.startDate.getTime() <= itemDate.getTime() &&
+                      appointment.endDate.getTime() > itemDate.getTime()
+                    ) && // Si el item esta entre una cita
+                    !(
+                      appointment.startDate.getTime() <
+                        possibleEndDate.getTime() &&
+                      appointment.endDate.getTime() > possibleEndDate.getTime()
+                    ) && // Si el posibleFin esta entre una cita
+                    !(
+                      appointment.startDate.getTime() > itemDate.getTime() &&
+                      appointment.endDate.getTime() < possibleEndDate.getTime()
+                    )
+                  )
+                    // Si hay una cita entre el item y el posible final
+                    console.log('No añadir tramo');
+                  else {
+                    canAdd = false;
+                  }
+                });
+                if (canAdd) {
+                  this.appoinmentGaps.push(item.format('HH:mm'));
+                }
+              }
             }
           }
         }
@@ -195,42 +268,12 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
-  isStartTimeFull(element, item) {
-    return (
-      element.startDate.getHours() === item.hour() &&
-      element.startDate.getMinutes() === item.minute() &&
-      element.sharesStartTimeWithOtherAppointment
-    );
-  }
-
-  isDurationBiggerThanGap(
-    item: Moment,
-    appointment: Appointment,
-    productDuration: Duration,
-  ) {
-    const end = moment(item)
-      .add(productDuration.asMinutes(), 'minutes')
-      .toDate();
-    end.setMonth(this.dateTimeValue.getMonth());
-    end.setFullYear(this.dateTimeValue.getFullYear());
-    end.setDate(this.dateTimeValue.getDate());
-
-    if (
-      this.isBetweenAppointment(appointment, end) &&
-      appointment.sharesStartTimeWithOtherAppointment &&
-      appointment.positionSharing === 2
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  isBetweenAppointment(appointment: Appointment, date: Date): boolean {
+  /* isBetweenAppointment(appointment: Appointment, date: Date): boolean {
     return (
       appointment.startDate.getTime() < date.getTime() &&
       appointment.endDate.getTime() >= date.getTime()
     );
-  }
+  } */
 
   selectTime($event) {
     this.updatePossibleAppointment($event);
@@ -254,7 +297,7 @@ export class AgendaDetailsPage implements OnInit {
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
-
+    /*
     /////////////////
     let sharesStartDate: boolean;
     let sharingPosition: number;
@@ -283,8 +326,6 @@ export class AgendaDetailsPage implements OnInit {
       sharingPosition = 0; // enum
       console.log('Cita sola');
     } else if (numberOfAppointmentsAtStartDate === 1) {
-      this.dayAppointments[index].sharesStartTimeWithOtherAppointment = true; // Wrong? sharing = 1
-      this.dayAppointments[index].positionSharing = 1;
       this.appointmentsService.updateTemporallyExisitingAppointment(
         this.dayAppointments[index],
       );
@@ -299,7 +340,7 @@ export class AgendaDetailsPage implements OnInit {
       // return error o alerta
     }
 
-    ////////////////
+    //////////////// */
     const productDuration = moment.duration(
       this.addingAppointmentInfo.product.duration,
       'minutes',
@@ -313,8 +354,8 @@ export class AgendaDetailsPage implements OnInit {
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
-      sharesStartTimeWithOtherAppointment: sharesStartDate,
-      positionSharing: sharingPosition,
+      /* sharesStartTimeWithOtherAppointment: sharesStartDate,
+      positionSharing: sharingPosition, */
       // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
@@ -339,11 +380,12 @@ export class AgendaDetailsPage implements OnInit {
           handler: async () => {
             try {
               this.loading = true;
-              await this.appointmentsService.updateExisitingAppointment(
+              await this.appointmentsService.confirmNewAppointment(
+                this.businessId,
                 agendaId,
-                this.dayAppointments,
+                this.addingAppointmentInfo.product.id,
+                this.addingAppointmentInfo.customer.id,
               );
-
               this.loading = false;
               this.addingAppointmentInfo = null;
               this.addingAppointment = false;
@@ -359,6 +401,7 @@ export class AgendaDetailsPage implements OnInit {
     this.possibleAppointmentId = null;
     this.appointment = null;
     this.exisitingAppointment = null;
+    this.appoinmentGaps = [];
   }
 
   private updateAppointments(date: Date) {
@@ -389,7 +432,11 @@ export class AgendaDetailsPage implements OnInit {
       );
       this.exisitingAppointment = null;
     }
-    this.selectedStartTime = !this.selectedStartTime;
+
+    if (this.selectedStartTime) {
+      this.selectedStartTime = !this.selectedStartTime;
+    }
+
     this.possibleAppointmentId = null;
   }
 }

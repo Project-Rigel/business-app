@@ -26,13 +26,13 @@ export class AgendaPage implements OnInit {
   ) {}
 
   agendas$: Observable<Agenda[]>;
-  loading: boolean = false;
+  loading = false;
 
   ngOnInit() {
     this.agendas$ = this.auth.user$.pipe(
       switchMap(user => {
         if (user) {
-          return this.service.getBusinessAgenda(user.businessId); // user de momento tiene un businessId
+          return this.service.getBusinessAgenda(user.businessId);
         } else {
           return of(null);
         }

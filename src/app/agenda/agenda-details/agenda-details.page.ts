@@ -207,50 +207,7 @@ export class AgendaDetailsPage implements OnInit {
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
-    /*
-    /////////////////
-    let sharesStartDate: boolean;
-    let sharingPosition: number;
-    let numberOfAppointmentsAtStartDate = 0;
-    let index = 0;
 
-    this.dayAppointments.forEach((element, i) => {
-      element.startDate.setSeconds(this.dateTimeValue.getSeconds());
-      element.startDate.setMilliseconds(this.dateTimeValue.getMilliseconds());
-      element.endDate.setSeconds(this.dateTimeValue.getSeconds());
-      element.endDate.setMilliseconds(this.dateTimeValue.getMilliseconds());
-
-      if (
-        element.startDate.getTime() <= this.dateTimeValue.getTime() &&
-        element.endDate.getTime() > this.dateTimeValue.getTime()
-      ) {
-        // Cambiar por en rato de cita entero
-        numberOfAppointmentsAtStartDate++; // Parte derecha
-        index = i;
-      }
-    });
-
-    if (numberOfAppointmentsAtStartDate === 0) {
-      // Si array de citas contiene x elementos, entonces ...
-      sharesStartDate = false;
-      sharingPosition = 0; // enum
-      console.log('Cita sola');
-    } else if (numberOfAppointmentsAtStartDate === 1) {
-      this.appointmentsService.updateTemporallyExisitingAppointment(
-        this.dayAppointments[index],
-      );
-      this.exisitingAppointment = this.dayAppointments[index];
-
-      sharesStartDate = true;
-      sharingPosition = 2;
-      console.log('Cita doble');
-    } else {
-      console.log('Error, más de 2 citas');
-      return;
-      // return error o alerta
-    }
-
-    //////////////// */
     const productDuration = moment.duration(
       this.addingAppointmentInfo.product.duration,
       'minutes',

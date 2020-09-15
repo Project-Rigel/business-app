@@ -1,4 +1,9 @@
-const BUSINESS_ID = '123456789arturo';
-const AGENDA_ID = 'AZNVcZzTz5F9yLkxx96h';
-const PRODUCT_ID = 'XOucpP9coitMpPnsyosW';
-const TIMESTAMP = '1600112397000';
+export abstract class FunctionNames {
+  public static readonly BOOK_APPOINTMENT = 'bookAppointment';
+  public static readonly GET_AVAILABLE_DAYS_IN_MONTH =
+    'getAvaliableDaysInMonth';
+  public static readonly GET_AVAILABLE_TIME_INTERVALS =
+    'getAvaliableTimeIntervals';
+  public static readonly SET_AGENDA_SCHEDULE_SETTINGS =
+    'setAgendaScheduleSettings';
+}

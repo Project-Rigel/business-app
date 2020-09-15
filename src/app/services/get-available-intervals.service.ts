@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable } from 'rxjs';
+import { FunctionNames } from '../constants';
 
 export interface GetAvailableTimesDto {
   businessId: string;
@@ -10,7 +11,6 @@ export interface GetAvailableTimesDto {
 }
 
 export interface AvailableTimesResponse {
-  //intervals: { from: string; to: string }[];
   result: { from: string; to: string }[];
 }
 
@@ -26,7 +26,7 @@ export class GetAvailableIntervalsService {
     this._endpoint = this.functions.httpsCallable<
       GetAvailableTimesDto,
       AvailableTimesResponse
-    >('getAvaliableTimeIntervals');
+    >(FunctionNames.GET_AVAILABLE_TIME_INTERVALS);
   }
 
   get endpoint() {

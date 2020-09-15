@@ -26,9 +26,7 @@ workflows:
           inputs:
             - android_version_code: $BITRISE_BUILD_NUMBER
             - ios_bundle_version: $BITRISE_BUILD_NUMBER
-      - ionic-prepare@1:
-          inputs:
-            - cache_local_deps: 'true'
+      - ionic-prepare@1: {}
       - ios-auto-provision@1:
           inputs:
             - distribution_type: app-store

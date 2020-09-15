@@ -5,6 +5,4 @@ export interface Appointment {
   customerId: string;
   customerName: string;
   id: string;
-  sharesStartTimeWithOtherAppointment: boolean;
-  positionSharing: number;
 }

@@ -127,6 +127,7 @@ export class AuthService {
           resolve(true);
         })
         .catch(err => {
+          console.log(err);
           resolve(false);
         });
     });

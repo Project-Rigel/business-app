@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { IonSlides, ModalController } from '@ionic/angular';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertController, IonSlides, ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -8,21 +9,25 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './add-business-wizard.component.html',
   styleUrls: ['./add-business-wizard.component.scss'],
 })
-export class AddBusinessWizardComponent implements AfterViewInit {
+export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
   @ViewChild(IonSlides) ionSlides: IonSlides;
   slideOpts: any = {};
   businessName: string;
   businessNIF: string;
   businessAddress: any;
   businessPhoneNumber: number;
+  maxTries: number;
 
   constructor(
     private modalController: ModalController,
     private authService: AuthService,
     private keyboard: Keyboard,
+    private alertController: AlertController,
   ) {}
 
-  //ngOnInit() {}
+  ngOnInit() {
+    this.maxTries = 3;
+  }
 
   async ngAfterViewInit(): Promise<void> {
     await this.ionSlides.lockSwipes(true);
@@ -64,7 +69,22 @@ export class AddBusinessWizardComponent implements AfterViewInit {
           },
         });
       } else {
-        await this.cancel();
+        this.maxTries--;
+        if (this.maxTries > 0) {
+          await this.presentError(
+            'El código de verificación es incorrecto. Por favor, introduzca de nuevo el teléfono o inténtelo de nuevo.',
+            (this.maxTries === 1 ? 'Queda ' : 'Quedan ') +
+              this.maxTries +
+              (this.maxTries === 1 ? ' intento' : ' intentos'),
+          );
+          await this.ionSlides.slidePrev();
+        } else {
+          await this.presentError(
+            'Ha agotado el número de intentos, se le va a redirigir al login',
+            'Quedan ' + this.maxTries + ' intentos',
+          );
+          await this.cancel();
+        }
       }
     });
   }
@@ -78,6 +98,20 @@ export class AddBusinessWizardComponent implements AfterViewInit {
   }
 
   async cancel() {
+    this.maxTries = 3;
     await this.modalController.dismiss({ done: false });
+  }
+
+  async presentError(msg: string, subtitle: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'alert',
+      mode: 'ios',
+      header: 'Error',
+      subHeader: subtitle,
+      message: msg,
+      buttons: ['OK'],
+    });
+
+    await alert.present();
   }
 }

@@ -1,9 +1,13 @@
-export abstract class FunctionNames {
-  public static readonly BOOK_APPOINTMENT = 'bookAppointment';
-  public static readonly GET_AVAILABLE_DAYS_IN_MONTH =
-    'getAvaliableDaysInMonth';
-  public static readonly GET_AVAILABLE_TIME_INTERVALS =
-    'getAvaliableTimeIntervals';
-  public static readonly SET_AGENDA_SCHEDULE_SETTINGS =
-    'setAgendaScheduleSettings';
+interface Functions {
+  bookAppointment: string;
+  avaliableDaysInMonth: string;
+  avaliableTimeIntervals: string;
+  agendaSettings: string;
 }
+
+export const functionNames: Functions = {
+  bookAppointment: 'bookAppointment',
+  avaliableDaysInMonth: 'getAvaliableDaysInMonth',
+  avaliableTimeIntervals: 'getAvaliableTimeIntervals',
+  agendaSettings: 'setAgendaScheduleSettings',
+};

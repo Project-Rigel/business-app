@@ -4,7 +4,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FunctionNames } from '../constants';
+import { functionNames } from '../constants';
 import { AgendaDay } from '../interfaces/agendaDay';
 import { Appointment } from '../interfaces/appointment';
 
@@ -23,7 +23,7 @@ export class AppointmentsService {
   startHour = 7;
   endHour = 23;
   appointmentToBeConfirmed: Appointment;
-  callable = this.functions.httpsCallable(FunctionNames.BOOK_APPOINTMENT);
+  callable = this.functions.httpsCallable(functionNames.bookAppointment);
 
   constructor(
     private afs: AngularFirestore,

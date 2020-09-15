@@ -1,3 +1,4 @@
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, IonSlides, ModalController } from '@ionic/angular';
@@ -20,7 +21,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
   constructor(
     private modalController: ModalController,
     private authService: AuthService,
-    private router: Router,
+    private keyboard: Keyboard,
     private alertController: AlertController,
   ) {}
 
@@ -93,6 +94,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     await this.ionSlides.slideNext(600);
     await this.ionSlides.lockSwipes(false);
     await this.ionSlides.lockSwipeToNext(true);
+    await this.keyboard.hide(); // For cordova, to prevent going to the nextSlide with 'enter'
   }
 
   async cancel() {

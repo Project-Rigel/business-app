@@ -13,6 +13,7 @@ import { AddBusinessWizardComponent } from './add-business-wizard/add-business-w
 export class LoginPage implements OnInit {
   userForm;
   userId: string;
+  prueba = '';
 
   constructor(
     private formBuilder: FormBuilder,

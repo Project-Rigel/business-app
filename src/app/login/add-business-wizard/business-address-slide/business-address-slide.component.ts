@@ -84,4 +84,8 @@ export class BusinessAddressSlideComponent implements OnInit {
 
     return false;
   }
+
+  goToNextSlide(event) {
+    event.setFocus();
+  }
 }

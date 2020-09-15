@@ -26,7 +26,7 @@
         >
           <form [formGroup]="userForm" class="ion-padding">
             <ion-item>
-              <ion-label position="floating">Name</ion-label>
+              <ion-label position="floating">Nombre</ion-label>
               <ion-input
                 type="text"
                 formControlName="fullName"
@@ -34,7 +34,7 @@
               ></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="floating">Email/Username</ion-label>
+              <ion-label position="floating">Email/Usuario</ion-label>
               <ion-input
                 type="text"
                 formControlName="email"
@@ -42,7 +42,7 @@
               ></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="floating">Password</ion-label>
+              <ion-label position="floating">Contraseña</ion-label>
               <ion-input
                 type="password"
                 formControlName="password"
@@ -51,7 +51,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-label position="floating">Repeat Password</ion-label>
+              <ion-label position="floating">Repetir contraseña</ion-label>
               <ion-input
                 type="password"
                 formControlName="password"
@@ -66,7 +66,7 @@
               shape="round"
               [disabled]="!userForm.valid"
               (click)="registerUser()"
-              >Register
+              >Registrar
             </ion-button>
           </form>
           <div class="ion-padding ion-text-center login-title">OR</div>
@@ -76,7 +76,7 @@
             (click)="loginWithGoogle()"
           >
             <ion-icon name="logo-google"></ion-icon>
-            <ion-label>Login with Google</ion-label>
+            <ion-label>Iniciar con Google</ion-label>
           </ion-chip>
         </ion-col>
       </ion-row>

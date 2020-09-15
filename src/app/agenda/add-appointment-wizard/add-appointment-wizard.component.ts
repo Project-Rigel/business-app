@@ -13,7 +13,10 @@ import { Product } from '../../interfaces/product';
 import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
-import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
+import {
+  AvailableTimesResponse,
+  GetAvailableIntervalsService,
+} from '../../services/get-available-intervals.service';
 import { PaginationService } from '../../services/pagination-service.service';
 import { ProductsService } from '../../services/products.service';
 
@@ -101,11 +104,11 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       })
       .pipe(take(1))
       .subscribe(
-        async (v: any) => {
+        async (intervals: AvailableTimesResponse) => {
           this.loading = false;
           await this.modalController.dismiss({
             done: true,
-            intervals: v.intervals,
+            intervals: intervals,
             customer: this.selectedCustomer,
             product: this.selectedProduct,
           });

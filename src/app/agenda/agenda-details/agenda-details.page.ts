@@ -162,7 +162,6 @@ export class AgendaDetailsPage implements OnInit {
       component: AddAppointmentWizardComponent,
       swipeToClose: true,
       componentProps: {
-        //display: this.display,
         agendaId: this.route.snapshot.paramMap.get('id'),
         daySelected: this.dateTimeValue,
       },
@@ -176,104 +175,15 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointment = true;
         this.addingAppointmentInfo = data;
 
-        this.showConfirmApoointmentDialog();
-        let intervals = this.addingAppointmentInfo.intervals;
-        console.log('Intervals received from functions: ');
-        console.log(intervals);
-
-        intervals = [
-          {
-            from: '08:00',
-            to: '14:00',
-          },
-          {
-            from: '17:00',
-            to: '20:00',
-          },
-        ];
-
-        const productDuration = moment.duration(
-          this.addingAppointmentInfo.product.duration,
-          'minutes',
-        );
-
+        await this.showConfirmApoointmentDialog();
+        const intervals = this.addingAppointmentInfo.intervals;
         for (const gap of intervals) {
-          for (
-            let item = moment(gap.from, 'HH:mm');
-            moment(gap.to, 'HH:mm').diff(item) > 0;
-            item.add(productDuration.asMinutes(), 'minutes')
-          ) {
-            const aux = moment(item);
-            if (
-              moment(gap.to, 'HH:mm').diff(
-                aux.add(productDuration.asMinutes(), 'minutes'),
-              ) >= 0
-            ) {
-              if (!this.dayAppointments || this.dayAppointments.length === 0) {
-                this.appoinmentGaps.push(item.format('HH:mm'));
-              } else {
-                const possibleEndMoment = moment(item, 'HH:mm').add(
-                  productDuration.asMinutes(),
-                  'minutes',
-                );
-                let canAdd = true;
-                const itemDate = item.toDate();
-                itemDate.setDate(this.dayAppointments[0].startDate.getDate());
-                itemDate.setMonth(this.dayAppointments[0].startDate.getMonth());
-                itemDate.setFullYear(
-                  this.dayAppointments[0].startDate.getFullYear(),
-                );
-
-                const possibleEndDate = possibleEndMoment.toDate();
-                possibleEndDate.setDate(
-                  this.dayAppointments[0].startDate.getDate(),
-                );
-                possibleEndDate.setMonth(
-                  this.dayAppointments[0].startDate.getMonth(),
-                );
-                possibleEndDate.setFullYear(
-                  this.dayAppointments[0].startDate.getFullYear(),
-                );
-
-                this.dayAppointments.forEach(appointment => {
-                  if (
-                    !(
-                      appointment.startDate.getTime() <= itemDate.getTime() &&
-                      appointment.endDate.getTime() > itemDate.getTime()
-                    ) && // Si el item esta entre una cita
-                    !(
-                      appointment.startDate.getTime() <
-                        possibleEndDate.getTime() &&
-                      appointment.endDate.getTime() > possibleEndDate.getTime()
-                    ) && // Si el posibleFin esta entre una cita
-                    !(
-                      appointment.startDate.getTime() > itemDate.getTime() &&
-                      appointment.endDate.getTime() < possibleEndDate.getTime()
-                    )
-                  )
-                    // Si hay una cita entre el item y el posible final
-                    console.log('No añadir tramo');
-                  else {
-                    canAdd = false;
-                  }
-                });
-                if (canAdd) {
-                  this.appoinmentGaps.push(item.format('HH:mm'));
-                }
-              }
-            }
-          }
+          const item = moment(gap.from, 'HH:mm');
+          this.appoinmentGaps.push(item.format('HH:mm'));
         }
       }
     }
   }
-
-  /* isBetweenAppointment(appointment: Appointment, date: Date): boolean {
-    return (
-      appointment.startDate.getTime() < date.getTime() &&
-      appointment.endDate.getTime() >= date.getTime()
-    );
-  } */
 
   selectTime($event) {
     this.updatePossibleAppointment($event);
@@ -297,50 +207,7 @@ export class AgendaDetailsPage implements OnInit {
     if (!this.possibleAppointmentId) {
       this.possibleAppointmentId = this.appointmentsService.getId();
     }
-    /*
-    /////////////////
-    let sharesStartDate: boolean;
-    let sharingPosition: number;
-    let numberOfAppointmentsAtStartDate = 0;
-    let index = 0;
 
-    this.dayAppointments.forEach((element, i) => {
-      element.startDate.setSeconds(this.dateTimeValue.getSeconds());
-      element.startDate.setMilliseconds(this.dateTimeValue.getMilliseconds());
-      element.endDate.setSeconds(this.dateTimeValue.getSeconds());
-      element.endDate.setMilliseconds(this.dateTimeValue.getMilliseconds());
-
-      if (
-        element.startDate.getTime() <= this.dateTimeValue.getTime() &&
-        element.endDate.getTime() > this.dateTimeValue.getTime()
-      ) {
-        // Cambiar por en rato de cita entero
-        numberOfAppointmentsAtStartDate++; // Parte derecha
-        index = i;
-      }
-    });
-
-    if (numberOfAppointmentsAtStartDate === 0) {
-      // Si array de citas contiene x elementos, entonces ...
-      sharesStartDate = false;
-      sharingPosition = 0; // enum
-      console.log('Cita sola');
-    } else if (numberOfAppointmentsAtStartDate === 1) {
-      this.appointmentsService.updateTemporallyExisitingAppointment(
-        this.dayAppointments[index],
-      );
-      this.exisitingAppointment = this.dayAppointments[index];
-
-      sharesStartDate = true;
-      sharingPosition = 2;
-      console.log('Cita doble');
-    } else {
-      console.log('Error, más de 2 citas');
-      return;
-      // return error o alerta
-    }
-
-    //////////////// */
     const productDuration = moment.duration(
       this.addingAppointmentInfo.product.duration,
       'minutes',

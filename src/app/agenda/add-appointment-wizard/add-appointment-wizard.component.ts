@@ -29,6 +29,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   @ViewChild(IonSlides)
   ionSlides: IonSlides;
   search$: Observable<Customer[]>;
+  searchProduct$: Observable<Product[]>;
   searching = false;
   sliderOptions: any = {};
   agendaId: string;
@@ -87,6 +88,24 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               inputs[1] ? inputs[1].toLowerCase() : undefined,
               inputs[2] ? inputs[2].toLowerCase() : undefined,
             );
+          }
+        }),
+      );
+    }
+  }
+
+  async searchProduct(event) {
+    const input = event.target.value.toString();
+
+    if (input.length === 0) {
+      this.searching = false;
+    }
+    if (input.length > 0) {
+      this.searching = true;
+      this.searchProduct$ = this.auth.user$.pipe(
+        switchMap(user => {
+          if (user) {
+            return this.productsService.findProductByField('name', input);
           }
         }),
       );

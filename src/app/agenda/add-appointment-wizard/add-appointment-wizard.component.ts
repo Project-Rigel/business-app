@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { AlertController, IonSlides, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -39,7 +40,9 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   loading: boolean;
   user: User;
 
-  lastIdSelected: string;
+  searcherStyle = 17;
+  listStyle = 68;
+  buttonStyle = 15;
 
   constructor(
     private readonly customerService: CustomersService,
@@ -50,8 +53,22 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     public readonly intervalsService: GetAvailableIntervalsService,
     public readonly alertController: AlertController,
     private chRef: ChangeDetectorRef,
+    private keyboard: Keyboard,
   ) {
     // Para detectar los cambios de la variable loading en el html
+    this.keyboard.onKeyboardDidShow().subscribe(() => {
+      console.log('Aparezo');
+      this.searcherStyle = 25;
+      this.listStyle = 75;
+      this.buttonStyle = 0;
+    });
+
+    this.keyboard.onKeyboardDidHide().subscribe(() => {
+      console.log('Me voy');
+      this.searcherStyle = 17;
+      this.listStyle = 68;
+      this.buttonStyle = 15;
+    });
   }
 
   ngOnInit() {

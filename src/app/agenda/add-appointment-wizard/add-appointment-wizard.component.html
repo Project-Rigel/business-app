@@ -10,17 +10,12 @@
 </ion-header>
 
 <ion-content fullscreen [scrollY]="false">
-  <ion-slides
-    mode="ios"
-    pager="ios"
-    [options]="sliderOptions"
-    class="slider-content"
-  >
+  <ion-slides mode="ios" [options]="sliderOptions" class="slider-content">
     <ion-slide>
       <div class="slide">
-        <div style="max-height: 17%; height: 17%">
-          <ion-text class="ion-text-center"
-            ><h1>Seleccione un cliente</h1></ion-text
+        <div [style.height.%]="searcherStyle">
+          <ion-text class="ion-text-center ion-no-margin ion-no-padding"
+            ><h1 style="margin: 10px">Seleccione un cliente</h1></ion-text
           >
           <ion-searchbar
             class="ion-text-left"
@@ -29,9 +24,10 @@
             (ionChange)="search($event)"
           ></ion-searchbar>
         </div>
+
         <app-customers-list
           class="customers-list"
-          [maxHeightPercent]="67"
+          [maxHeightPercent]="listStyle"
           [loadedData]="paginationService.data | async"
           [isSearching]="searching"
           [done]="paginationService.done | async"
@@ -40,8 +36,7 @@
           [isSelectable]="true"
           (onCustomerClicked)="selectedCustomer = $event"
         ></app-customers-list>
-
-        <div style="max-height: 15%; height: 15%">
+        <div [style.height.%]="buttonStyle">
           <ion-button
             [disabled]="!selectedCustomer"
             expand="block"
@@ -55,9 +50,9 @@
     </ion-slide>
 
     <ion-slide class="slide">
-      <div style="max-height: 17%; height: 17%">
-        <ion-text class="ion-text-center"
-          ><h1>Seleccione un producto</h1></ion-text
+      <div [style.height.%]="searcherStyle">
+        <ion-text class="ion-text-center ion-no-margin ion-no-padding"
+          ><h1 style="margin: 10px">Seleccione un producto</h1></ion-text
         >
         <ion-searchbar
           class="ion-text-left"
@@ -69,7 +64,7 @@
 
       <app-products-list
         class="customers-list"
-        [maxHeightPercent]="67"
+        [maxHeightPercent]="listStyle"
         [loadedData]="productsService.data | async"
         [isSearching]="searching"
         [done]="productsService.done | async"
@@ -78,8 +73,7 @@
         [isSelectable]="true"
         (onProductClicked)="selectedProduct = $event"
       ></app-products-list>
-
-      <div style="max-height: 15%; height: 15%">
+      <div [style.height.%]="buttonStyle">
         <ion-button
           [disabled]="!selectedProduct"
           expand="block"

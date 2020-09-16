@@ -10,6 +10,7 @@ import { AlertController, IonInput, ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
+import { LoaderService } from '../../services/loader.service';
 import { PhoneValidatorService } from '../../services/phone-validator.service';
 
 @Component({
@@ -31,6 +32,7 @@ export class AddCustomerPage implements OnInit {
     public readonly auth: AuthService,
     private keyboard: Keyboard,
     public readonly alertController: AlertController,
+    private loader: LoaderService,
   ) {}
 
   async ngOnInit() {
@@ -76,6 +78,7 @@ export class AddCustomerPage implements OnInit {
         message: this.getErrorMessage(),
       });
     } else {
+      this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
       await this.customersService
@@ -88,6 +91,7 @@ export class AddCustomerPage implements OnInit {
           value.phone,
         )
         .then(() => {
+          this.loader.hideLoader();
           this.presentSuccess(
             value.name.toString(),
             value.firstSurname.toString(),

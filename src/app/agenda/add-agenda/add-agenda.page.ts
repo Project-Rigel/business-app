@@ -12,6 +12,7 @@ import {
 import { take } from 'rxjs/operators';
 import { AgendaService } from '../../services/agenda.service';
 import { AuthService } from '../../services/auth.service';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -36,6 +37,7 @@ export class AddAgendaPage {
     private storage: AngularFireStorage,
     private afs: AngularFirestore,
     private auth: AuthService,
+    private loader: LoaderService,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -47,6 +49,7 @@ export class AddAgendaPage {
   }
 
   async createAgenda() {
+    this.loader.showLoader();
     this.auth.user$.pipe(take(1)).subscribe(async user => {
       this.loading = true;
       const id = this.afs.createId();
@@ -68,6 +71,7 @@ export class AddAgendaPage {
         user.businessId, // Esto tiene que ser el id de el bussiness
       );
 
+      this.loader.hideLoader();
       await this.modalController.dismiss({});
 
       this.loading = false;

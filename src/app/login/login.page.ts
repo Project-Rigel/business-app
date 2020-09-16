@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { LoaderService } from '../services/loader.service';
 import { AddBusinessWizardComponent } from './add-business-wizard/add-business-wizard.component';
 
 @Component({
@@ -20,6 +21,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     public authService: AuthService,
     public modalController: ModalController,
+    private loader: LoaderService,
   ) {
     this.authService.user$.subscribe(user => {
       if (user) {
@@ -37,14 +39,19 @@ export class LoginPage implements OnInit {
   }
 
   async registerUser() {
+    this.loader.showLoader();
     await this.authService
       .createUser(this.userForm.value.email, this.userForm.value.password)
       .then(async isNewUser => {
+        this.loader.hideLoader();
         if (isNewUser) {
           await this.startAddBusinessWizard();
         } else {
           await this.router.navigate(['app', 'tabs']);
         }
+      })
+      .catch(() => {
+        this.loader.hideLoader();
       });
   }
 
@@ -53,13 +60,20 @@ export class LoginPage implements OnInit {
   }
 
   async loginWithGoogle() {
-    await this.authService.loginWithGoogle().then(async isNewUser => {
-      if (isNewUser) {
-        await this.startAddBusinessWizard();
-      } else {
-        await this.router.navigate(['app', 'tabs']);
-      }
-    });
+    this.loader.showLoader();
+    await this.authService
+      .loginWithGoogle()
+      .then(async isNewUser => {
+        this.loader.hideLoader();
+        if (isNewUser) {
+          await this.startAddBusinessWizard();
+        } else {
+          await this.router.navigate(['app', 'tabs']);
+        }
+      })
+      .catch(() => {
+        this.loader.hideLoader();
+      });
   }
 
   async startAddBusinessWizard() {
@@ -77,7 +91,6 @@ export class LoginPage implements OnInit {
       this.authService.deleteCurrentUser();
     } else {
       this.authService.saveBusiness(data.values);
-      console.log(data.values);
       await this.router.navigate(['app', 'tabs']);
     }
   }

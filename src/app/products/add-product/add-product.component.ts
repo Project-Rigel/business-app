@@ -9,6 +9,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonInput, ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 import { ErrorToastService } from '../../services/error-toast.service';
+import { LoaderService } from '../../services/loader.service';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
@@ -29,6 +30,7 @@ export class AddProductComponent implements OnInit {
     private errorToastService: ErrorToastService,
     public readonly auth: AuthService,
     private keyboard: Keyboard,
+    private loader: LoaderService,
   ) {}
 
   async ngOnInit() {
@@ -70,14 +72,19 @@ export class AddProductComponent implements OnInit {
           : 'Rellene los campos obligatorios.',
       });
     } else {
+      this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
-      await this.productService.addProduct(
-        businessId,
-        value.name.toString().toLowerCase(),
-        value.description.toString().toLowerCase(),
-        parseInt(value.duration),
-      );
+      await this.productService
+        .addProduct(
+          businessId,
+          value.name.toString().toLowerCase(),
+          value.description.toString().toLowerCase(),
+          parseInt(value.duration),
+        )
+        .then(() => {
+          this.loader.hideLoader();
+        });
 
       await this.ctrl.dismiss({ done: true, values: this.productForm.value });
       this.submitClicked = false;

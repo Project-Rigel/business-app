@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { AlertController } from '@ionic/angular';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FunctionNames } from '../constants';
 import { AgendaDay } from '../interfaces/agendaDay';
 import { Appointment } from '../interfaces/appointment';
+import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +30,8 @@ export class AppointmentsService {
   constructor(
     private afs: AngularFirestore,
     private functions: AngularFireFunctions,
+    private loader: LoaderService,
+    private alertController: AlertController,
   ) {}
 
   getAllPossibleAppointments() {
@@ -107,15 +111,33 @@ export class AppointmentsService {
     customerId: string,
   ) {
     if (this.appointmentToBeConfirmed) {
+      this.loader.showLoader();
       this.callable({
         uid: customerId,
         businessId: businessId,
         productId: productId,
         timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
         agendaId: agendaId,
-      }).subscribe(a => {
-        console.log(a);
-      });
+      }).subscribe(
+        async a => {
+          console.log(a);
+          this.loader.hideLoader();
+          const alert = await this.alertController.create({
+            cssClass: 'my-custom-class',
+            header: 'Cita confirmada',
+            message: 'OK',
+            buttons: [
+              {
+                text: 'Ok',
+              },
+            ],
+          });
+          alert.present();
+        },
+        err => {
+          console.log(err);
+        },
+      );
     }
     this.appointmentToBeConfirmed = null;
   }

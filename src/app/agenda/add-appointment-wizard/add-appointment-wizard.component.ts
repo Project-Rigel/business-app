@@ -57,14 +57,12 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   ) {
     // Para detectar los cambios de la variable loading en el html
     this.keyboard.onKeyboardDidShow().subscribe(() => {
-      console.log('Aparezo');
       this.searcherStyle = 25;
       this.listStyle = 75;
       this.buttonStyle = 0;
     });
 
     this.keyboard.onKeyboardDidHide().subscribe(() => {
-      console.log('Me voy');
       this.searcherStyle = 17;
       this.listStyle = 68;
       this.buttonStyle = 15;

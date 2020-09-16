@@ -1,26 +1,50 @@
-<ion-text class="title">¿Cómo se llama tu negocio?</ion-text>
+<ion-grid>
+  <ion-row
+    class="ion-align-items-center ion-justify-content-evenly ion-text-center"
+  >
+    <ion-col size="12">
+      <h1 class="login-title">¿Cómo se llama tu negocio?</h1>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-align-items-center ion-justify-content-evenly">
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <form [formGroup]="businessNameForm" class="ion-padding">
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input
+            #businessName
+            enterkeyhint="enter"
+            (keyup.enter)="submitForm(businessNameForm.value)"
+            [color]="isInputInvalid(name) ? 'danger' : 'undefined'"
+            required
+            type="text"
+            formControlName="name"
+          >
+          </ion-input>
+        </ion-item>
+      </form>
+    </ion-col>
+  </ion-row>
 
-<form [formGroup]="businessNameForm" class="fixed-center">
-  <ion-list lines="inset" class="ion-item-round ion-no-margin">
-    <ion-item>
-      <ion-input
-        #businessName
-        enterkeyhint="enter"
-        [color]="isInputInvalid(name) ? 'danger' : 'undefined'"
-        placeholder="Introduzca el nombre aquí"
-        required
-        type="text"
-        formControlName="name"
-        class="ion-text-center"
+  <ion-row style="height: 300px">
+    <ion-col> </ion-col>
+  </ion-row>
+
+  <ion-row class="ion-align-items-center ion-justify-content-evenly">
+    <ion-col
+      size-xs="12"
+      size-sm="8"
+      size-lg="6"
+      class="ion-padding ion-align-self-center"
+    >
+      <ion-button expand="block" (click)="submitForm(businessNameForm.value)"
+        >Siguiente</ion-button
       >
-      </ion-input>
-    </ion-item>
-  </ion-list>
-</form>
-
-<ion-button
-  expand="block"
-  (click)="submitForm(businessNameForm.value)"
-  class="bottom rounded"
-  >Siguiente</ion-button
->
+    </ion-col>
+  </ion-row>
+</ion-grid>

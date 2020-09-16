@@ -4,6 +4,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FunctionNames } from '../constants';
 import { AgendaDay } from '../interfaces/agendaDay';
 import { Appointment } from '../interfaces/appointment';
 
@@ -22,7 +23,7 @@ export class AppointmentsService {
   startHour = 7;
   endHour = 23;
   appointmentToBeConfirmed: Appointment;
-  callable = this.functions.httpsCallable('bookAppointment');
+  callable = this.functions.httpsCallable(FunctionNames.BOOK_APPOINTMENT);
 
   constructor(
     private afs: AngularFirestore,
@@ -62,13 +63,11 @@ export class AppointmentsService {
             this.appointments.next(
               Object.values(v).map(
                 (v: any): Appointment => {
-                  console.log(v);
-
                   return {
-                    startDate: v.startDate.toDate(),
+                    startDate: new Date(Date.parse(v.startDate)),
                     id: v.id,
                     customerName: v.customerName,
-                    endDate: v.endDate.toDate(),
+                    endDate: new Date(Date.parse(v.endDate)),
                     customerId: v.customerId,
                     name: v.name,
                   };
@@ -100,16 +99,6 @@ export class AppointmentsService {
     this.appointments.next(appointToShow);
     this.appointmentToBeConfirmed = appointment;
   }
-
-  /* updateTemporallyExisitingAppointment(appointment: Appointment) {
-    const appointToShow = this.appointments?.value;
-    appointToShow.forEach((element, index) => {
-      if (element.id === appointment.id) {
-        appointToShow[index] = appointment;
-      }
-    });
-    this.appointments.next(appointToShow);
-  } */
 
   async confirmNewAppointment(
     businessId: string,

@@ -8,6 +8,11 @@ export class NifValidatorService {
   static valid_NIF_NIE_CIF = (): ValidatorFn => {
     return (inputControl: AbstractControl): { [key: string]: boolean } => {
       if (inputControl.value !== '') {
+        if (inputControl.value.length > 9)
+          return {
+            valid: true,
+          };
+
         try {
           const nifRegex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
           const nieRegex = /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
@@ -18,9 +23,9 @@ export class NifValidatorService {
               0,
               inputControl.value.length - 1,
             );
-            numero = numero.replace('X', 0);
-            numero = numero.replace('Y', 1);
-            numero = numero.replace('Z', 2);
+            numero = numero.replace('X', '0');
+            numero = numero.replace('Y', '1');
+            numero = numero.replace('Z', '2');
             const letraDni = inputControl.value.substr(
               inputControl.value.length - 1,
               1,

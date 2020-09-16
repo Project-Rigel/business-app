@@ -111,33 +111,15 @@ export class AppointmentsService {
     customerId: string,
   ) {
     if (this.appointmentToBeConfirmed) {
-      this.loader.showLoader();
       this.callable({
         uid: customerId,
         businessId: businessId,
         productId: productId,
         timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
         agendaId: agendaId,
-      }).subscribe(
-        async a => {
-          console.log(a);
-          this.loader.hideLoader();
-          const alert = await this.alertController.create({
-            cssClass: 'my-custom-class',
-            header: 'Cita confirmada',
-            message: 'OK',
-            buttons: [
-              {
-                text: 'Ok',
-              },
-            ],
-          });
-          alert.present();
-        },
-        err => {
-          console.log(err);
-        },
-      );
+      }).subscribe(async a => {
+        console.log(a);
+      });
     }
     this.appointmentToBeConfirmed = null;
   }

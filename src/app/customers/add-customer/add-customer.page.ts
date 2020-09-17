@@ -81,22 +81,22 @@ export class AddCustomerPage implements OnInit {
       this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
-      await this.customersService
-        .addCustomer(
+      try {
+        await this.customersService.addCustomer(
           clientId,
           value.name.toString().toLowerCase(),
           value.firstSurname.toString().toLowerCase(),
           value.secondSurname.toString().toLowerCase(),
           value.email,
           value.phone,
-        )
-        .then(() => {
-          this.loader.hideLoader();
-          this.presentSuccess(
-            value.name.toString(),
-            value.firstSurname.toString(),
-          );
-        });
+        );
+        await this.presentSuccess(
+          value.name.toString(),
+          value.firstSurname.toString(),
+        );
+      } finally {
+        this.loader.hideLoader();
+      }
 
       await this.ctrl.dismiss({ done: true, values: this.customerForm.value });
       this.submitClicked = false;

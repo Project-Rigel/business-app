@@ -50,32 +50,37 @@ export class AddAgendaPage {
 
   async createAgenda() {
     this.loader.showLoader();
-    this.auth.user$.pipe(take(1)).subscribe(async user => {
-      this.loading = true;
-      const id = this.afs.createId();
+    this.auth.user$.pipe(take(1)).subscribe(
+      async user => {
+        this.loading = true;
+        const id = this.afs.createId();
 
-      let imageUrl: string = null;
-      if (this.imageUrl) {
-        const task = await this.storage
-          .ref(id)
-          .putString(this.imageUrl, 'base64');
+        let imageUrl: string = null;
+        if (this.imageUrl) {
+          const task = await this.storage
+            .ref(id)
+            .putString(this.imageUrl, 'base64');
 
-        imageUrl = await task.ref.getDownloadURL();
-      }
+          imageUrl = await task.ref.getDownloadURL();
+        }
 
-      await this.agendaService.addAgenda(
-        id,
-        this.form.get('name').value,
-        this.minuteSelected,
-        imageUrl,
-        user.businessId, // Esto tiene que ser el id de el bussiness
-      );
+        await this.agendaService.addAgenda(
+          id,
+          this.form.get('name').value,
+          this.minuteSelected,
+          imageUrl,
+          user.businessId, // Esto tiene que ser el id de el bussiness
+        );
 
-      this.loader.hideLoader();
-      await this.modalController.dismiss({});
+        this.loader.hideLoader();
+        await this.modalController.dismiss({});
 
-      this.loading = false;
-    });
+        this.loading = false;
+      },
+      err => {
+        this.loader.hideLoader();
+      },
+    );
   }
 
   async selectImage(event) {

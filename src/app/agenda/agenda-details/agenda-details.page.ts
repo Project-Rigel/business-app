@@ -247,7 +247,6 @@ export class AgendaDetailsPage implements OnInit {
       '<br>' +
       dateMessagePiece;
     const alert = await this.alertController.create({
-      cssClass: 'ola',
       header: '¿Quiere confirmar la cita con los siguiente datos?',
       message: message,
       buttons: [
@@ -255,26 +254,51 @@ export class AgendaDetailsPage implements OnInit {
           text: 'Cancelar',
         },
         {
-          text: 'Ok',
+          text: 'OK',
           handler: async () => {
-            try {
-              this.loading = true;
-              await this.appointmentsService.confirmNewAppointment(
-                this.businessId,
-                agendaId,
-                this.addingAppointmentInfo.product.id,
-                this.addingAppointmentInfo.customer.id,
-              );
-              this.loading = false;
-              this.clearPossibleAppointmentData();
-            } catch (e) {
-              this.loading = false;
-            }
+            await this.confirmNewAppointment(agendaId);
           },
         },
       ],
     });
     await alert.present();
+  }
+
+  async confirmNewAppointment(agendaId: string) {
+    try {
+      this.loading = true;
+      await this.appointmentsService.confirmNewAppointment(
+        this.businessId,
+        agendaId,
+        this.addingAppointmentInfo.product.id,
+        this.addingAppointmentInfo.customer.id,
+      );
+      this.clearPossibleAppointmentData();
+      this.loading = false;
+      const alert = await this.alertController.create({
+        header: 'Éxito',
+        message: 'La cita se ha confirmado con éxito.',
+        buttons: [
+          {
+            text: 'Aceptar',
+          },
+        ],
+      });
+      await alert.present();
+    } catch (e) {
+      this.loading = false;
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message:
+          'Se ha producido un error inesperado. Vuelva a intentarlo en unos instantes.',
+        buttons: [
+          {
+            text: 'Aceptar',
+          },
+        ],
+      });
+      await alert.present();
+    }
   }
 
   private updateAppointments(date: Date) {

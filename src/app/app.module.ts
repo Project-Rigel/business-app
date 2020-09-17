@@ -1,3 +1,5 @@
+import { registerLocaleData } from '@angular/common';
+import localeES from '@angular/common/locales/es';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import {
@@ -26,6 +28,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PaginationService } from './services/pagination-service.service';
 // import { SmsRetriever } from '@ionic-native/sms-retriever/ngx';
+
+registerLocaleData(localeES, 'es');
 
 @NgModule({
   declarations: [AppComponent],

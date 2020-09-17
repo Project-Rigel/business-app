@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -221,26 +222,37 @@ export class AgendaDetailsPage implements OnInit {
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
-      /* sharesStartTimeWithOtherAppointment: sharesStartDate,
-      positionSharing: sharingPosition, */
-      // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
   }
 
   async confirmAppointments(agendaId: string) {
+    const customerMessagePiece =
+      '<strong>Cliente: </strong> ' +
+      this.capitalize(this.addingAppointmentInfo.customer.name) +
+      ' ' +
+      this.capitalize(this.addingAppointmentInfo.customer.firstSurname) +
+      ' ' +
+      this.capitalize(this.addingAppointmentInfo.customer.secondSurname);
+    const productMessagePiece =
+      '<strong>Producto: </strong> ' +
+      this.capitalize(this.addingAppointmentInfo.product.name);
+    const dateMessagePiece =
+      '<strong>Fecha: </strong> ' +
+      new DatePipe('es-ES').transform(this.dateTimeValue, 'short');
+    const message =
+      customerMessagePiece +
+      '<br>' +
+      productMessagePiece +
+      '<br>' +
+      dateMessagePiece;
     const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Cita confirmada',
-      message: 'Fecha: ' + this.dateTimeValue,
+      cssClass: 'ola',
+      header: '¿Quiere confirmar la cita con los siguiente datos?',
+      message: message,
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: blah => {
-            console.log('Confirm Cancel: blah');
-          },
         },
         {
           text: 'Ok',
@@ -254,8 +266,7 @@ export class AgendaDetailsPage implements OnInit {
                 this.addingAppointmentInfo.customer.id,
               );
               this.loading = false;
-              this.addingAppointmentInfo = null;
-              this.addingAppointment = false;
+              this.clearPossibleAppointmentData();
             } catch (e) {
               this.loading = false;
             }
@@ -264,11 +275,6 @@ export class AgendaDetailsPage implements OnInit {
       ],
     });
     await alert.present();
-    this.selectedStartTime = !this.selectedStartTime;
-    this.possibleAppointmentId = null;
-    this.appointment = null;
-    this.exisitingAppointment = null;
-    this.appoinmentGaps = [];
   }
 
   private updateAppointments(date: Date) {
@@ -305,5 +311,20 @@ export class AgendaDetailsPage implements OnInit {
     }
 
     this.possibleAppointmentId = null;
+  }
+
+  clearPossibleAppointmentData() {
+    this.addingAppointmentInfo = null;
+    this.addingAppointment = false;
+    this.selectedStartTime = !this.selectedStartTime;
+    this.possibleAppointmentId = null;
+    this.appointment = null;
+    this.exisitingAppointment = null;
+    this.appoinmentGaps = [];
+  }
+
+  capitalize(text: string) {
+    if (typeof text !== 'string') return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 }

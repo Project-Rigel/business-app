@@ -235,7 +235,7 @@ export class AgendaDetailsPage implements OnInit {
       message: 'Fecha: ' + this.dateTimeValue,
       buttons: [
         {
-          text: 'Cancel',
+          text: 'Cancelar',
           role: 'cancel',
           cssClass: 'secondary',
           handler: blah => {

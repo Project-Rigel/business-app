@@ -13,7 +13,6 @@ import { AddBusinessWizardComponent } from './add-business-wizard/add-business-w
 export class LoginPage implements OnInit {
   userForm;
   userId: string;
-  prueba = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,15 +36,19 @@ export class LoginPage implements OnInit {
   }
 
   async registerUser() {
-    await this.authService
-      .createUser(this.userForm.value.email, this.userForm.value.password)
-      .then(async isNewUser => {
-        if (isNewUser) {
-          await this.startAddBusinessWizard();
-        } else {
-          await this.router.navigate(['app', 'tabs']);
-        }
-      });
+    const userContext = await this.authService.createUserIfNewOrUpdate(
+      this.userForm.value.email,
+      this.userForm.value.password,
+    );
+    await this.redirectAfterLogin(userContext.isNewUser);
+  }
+
+  private async redirectAfterLogin(isNewUser: boolean) {
+    if (isNewUser) {
+      await this.startAddBusinessWizard();
+    } else {
+      await this.router.navigate(['app', 'tabs']);
+    }
   }
 
   async logOut() {
@@ -53,13 +56,8 @@ export class LoginPage implements OnInit {
   }
 
   async loginWithGoogle() {
-    await this.authService.loginWithGoogle().then(async isNewUser => {
-      if (isNewUser) {
-        await this.startAddBusinessWizard();
-      } else {
-        await this.router.navigate(['app', 'tabs']);
-      }
-    });
+    const isNewUser = await this.authService.loginWithGoogle();
+    await this.redirectAfterLogin(isNewUser);
   }
 
   async startAddBusinessWizard() {
@@ -73,11 +71,9 @@ export class LoginPage implements OnInit {
 
     if (!data.done) {
       await this.logOut();
-      // Delete temporal user since he/she the canceled business wizard
       this.authService.deleteCurrentUser();
     } else {
       this.authService.saveBusiness(data.values);
-      console.log(data.values);
       await this.router.navigate(['app', 'tabs']);
     }
   }

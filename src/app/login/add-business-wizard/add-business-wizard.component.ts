@@ -1,6 +1,5 @@
-import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { AlertController, IonSlides, ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 
@@ -55,38 +54,36 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
   }
 
   async checkVerificationCode(code) {
-    await this.authService.verifyPhoneNumber(code).then(async success => {
-      if (success) {
-        // save business
+    try {
+      await this.authService.verifyPhoneNumber(code);
 
-        await this.modalController.dismiss({
-          done: true,
-          values: {
-            name: this.businessName,
-            nif: this.businessNIF,
-            address: this.businessAddress,
-            phone: this.businessPhoneNumber,
-          },
-        });
+      await this.modalController.dismiss({
+        done: true,
+        values: {
+          name: this.businessName,
+          nif: this.businessNIF,
+          address: this.businessAddress,
+          phone: this.businessPhoneNumber,
+        },
+      });
+    } catch (e) {
+      this.maxTries--;
+      if (this.maxTries > 0) {
+        await this.presentError(
+          'El código de verificación es incorrecto. Por favor, introduzca de nuevo el teléfono o inténtelo de nuevo.',
+          (this.maxTries === 1 ? 'Queda ' : 'Quedan ') +
+            this.maxTries +
+            (this.maxTries === 1 ? ' intento' : ' intentos'),
+        );
+        await this.ionSlides.slidePrev();
       } else {
-        this.maxTries--;
-        if (this.maxTries > 0) {
-          await this.presentError(
-            'El código de verificación es incorrecto. Por favor, introduzca de nuevo el teléfono o inténtelo de nuevo.',
-            (this.maxTries === 1 ? 'Queda ' : 'Quedan ') +
-              this.maxTries +
-              (this.maxTries === 1 ? ' intento' : ' intentos'),
-          );
-          await this.ionSlides.slidePrev();
-        } else {
-          await this.presentError(
-            'Ha agotado el número de intentos, se le va a redirigir al login',
-            'Quedan ' + this.maxTries + ' intentos',
-          );
-          await this.cancel();
-        }
+        await this.presentError(
+          'Ha agotado el número de intentos, se le va a redirigir al login',
+          'Quedan ' + this.maxTries + ' intentos',
+        );
+        await this.cancel();
       }
-    });
+    }
   }
 
   async nextSlide() {

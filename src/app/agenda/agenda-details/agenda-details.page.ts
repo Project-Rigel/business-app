@@ -226,7 +226,6 @@ export class AgendaDetailsPage implements OnInit {
     this.appointmentsService.updatePossibleAppointment(this.appointment);
   }
 
-
   async showConfirmAppointment(agendaId: string) {
     const customerMessagePiece =
       '<strong>Cliente: </strong> ' +

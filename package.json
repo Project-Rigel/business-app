@@ -36,6 +36,7 @@
     "@teamhive/lottie-player": "^1.0.0",
     "cordova-browser": "^6.0.0",
     "cordova-ios-plugin-no-export-compliance": "0.0.6",
+    "cordova-plugin-firebase-authentication": "3.4.1",
     "cordova-plugin-googleplus": "git+https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git",
     "cordova-plugin-telerik-imagepicker": "^2.3.3",
     "core-js": "^2.5.4",
@@ -69,7 +70,6 @@
     "cordova-plugin-androidx": "^2.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-device": "^2.0.3",
-    "cordova-plugin-firebase-authentication": "^3.4.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-splashscreen": "^5.0.3",
@@ -108,12 +108,16 @@
       "cordova-plugin-telerik-imagepicker": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "Permiso para poder seleccionar tus fotos"
       },
-      "cordova-plugin-firebase-authentication": {},
       "cordova-plugin-androidx": {},
       "cordova-plugin-androidx-adapter": {},
       "cordova-plugin-googleplus": {
         "REVERSED_CLIENT_ID": "com.googleusercontent.apps.457735200635-jk4esdsp6fl98gg42illp44t17lsqj7t",
-        "WEB_APPLICATION_CLIENT_ID": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com"
+        "WEB_APPLICATION_CLIENT_ID": "457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com",
+        "PLAY_SERVICES_VERSION": "15.0.1"
+      },
+      "cordova-plugin-firebase-authentication": {
+        "ANDROID_FIREBASE_AUTH_VERSION": "19.3.+",
+        "IOS_FIREBASE_AUTH_VERSION": "~> 6.31.0"
       }
     },
     "platforms": [

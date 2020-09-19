@@ -179,7 +179,7 @@ export class AgendaDetailsPage implements OnInit {
         await this.showConfirmApoointmentDialog();
         const intervals = this.addingAppointmentInfo.intervals;
         for (const gap of intervals) {
-          const item = moment(gap.from, 'HH:mm');
+          const item = moment(gap.from).utc(true);
           this.appoinmentGaps.push(item.format('HH:mm'));
         }
       }

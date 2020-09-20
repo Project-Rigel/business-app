@@ -9,18 +9,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen [scrollY]="false" class="ion-padding">
-  <ion-slides
-    mode="ios"
-    pager="ios"
-    [options]="sliderOptions"
-    class="slider-content"
-  >
+<ion-content fullscreen [scrollY]="false">
+  <ion-slides mode="ios" [options]="sliderOptions" class="slider-content">
     <ion-slide>
       <div class="slide">
-        <div>
-          <ion-text class="ion-margin-top ion-text-center"
-            ><h1>Seleccione un cliente</h1></ion-text
+        <div [style.height.%]="searcherStyle">
+          <ion-text class="ion-text-center ion-no-margin ion-no-padding"
+            ><h1 style="margin: 10px">Seleccione un cliente</h1></ion-text
           >
           <ion-searchbar
             class="ion-text-left"
@@ -29,10 +24,10 @@
             (ionChange)="search($event)"
           ></ion-searchbar>
         </div>
+
         <app-customers-list
-          #customerList
-          class="customers-list ion-padding"
-          [maxHeightPercent]="60"
+          class="customers-list"
+          [maxHeightPercent]="listStyle"
           [loadedData]="paginationService.data | async"
           [isSearching]="searching"
           [done]="paginationService.done | async"
@@ -41,43 +36,54 @@
           [isSelectable]="true"
           (onCustomerClicked)="selectedCustomer = $event"
         ></app-customers-list>
-        <ion-button
-          [disabled]="!selectedCustomer"
-          expand="block"
-          color="primary"
-          (click)="nextSlide()"
-        >
-          Siguiente</ion-button
-        >
+        <div [style.height.%]="buttonStyle">
+          <ion-button
+            [disabled]="!selectedCustomer"
+            expand="block"
+            color="primary"
+            (click)="nextSlide()"
+          >
+            Siguiente</ion-button
+          >
+        </div>
       </div>
     </ion-slide>
 
     <ion-slide class="slide">
-      <ion-text class="ion-margin-top ion-text-center"
-        ><h1>Seleccione un producto</h1></ion-text
-      >
+      <div [style.height.%]="searcherStyle">
+        <ion-text class="ion-text-center ion-no-margin ion-no-padding"
+          ><h1 style="margin: 10px">Seleccione un producto</h1></ion-text
+        >
+        <ion-searchbar
+          class="ion-text-left"
+          debounce="500"
+          placeholder="Producto"
+          (ionChange)="searchProduct($event)"
+        ></ion-searchbar>
+      </div>
+
       <app-products-list
-        #productsList
-        class="customers-list ion-padding"
-        [maxHeightPercent]="70"
+        class="customers-list"
+        [maxHeightPercent]="listStyle"
         [loadedData]="productsService.data | async"
         [isSearching]="searching"
         [done]="productsService.done | async"
         [loading]="productsService.loading | async"
-        [searchResult]="search$ | async"
+        [searchResult]="searchProduct$ | async"
         [isSelectable]="true"
         (onProductClicked)="selectedProduct = $event"
       ></app-products-list>
-
-      <ion-button
-        [disabled]="!selectedProduct"
-        expand="block"
-        color="primary"
-        (click)="closeModal()"
-      >
-        <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
-        <ion-label *ngIf="!loading"> Siguiente</ion-label>
-      </ion-button>
+      <div [style.height.%]="buttonStyle">
+        <ion-button
+          [disabled]="!selectedProduct"
+          expand="block"
+          color="primary"
+          (click)="closeModal()"
+        >
+          <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+          <ion-label *ngIf="!loading"> Siguiente</ion-label>
+        </ion-button>
+      </div>
     </ion-slide>
   </ion-slides>
 </ion-content>

@@ -91,7 +91,7 @@
           <ion-button
             *ngIf="dateTimeValue"
             [disabled]="!selectedStartTime"
-            (click)="confirmAppointments(this.route.snapshot.paramMap.get('id'))"
+            (click)="showConfirmAppointment(this.route.snapshot.paramMap.get('id'))"
             expand="block"
           >
             <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>

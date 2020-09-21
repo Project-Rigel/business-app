@@ -2,14 +2,11 @@ import { registerLocaleData } from '@angular/common';
 import localeES from '@angular/common/locales/es';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
-import {
-  AngularFireAnalyticsModule,
-  ScreenTrackingService,
-} from '@angular/fire/analytics';
+import { ScreenTrackingService } from '@angular/fire/analytics';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
+import { REGION } from '@angular/fire/functions';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FormsModule } from '@angular/forms';
@@ -44,8 +41,6 @@ registerLocaleData(localeES, 'es');
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAuthGuardModule,
-    AngularFireFunctionsModule,
-    AngularFireAnalyticsModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

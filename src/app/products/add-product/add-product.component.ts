@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { IonInput, ModalController } from '@ionic/angular';
+import { AlertController, IonInput, ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 import { ErrorToastService } from '../../services/error-toast.service';
 import { LoaderService } from '../../services/loader.service';
@@ -19,7 +19,7 @@ import { ProductsService } from '../../services/products.service';
 })
 export class AddProductComponent implements OnInit {
   productForm: FormGroup;
-  submitEnabled: boolean = true;
+  submitEnabled = true;
   submitClicked = false;
   @ViewChild('productName') input: IonInput;
 
@@ -31,6 +31,7 @@ export class AddProductComponent implements OnInit {
     public readonly auth: AuthService,
     private keyboard: Keyboard,
     private loader: LoaderService,
+    private alertController: AlertController,
   ) {}
 
   async ngOnInit() {
@@ -72,19 +73,20 @@ export class AddProductComponent implements OnInit {
           : 'Rellene los campos obligatorios.',
       });
     } else {
-      this.loader.showLoader();
+      await this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
-      await this.productService
-        .addProduct(
+      try {
+        await this.productService.addProduct(
           businessId,
           value.name.toString().toLowerCase(),
           value.description.toString().toLowerCase(),
           parseInt(value.duration),
-        )
-        .then(() => {
-          this.loader.hideLoader();
-        });
+        );
+        await this.presentSuccess();
+      } finally {
+        await this.loader.hideLoader();
+      }
 
       await this.ctrl.dismiss({ done: true, values: this.productForm.value });
       this.submitClicked = false;
@@ -118,5 +120,17 @@ export class AddProductComponent implements OnInit {
     }
 
     return false;
+  }
+
+  async presentSuccess() {
+    const alert = await this.alertController.create({
+      cssClass: 'alert',
+      mode: 'ios',
+      header: 'Confirmación',
+      message: 'Producto añadido con éxito.',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
   }
 }

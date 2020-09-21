@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { AlertController } from '@ionic/angular';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FunctionNames } from '../constants';
 import { AgendaDay } from '../interfaces/agendaDay';
 import { Appointment } from '../interfaces/appointment';
-import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +28,6 @@ export class AppointmentsService {
   constructor(
     private afs: AngularFirestore,
     private functions: AngularFireFunctions,
-    private loader: LoaderService,
-    private alertController: AlertController,
   ) {}
 
   getAllPossibleAppointments() {
@@ -117,8 +113,6 @@ export class AppointmentsService {
         productId: productId,
         timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
         agendaId: agendaId,
-      }).subscribe(async a => {
-        console.log(a);
       });
     }
     this.appointmentToBeConfirmed = null;

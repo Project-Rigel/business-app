@@ -128,8 +128,8 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  closeModal() {
-    this.loader.showLoader();
+  async closeModal() {
+    await this.loader.showLoader();
     this.intervalsService
       .endpoint({
         businessId: this.user.businessId, //not needed yet
@@ -140,7 +140,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       .pipe(take(1))
       .subscribe(
         async (intervals: AvailableTimesResponse) => {
-          this.loader.hideLoader();
+          await this.loader.hideLoader();
           await this.modalController.dismiss({
             done: true,
             intervals: intervals,

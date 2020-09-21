@@ -78,7 +78,7 @@ export class AddCustomerPage implements OnInit {
         message: this.getErrorMessage(),
       });
     } else {
-      this.loader.showLoader();
+      await this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
       try {
@@ -95,7 +95,7 @@ export class AddCustomerPage implements OnInit {
           value.firstSurname.toString(),
         );
       } finally {
-        this.loader.hideLoader();
+        await this.loader.hideLoader();
       }
 
       await this.ctrl.dismiss({ done: true, values: this.customerForm.value });

@@ -49,7 +49,7 @@ export class AddAgendaPage {
   }
 
   async createAgenda() {
-    this.loader.showLoader();
+    await this.loader.showLoader();
     this.auth.user$.pipe(take(1)).subscribe(
       async user => {
         this.loading = true;
@@ -72,7 +72,7 @@ export class AddAgendaPage {
           user.businessId, // Esto tiene que ser el id de el bussiness
         );
 
-        this.loader.hideLoader();
+        await this.loader.hideLoader();
         await this.modalController.dismiss({});
 
         this.loading = false;

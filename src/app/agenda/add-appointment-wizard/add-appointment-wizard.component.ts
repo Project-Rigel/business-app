@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { AlertController, IonSlides, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -30,6 +31,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   @ViewChild(IonSlides)
   ionSlides: IonSlides;
   search$: Observable<Customer[]>;
+  searchProduct$: Observable<Product[]>;
   searching = false;
   sliderOptions: any = {};
   agendaId: string;
@@ -38,7 +40,9 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   selectedProduct: Product;
   user: User;
 
-  lastIdSelected: string;
+  searcherStyle = 17;
+  listStyle = 68;
+  buttonStyle = 15;
 
   constructor(
     private readonly customerService: CustomersService,
@@ -50,8 +54,20 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     public readonly alertController: AlertController,
     private chRef: ChangeDetectorRef,
     private loader: LoaderService,
+    private keyboard: Keyboard,
   ) {
     // Para detectar los cambios de la variable loading en el html
+    this.keyboard.onKeyboardDidShow().subscribe(() => {
+      this.searcherStyle = 25;
+      this.listStyle = 75;
+      this.buttonStyle = 0;
+    });
+
+    this.keyboard.onKeyboardDidHide().subscribe(() => {
+      this.searcherStyle = 17;
+      this.listStyle = 68;
+      this.buttonStyle = 15;
+    });
   }
 
   ngOnInit() {
@@ -88,6 +104,24 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
               inputs[1] ? inputs[1].toLowerCase() : undefined,
               inputs[2] ? inputs[2].toLowerCase() : undefined,
             );
+          }
+        }),
+      );
+    }
+  }
+
+  async searchProduct(event) {
+    const input = event.target.value.toString();
+
+    if (input.length === 0) {
+      this.searching = false;
+    }
+    if (input.length > 0) {
+      this.searching = true;
+      this.searchProduct$ = this.auth.user$.pipe(
+        switchMap(user => {
+          if (user) {
+            return this.productsService.findProductByField('name', input);
           }
         }),
       );

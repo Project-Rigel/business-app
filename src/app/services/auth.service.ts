@@ -37,11 +37,9 @@ export class AuthService {
     private businessService: BusinessService,
   ) {
     if (this.platform.is('cordova')) {
-      this.googlePlus
-        .trySilentLogin({
-          offline: false,
-        })
-        .then(res => console.log(res));
+      this.googlePlus.trySilentLogin({
+        offline: false,
+      });
     }
 
     this.user$ = this.fireAuth.authState.pipe(
@@ -59,44 +57,38 @@ export class AuthService {
   }
 
   async loginWithGoogle(): Promise<boolean> {
-    return new Promise(async resolve => {
-      try {
-        let credential;
-        if (this.platform.is('cordova')) {
-          const gPlusUser = await this.googlePlus.login({
-            webClientId:
-              '457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com',
-            offline: true,
-            scopes: 'profile email',
-          });
-          credential = await this.fireAuth.signInWithCredential(
-            firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken),
-          );
-        } else {
-          credential = await this.fireAuth.signInWithPopup(
-            new firebase.auth.GoogleAuthProvider(),
-          );
-        }
-        await this.updateUserData(credential.user).then(isANewUser => {
-          resolve(isANewUser);
+    try {
+      let credential: firebase.auth.UserCredential;
+      if (this.platform.is('cordova')) {
+        const gPlusUser = await this.googlePlus.login({
+          webClientId:
+            '457735200635-lfp1rpnghsuu4hodv0pr0gac6cf48spr.apps.googleusercontent.com',
+          offline: true,
+          scopes: 'profile email',
         });
-      } catch (e) {
-        console.error(e);
-        await this.errorToastService.present({ message: e.message });
-        throw e;
+        credential = await this.fireAuth.signInWithCredential(
+          firebase.auth.GoogleAuthProvider.credential(gPlusUser.idToken),
+        );
+      } else {
+        credential = await this.fireAuth.signInWithPopup(
+          new firebase.auth.GoogleAuthProvider(),
+        );
       }
-    });
+      await this.createUserInFirebaseIfNew(credential.user);
+      return credential.additionalUserInfo.isNewUser;
+    } catch (e) {
+      console.error(e);
+      await this.errorToastService.present({ message: e.message });
+      throw e;
+    }
   }
 
-  sendPhoneVerificationCode(phoneNumber: string) {
-    console.log(this.platform.platforms());
-    console.log(this.platform);
+  async sendPhoneVerificationCode(phoneNumber: string) {
     if (this.platform.is('cordova')) {
-      this.firebaseAuth
-        .verifyPhoneNumber(phoneNumber, 3000)
-        .then(verificationId => {
-          this.verificationId = verificationId;
-        });
+      this.verificationId = await this.firebaseAuth.verifyPhoneNumber(
+        phoneNumber,
+        3000,
+      );
     } else {
       const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
         'recaptcha-container',
@@ -105,53 +97,44 @@ export class AuthService {
         },
       );
       const provider = new firebase.auth.PhoneAuthProvider();
-      provider
-        .verifyPhoneNumber(phoneNumber, recaptchaVerifier)
-        .then(verificationId => {
-          this.verificationId = verificationId;
-        });
+      this.verificationId = await provider.verifyPhoneNumber(
+        phoneNumber,
+        recaptchaVerifier,
+      );
     }
   }
 
-  verifyPhoneNumber(code: string): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
+  async verifyPhoneNumber(code: string): Promise<void> {
+    try {
       const credential = firebase.auth.PhoneAuthProvider.credential(
         this.verificationId,
         code,
       );
-      firebase
-        .auth()
-        .currentUser.linkWithCredential(credential)
-        .then(result => {
-          console.log(result);
-          resolve(true);
-        })
-        .catch(err => {
-          console.log(err);
-          resolve(false);
-        });
-    });
+      await firebase.auth().currentUser.linkWithCredential(credential);
+    } catch (e) {
+      throw e;
+    }
   }
 
   async login(email: string, password: string) {
     await this.fireAuth.signInWithEmailAndPassword(email, password);
   }
 
-  async createUser(email: string, password: string): Promise<boolean> {
-    return new Promise(async resolve => {
-      try {
-        const credential = await this.fireAuth.createUserWithEmailAndPassword(
-          email,
-          password,
-        );
-        await this.updateUserData(credential.user).then(isANewUser => {
-          resolve(isANewUser);
-        });
-      } catch (e) {
-        await this.errorToastService.present({ message: e.message });
-        throw e;
-      }
-    });
+  async createUserIfNewOrUpdate(
+    email: string,
+    password: string,
+  ): Promise<{ user: any; isNewUser: boolean }> {
+    try {
+      const credential = await this.fireAuth.createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      const user = await this.createUserInFirebaseIfNew(credential.user);
+      return { user: user, isNewUser: credential.additionalUserInfo.isNewUser };
+    } catch (e) {
+      await this.errorToastService.present({ message: e.message });
+      throw e;
+    }
   }
 
   async logOut() {
@@ -167,45 +150,46 @@ export class AuthService {
     }
   }
 
-  private updateUserData(user): Promise<boolean> {
-    return new Promise(resolve => {
-      // Sets user data to firestore on login
-      const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
-        `users/${user.uid}`,
-      );
+  private async createUserInFirebaseIfNew(user: any): Promise<User> {
+    console.log(user);
+    // Sets user data to firestore on login
+    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
+      `users/${user.uid}`,
+    );
 
-      // Sets businessId depending of the user existance in the database
-      userRef.ref.get().then(doc => {
-        if (!doc.exists) {
-          const businessId = this.firestore.createId();
-          this.businessService.setBusinessId(businessId);
-          const data = {
-            id: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            avatar: user.photoURL,
-            customers: [],
-            businessId: businessId,
-          };
-          userRef.set(data, { merge: true });
-          resolve(true); // New user
-        } else {
-          resolve(false); // User already exists
-        }
-      });
-    });
+    // Sets businessId depending of the user existance in the database
+    const firebaseData = await userRef.ref.get();
+
+    const appUser: User = {
+      id: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      avatar: user.photoURL,
+      customers: [],
+      businessId: '',
+    };
+
+    if (!firebaseData.exists) {
+      const businessId = this.firestore.createId();
+      this.businessService.setBusinessId(businessId);
+      user.businessId = businessId;
+
+      await userRef.set(appUser, { merge: true });
+    }
+
+    return appUser;
   }
 
   deleteCurrentUser() {
     this.deleteUserData(this.temporalUser.uid);
-    this.temporalUser.delete().then(() => console.log('Borrado de Auth'));
+    this.temporalUser.delete();
   }
 
   deleteUserData(userId: string) {
     const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
       `users/${userId}`,
     );
-    userRef.delete().then(() => console.log('Borrado de la base de datos'));
+    userRef.delete();
   }
 
   saveBusiness(data: Business) {

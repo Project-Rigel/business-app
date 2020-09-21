@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -178,7 +179,7 @@ export class AgendaDetailsPage implements OnInit {
         await this.showConfirmApoointmentDialog();
         const intervals = this.addingAppointmentInfo.intervals;
         for (const gap of intervals) {
-          const item = moment(gap.from, 'HH:mm');
+          const item = moment(gap.from).utc(true);
           this.appoinmentGaps.push(item.format('HH:mm'));
         }
       }
@@ -221,54 +222,83 @@ export class AgendaDetailsPage implements OnInit {
       name: this.addingAppointmentInfo.product.name,
       customerId: this.addingAppointmentInfo.customer.id,
       customerName: this.addingAppointmentInfo.customer.name,
-      /* sharesStartTimeWithOtherAppointment: sharesStartDate,
-      positionSharing: sharingPosition, */
-      // cita: null : []
     };
     this.appointmentsService.updatePossibleAppointment(this.appointment);
   }
 
-  async confirmAppointments(agendaId: string) {
+  async showConfirmAppointment(agendaId: string) {
+    const customerMessagePiece =
+      '<strong>Cliente: </strong> ' +
+      this.capitalize(this.addingAppointmentInfo.customer.name) +
+      ' ' +
+      this.capitalize(this.addingAppointmentInfo.customer.firstSurname) +
+      ' ' +
+      this.capitalize(this.addingAppointmentInfo.customer.secondSurname);
+    const productMessagePiece =
+      '<strong>Producto: </strong> ' +
+      this.capitalize(this.addingAppointmentInfo.product.name);
+    const dateMessagePiece =
+      '<strong>Fecha: </strong> ' +
+      new DatePipe('es-ES').transform(this.dateTimeValue, 'short');
+    const message =
+      customerMessagePiece +
+      '<br>' +
+      productMessagePiece +
+      '<br>' +
+      dateMessagePiece;
     const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Cita confirmada',
-      message: 'Fecha: ' + this.dateTimeValue,
+      header: '¿Quiere confirmar la cita con los siguiente datos?',
+      message: message,
       buttons: [
         {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: blah => {
-            console.log('Confirm Cancel: blah');
-          },
+          text: 'Cancelar',
         },
         {
-          text: 'Ok',
+          text: 'OK',
           handler: async () => {
-            try {
-              this.loading = true;
-              await this.appointmentsService.confirmNewAppointment(
-                this.businessId,
-                agendaId,
-                this.addingAppointmentInfo.product.id,
-                this.addingAppointmentInfo.customer.id,
-              );
-              this.loading = false;
-              this.addingAppointmentInfo = null;
-              this.addingAppointment = false;
-            } catch (e) {
-              this.loading = false;
-            }
+            await this.confirmNewAppointment(agendaId);
           },
         },
       ],
     });
     await alert.present();
-    this.selectedStartTime = !this.selectedStartTime;
-    this.possibleAppointmentId = null;
-    this.appointment = null;
-    this.exisitingAppointment = null;
-    this.appoinmentGaps = [];
+  }
+
+  async confirmNewAppointment(agendaId: string) {
+    try {
+      this.loading = true;
+      await this.appointmentsService.confirmNewAppointment(
+        this.businessId,
+        agendaId,
+        this.addingAppointmentInfo.product.id,
+        this.addingAppointmentInfo.customer.id,
+      );
+      this.clearPossibleAppointmentData();
+      this.loading = false;
+      const alert = await this.alertController.create({
+        header: 'Éxito',
+        message: 'La cita se ha confirmado con éxito.',
+        buttons: [
+          {
+            text: 'Aceptar',
+          },
+        ],
+      });
+      await alert.present();
+    } catch (e) {
+      this.loading = false;
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message:
+          'Se ha producido un error inesperado. Vuelva a intentarlo en unos instantes.',
+        buttons: [
+          {
+            text: 'Aceptar',
+          },
+        ],
+      });
+      await alert.present();
+    }
   }
 
   private updateAppointments(date: Date) {
@@ -305,5 +335,20 @@ export class AgendaDetailsPage implements OnInit {
     }
 
     this.possibleAppointmentId = null;
+  }
+
+  clearPossibleAppointmentData() {
+    this.addingAppointmentInfo = null;
+    this.addingAppointment = false;
+    this.selectedStartTime = !this.selectedStartTime;
+    this.possibleAppointmentId = null;
+    this.appointment = null;
+    this.exisitingAppointment = null;
+    this.appoinmentGaps = [];
+  }
+
+  capitalize(text: string) {
+    if (typeof text !== 'string') return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 }

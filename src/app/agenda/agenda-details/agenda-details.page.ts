@@ -20,6 +20,7 @@ import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
 import { AppointmentsService } from '../../services/appointments.service';
 import { AuthService } from '../../services/auth.service';
+import { LoaderService } from '../../services/loader.service';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 
 interface DisplayItem {
@@ -67,7 +68,6 @@ export class AgendaDetailsPage implements OnInit {
   businessId: string;
 
   @ViewChild(IonDatetime) dateTime: IonDatetime;
-  public loading: boolean;
 
   constructor(
     private animationController: AnimationController,
@@ -77,6 +77,7 @@ export class AgendaDetailsPage implements OnInit {
     private modalController: ModalController,
     public alertController: AlertController,
     private auth: AuthService,
+    private loader: LoaderService,
   ) {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
@@ -266,7 +267,7 @@ export class AgendaDetailsPage implements OnInit {
 
   async confirmNewAppointment(agendaId: string) {
     try {
-      this.loading = true;
+      await this.loader.showLoader();
       await this.appointmentsService.confirmNewAppointment(
         this.businessId,
         agendaId,
@@ -274,7 +275,7 @@ export class AgendaDetailsPage implements OnInit {
         this.addingAppointmentInfo.customer.id,
       );
       this.clearPossibleAppointmentData();
-      this.loading = false;
+      await this.loader.hideLoader();
       const alert = await this.alertController.create({
         header: 'Éxito',
         message: 'La cita se ha confirmado con éxito.',
@@ -286,7 +287,7 @@ export class AgendaDetailsPage implements OnInit {
       });
       await alert.present();
     } catch (e) {
-      this.loading = false;
+      await this.loader.hideLoader();
       const alert = await this.alertController.create({
         header: 'Error',
         message:

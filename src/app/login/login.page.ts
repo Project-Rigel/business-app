@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { LoaderService } from '../services/loader.service';
 import { AddBusinessWizardComponent } from './add-business-wizard/add-business-wizard.component';
 
 @Component({
@@ -19,6 +20,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     public authService: AuthService,
     public modalController: ModalController,
+    private loader: LoaderService,
   ) {
     this.authService.user$.subscribe(user => {
       if (user) {

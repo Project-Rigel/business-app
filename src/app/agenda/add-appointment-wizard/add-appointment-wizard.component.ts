@@ -18,6 +18,7 @@ import {
   AvailableTimesResponse,
   GetAvailableIntervalsService,
 } from '../../services/get-available-intervals.service';
+import { LoaderService } from '../../services/loader.service';
 import { PaginationService } from '../../services/pagination-service.service';
 import { ProductsService } from '../../services/products.service';
 
@@ -37,7 +38,6 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   daySelected: Date;
   selectedCustomer: Customer;
   selectedProduct: Product;
-  loading: boolean;
   user: User;
 
   searcherStyle = 17;
@@ -53,6 +53,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     public readonly intervalsService: GetAvailableIntervalsService,
     public readonly alertController: AlertController,
     private chRef: ChangeDetectorRef,
+    private loader: LoaderService,
     private keyboard: Keyboard,
   ) {
     // Para detectar los cambios de la variable loading en el html
@@ -127,8 +128,8 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  closeModal() {
-    this.loading = true;
+  async closeModal() {
+    await this.loader.showLoader();
     this.intervalsService
       .endpoint({
         businessId: this.user.businessId, //not needed yet
@@ -139,7 +140,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       .pipe(take(1))
       .subscribe(
         async (intervals: AvailableTimesResponse) => {
-          this.loading = false;
+          await this.loader.hideLoader();
           await this.modalController.dismiss({
             done: true,
             intervals: intervals,
@@ -148,8 +149,8 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
           });
         },
         err => {
+          this.loader.hideLoader();
           this.presentError().then(() => {
-            this.loading = false;
             this.chRef.detectChanges();
             console.log(err);
           });

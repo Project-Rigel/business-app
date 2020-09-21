@@ -113,8 +113,6 @@ export class AppointmentsService {
         productId: productId,
         timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
         agendaId: agendaId,
-      }).subscribe(a => {
-        console.log(a);
       });
     }
     this.appointmentToBeConfirmed = null;

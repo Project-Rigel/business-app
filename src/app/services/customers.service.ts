@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { merge, Observable } from 'rxjs';
+import { combineLatest, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Customer } from '../interfaces/customer';
 import { AuthService } from './auth.service';
@@ -55,14 +55,21 @@ export class CustomersService {
     firstSurname?: string,
     secondSurname?: string,
   ) {
-    const searchByName$ = this.findCustomersByField(userId, 'name', name);
+    const searchByName$ = this.findCustomersByField('name', name);
+    const searchFirstSurnameAsName$ = this.findCustomersByField(
+      'firstSurname',
+      name,
+    );
+    const searchSecondSurnameAsName$ = this.findCustomersByField(
+      'secondSurname',
+      name,
+    );
 
     let searchBySurname$: Observable<Customer[]>,
       searchBySecondSurname$: Observable<Customer[]>;
 
     if (firstSurname) {
       searchBySurname$ = this.findCustomersByField(
-        userId,
         'firstSurname',
         firstSurname,
       );
@@ -70,13 +77,12 @@ export class CustomersService {
 
     if (secondSurname) {
       searchBySecondSurname$ = this.findCustomersByField(
-        userId,
         'secondSurname',
         secondSurname,
       );
     }
 
-    if (firstSurname) {
+    if (firstSurname && !secondSurname) {
       return merge(searchByName$, searchBySurname$).pipe(
         map(val => {
           return val.filter((v, i) => val.indexOf(v) === i);
@@ -84,7 +90,7 @@ export class CustomersService {
       );
     }
 
-    if (secondSurname) {
+    if (firstSurname && secondSurname) {
       return merge(
         searchByName$,
         searchBySurname$,
@@ -96,10 +102,14 @@ export class CustomersService {
       );
     }
 
-    return searchByName$;
+    return combineLatest([
+      searchByName$,
+      searchFirstSurnameAsName$,
+      searchSecondSurnameAsName$,
+    ]).pipe(map(arr => arr.reduce((acc, cur) => acc.concat(cur))));
   }
 
-  private findCustomersByField(userId: string, field: string, value: string) {
+  private findCustomersByField(field: string, value: string) {
     return this.firestore
       .collection<Customer>('customers', ref => {
         return ref

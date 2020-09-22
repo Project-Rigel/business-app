@@ -28,7 +28,7 @@ export class AlertService {
           text: 'Cancelar',
         },
         {
-          text: 'OK',
+          text: 'Aceptar',
           handler: async () => {
             AlertService.AppointmentMustBeConfirmed.next(true);
           },

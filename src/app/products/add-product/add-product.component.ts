@@ -6,7 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { AlertController, IonInput, ModalController } from '@ionic/angular';
+import { IonInput, ModalController } from '@ionic/angular';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { ErrorToastService } from '../../services/error-toast.service';
 import { LoaderService } from '../../services/loader.service';
@@ -31,7 +32,7 @@ export class AddProductComponent implements OnInit {
     public readonly auth: AuthService,
     private keyboard: Keyboard,
     private loader: LoaderService,
-    private alertController: AlertController,
+    private alertService: AlertService,
   ) {}
 
   async ngOnInit() {
@@ -123,14 +124,9 @@ export class AddProductComponent implements OnInit {
   }
 
   async presentSuccess() {
-    const alert = await this.alertController.create({
-      cssClass: 'alert',
-      mode: 'ios',
-      header: 'Confirmación',
-      message: 'Producto añadido con éxito.',
-      buttons: ['OK'],
-    });
-
-    await alert.present();
+    await this.alertService.presentSimpleAlert(
+      'Confirmación',
+      'Producto añadido con éxito.',
+    );
   }
 }

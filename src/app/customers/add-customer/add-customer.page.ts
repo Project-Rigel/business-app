@@ -6,7 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { AlertController, IonInput, ModalController } from '@ionic/angular';
+import { IonInput, ModalController } from '@ionic/angular';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
@@ -31,7 +32,7 @@ export class AddCustomerPage implements OnInit {
     private errorToastService: ErrorToastService,
     public readonly auth: AuthService,
     private keyboard: Keyboard,
-    public readonly alertController: AlertController,
+    public readonly alertService: AlertService,
     private loader: LoaderService,
   ) {}
 
@@ -90,9 +91,12 @@ export class AddCustomerPage implements OnInit {
           value.email,
           value.phone,
         );
-        await this.presentSuccess(
-          value.name.toString(),
-          value.firstSurname.toString(),
+        await this.alertService.presentSimpleAlert(
+          'Confirmación',
+          'Cliente añadido con éxito. <br> ' +
+            value.name.toString() +
+            ' ' +
+            value.firstSurname.toString(),
         );
       } finally {
         await this.loader.hideLoader();
@@ -139,19 +143,6 @@ export class AddCustomerPage implements OnInit {
     }
 
     return false;
-  }
-
-  async presentSuccess(name: string, surname: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'alert',
-      mode: 'ios',
-      header: 'Confirmación',
-      subHeader: 'Cliente añadido con éxito.',
-      message: name + ' ' + surname,
-      buttons: ['OK'],
-    });
-
-    await alert.present();
   }
 
   getErrorMessage(): string {

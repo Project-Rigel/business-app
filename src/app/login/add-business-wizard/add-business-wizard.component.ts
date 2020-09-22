@@ -1,11 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import {
-  AlertController,
-  IonSlides,
-  ModalController,
-  Platform,
-} from '@ionic/angular';
+import { IonSlides, ModalController, Platform } from '@ionic/angular';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -26,7 +22,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     private modalController: ModalController,
     private authService: AuthService,
     private keyboard: Keyboard,
-    private alertController: AlertController,
+    private alertService: AlertService,
     private platform: Platform,
   ) {}
 
@@ -75,17 +71,21 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     } catch (e) {
       this.maxTries--;
       if (this.maxTries > 0) {
-        await this.presentError(
-          'El código de verificación es incorrecto. Por favor, introduzca de nuevo el teléfono o inténtelo de nuevo.',
+        const subheader =
           (this.maxTries === 1 ? 'Queda ' : 'Quedan ') +
-            this.maxTries +
-            (this.maxTries === 1 ? ' intento' : ' intentos'),
+          this.maxTries +
+          (this.maxTries === 1 ? ' intento' : ' intentos');
+        await this.alertService.presentAlertWithSubheader(
+          'Error',
+          subheader,
+          'El código de verificación es incorrecto. Por favor, introduzca de nuevo el teléfono o inténtelo de nuevo.',
         );
         await this.ionSlides.slidePrev();
       } else {
-        await this.presentError(
-          'Ha agotado el número de intentos, se le va a redirigir al login',
+        await this.alertService.presentAlertWithSubheader(
+          'Error',
           'Quedan ' + this.maxTries + ' intentos',
+          'Ha agotado el número de intentos, se le va a redirigir al login',
         );
         await this.cancel();
       }
@@ -106,18 +106,5 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
   async cancel() {
     this.maxTries = 3;
     await this.modalController.dismiss({ done: false });
-  }
-
-  async presentError(msg: string, subtitle: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'alert',
-      mode: 'ios',
-      header: 'Error',
-      subHeader: subtitle,
-      message: msg,
-      buttons: ['OK'],
-    });
-
-    await alert.present();
   }
 }

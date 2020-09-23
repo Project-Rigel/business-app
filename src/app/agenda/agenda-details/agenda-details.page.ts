@@ -1,10 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AlertController,
   AnimationController,
-  IonDatetime,
   ModalController,
 } from '@ionic/angular';
 import { Animation } from '@ionic/core';
@@ -12,9 +11,7 @@ import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 import { Agenda } from '../../interfaces/agenda';
-import { Appointment } from '../../interfaces/appointment';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
@@ -22,13 +19,6 @@ import { AppointmentsService } from '../../services/appointments.service';
 import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
-
-interface DisplayItem {
-  appointment?: Appointment;
-  interval: Date;
-  appointmentHeight?: number;
-  pxFromLast?: number;
-}
 
 @Component({
   selector: 'app-agenda-details',
@@ -38,14 +28,12 @@ interface DisplayItem {
 export class AgendaDetailsPage implements OnInit {
   closeCalendar: Animation;
   openCalendar: Animation;
-  closeConfirmApoointment: Animation;
-  openConfirmAppoinment: Animation;
   isCalendarOpen = true;
-  isConfirmAppointmentOpen = false;
-  display: DisplayItem[] = [];
-  @ViewChild(DatePickerComponent)
-  datePicker: DatePickerComponent;
   calendarButtonColor = 'primary';
+
+  isConfirmAppointmentOpen = false;
+  appointmentGaps: string[] = [];
+
   agenda$: Observable<Agenda>;
   addingAppointment = false;
   addingAppointmentInfo: {
@@ -53,21 +41,17 @@ export class AgendaDetailsPage implements OnInit {
     customer: Customer;
     product: Product;
   };
-  appoinmentGaps: string[] = [];
-  startDate: Moment;
-  endDate: Moment;
-  interval: Duration;
   dateTimeInitialValue: Moment;
   dateTimeValue = new Date();
   selectedStartTime = false;
   possibleAppointmentId: string;
   appointment;
-  exisitingAppointment = null;
-  dayAppointments: Appointment[] = [];
-  productDuration: Duration;
+  existingAppointment = null;
   businessId: string;
 
-  @ViewChild(IonDatetime) dateTime: IonDatetime;
+  startDate: Moment;
+  endDate: Moment;
+  interval: Duration;
 
   constructor(
     private animationController: AnimationController,
@@ -87,10 +71,6 @@ export class AgendaDetailsPage implements OnInit {
     );
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
-
-    this.appointmentsService.appointments$.subscribe(data => {
-      this.dayAppointments = data;
-    });
 
     this.auth.user$.subscribe(user => {
       if (user) {
@@ -117,20 +97,6 @@ export class AgendaDetailsPage implements OnInit {
       .duration(400)
       .fromTo('height', '0px', '246px')
       .easing('ease-in-out');
-
-    this.closeConfirmApoointment = this.animationController
-      .create()
-      .addElement(document.getElementById('confirm-container'))
-      .duration(400)
-      .fromTo('height', '200px', '0px')
-      .easing('ease-in-out');
-
-    this.openConfirmAppoinment = this.animationController
-      .create()
-      .addElement(document.getElementById('confirm-container'))
-      .duration(400)
-      .fromTo('height', '0px', '200px')
-      .easing('ease-in-out');
   }
 
   onDateChange(event) {
@@ -140,7 +106,7 @@ export class AgendaDetailsPage implements OnInit {
     this.updateAppointments(event);
   }
 
-  async showCalendar() {
+  async showOrHideCalendar() {
     this.calendarButtonColor = this.isCalendarOpen ? 'medium' : 'primary';
     this.openCalendar.stop();
     this.closeCalendar.stop();
@@ -148,15 +114,6 @@ export class AgendaDetailsPage implements OnInit {
       ? await this.closeCalendar.play()
       : await this.openCalendar.play();
     this.isCalendarOpen = !this.isCalendarOpen;
-  }
-
-  async showConfirmApoointmentDialog() {
-    this.openConfirmAppoinment.stop();
-    this.closeConfirmApoointment.stop();
-    this.isConfirmAppointmentOpen
-      ? await this.closeConfirmApoointment.play()
-      : await this.openConfirmAppoinment.play();
-    this.isConfirmAppointmentOpen = !this.isConfirmAppointmentOpen;
   }
 
   async startAddAppointmentWizard() {
@@ -168,29 +125,28 @@ export class AgendaDetailsPage implements OnInit {
         daySelected: this.dateTimeValue,
       },
     });
-
     await modal.present();
     const { data } = await modal.onWillDismiss();
+    if (data && data.done) {
+      this.getAndShowAppointmentGaps(data);
+    }
+  }
 
-    if (data) {
-      if (data.done) {
-        this.addingAppointment = true;
-        this.addingAppointmentInfo = data;
-
-        await this.showConfirmApoointmentDialog();
-        const intervals = this.addingAppointmentInfo.intervals;
-        for (const gap of intervals) {
-          const item = moment(gap.from).utc(true);
-          this.appoinmentGaps.push(item.format('HH:mm'));
-        }
-      }
+  getAndShowAppointmentGaps(possibleAppointmentInfo: any) {
+    this.addingAppointment = true;
+    this.addingAppointmentInfo = possibleAppointmentInfo;
+    this.isConfirmAppointmentOpen = !this.isConfirmAppointmentOpen;
+    const intervals = this.addingAppointmentInfo.intervals;
+    for (const gap of intervals) {
+      const item = moment(gap.from).utc(true);
+      this.appointmentGaps.push(item.format('HH:mm'));
     }
   }
 
   selectTime($event) {
     this.updatePossibleAppointment($event);
     this.selectedStartTime = !this.selectedStartTime;
-    this.showConfirmApoointmentDialog();
+    this.isConfirmAppointmentOpen = !this.isConfirmAppointmentOpen;
   }
 
   async updatePossibleAppointment($event: any) {
@@ -319,16 +275,16 @@ export class AgendaDetailsPage implements OnInit {
   cancelAddAppointment() {
     this.addingAppointment = false;
     this.addingAppointmentInfo = null;
-    this.appoinmentGaps = [];
+    this.appointmentGaps = [];
     if (this.appointment != null) {
       this.appointmentsService.cancelAppointment(this.appointment);
       this.appointment = null;
     }
-    if (this.exisitingAppointment != null) {
+    if (this.existingAppointment != null) {
       this.appointmentsService.restoreExistingAppointment(
-        this.exisitingAppointment,
+        this.existingAppointment,
       );
-      this.exisitingAppointment = null;
+      this.existingAppointment = null;
     }
 
     if (this.selectedStartTime) {
@@ -344,8 +300,8 @@ export class AgendaDetailsPage implements OnInit {
     this.selectedStartTime = !this.selectedStartTime;
     this.possibleAppointmentId = null;
     this.appointment = null;
-    this.exisitingAppointment = null;
-    this.appoinmentGaps = [];
+    this.existingAppointment = null;
+    this.appointmentGaps = [];
   }
 
   capitalize(text: string) {

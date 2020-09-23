@@ -1,43 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/tabs/agenda" text=""></ion-back-button>
-    </ion-buttons>
-
-    <ion-buttons slot="end">
-      <!--<ion-button color="primary">
-        <ion-icon
-          color="primary"
-          slot="icon-only"
-          name="settings-outline"
-        ></ion-icon>
-      </ion-button>-->
-      <ion-button [color]="calendarButtonColor" (click)="showCalendar()">
-        <ion-icon
-          [color]="calendarButtonColor"
-          slot="icon-only"
-          name="calendar-outline"
-        ></ion-icon>
-      </ion-button>
-
-      <ion-button
-        *ngIf="!addingAppointment"
-        (click)="startAddAppointmentWizard()"
-        color="primary"
-      >
-        <ion-icon
-          color="primary"
-          slot="icon-only"
-          name="add-outline"
-        ></ion-icon>
-      </ion-button>
-
-      <ion-button (click)="cancelAddAppointment()" *ngIf="addingAppointment">
-        <ion-label color="primary"> Cancelar</ion-label>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-agenda-header
+  [calendarButtonColor]="calendarButtonColor"
+  [isAddingAppointment]="addingAppointment"
+  (onCalendarButtonPressed)="showOrHideCalendar()"
+  (onAddAppointmentButtonPressed)="startAddAppointmentWizard()"
+  (onCancelAddAppointmentButtonPressed)="cancelAddAppointment()"
+></app-agenda-header>
 
 <ion-content [scrollY]="true">
   <div class="calendar" id="date-container">
@@ -47,56 +14,14 @@
       (onSelect)="onDateChange($event)"
     ></date-picker>
   </div>
+
   <div id="citas-content" class="agenda-content">
     <p class="ion-text-center list-title">{{(agenda$ | async)?.name}}</p>
-
     <ion-row
       class="ion-margin-bottom ion-justify-content-center ion-align-items-center ion-text-center"
     >
       <ion-col>
-        <div id="confirm-container" *ngIf="addingAppointment">
-          <ion-text color="medium">
-            <p>Selecciona la hora de inicio</p>
-          </ion-text>
-
-          <ion-grid *ngIf="!selectedStartTime">
-            <ion-row>
-              <ion-col size="4" *ngFor="let gap of appoinmentGaps">
-                <!--Componente Input -> Fecha formateada string Output -> Click realizado -->
-                <ion-chip class="ion-no-margin" (click)="selectTime($event)">
-                  {{gap}}
-                  <ion-icon name="time-outline"></ion-icon>
-                </ion-chip>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-
-          <span
-            *ngIf="selectedStartTime"
-            class="ion-text-start ion-margin-start list-title"
-          >
-            Hora de Inicio
-          </span>
-          <ion-chip
-            *ngIf="selectedStartTime"
-            class="ion-margin-start"
-            (click)="selectedStartTime=!selectedStartTime"
-          >
-            {{(dateTimeValue.getHours() < 10 ? '0' : '') +
-            dateTimeValue.getHours()}}:{{(dateTimeValue.getMinutes() < 10 ? '0'
-            : '') + dateTimeValue.getMinutes()}}
-            <ion-icon name="time-outline"></ion-icon>
-          </ion-chip>
-
-          <ion-button
-            *ngIf="dateTimeValue"
-            [disabled]="!selectedStartTime"
-            (click)="showConfirmAppointment(this.route.snapshot.paramMap.get('id'))"
-            expand="block"
-          >
-            <ion-label> Confirmar la cita</ion-label>
-          </ion-button>
-        </div>
+        <app-agenda-time-selector></app-agenda-time-selector>
       </ion-col>
     </ion-row>
 

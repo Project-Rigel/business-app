@@ -132,18 +132,6 @@ export class AgendaDetailsPage implements OnInit {
       .duration(400)
       .fromTo('height', '0px', '200px')
       .easing('ease-in-out');
-
-    AlertService.AppointmentMustBeConfirmed.subscribe(
-      async appointmentMustBeConfirmed => {
-        if (appointmentMustBeConfirmed) {
-          await this.confirmNewAppointment(this.agendaId);
-        }
-      },
-    );
-  }
-
-  ionViewDidLeave() {
-    AlertService.AppointmentMustBeConfirmed.unsubscribe();
   }
 
   onDateChange(event) {
@@ -261,10 +249,16 @@ export class AgendaDetailsPage implements OnInit {
       productMessagePiece +
       '<br>' +
       dateMessagePiece;
-    await this.alertService.presentOkCancelAlert(
+    const result = await this.alertService.presentOkCancelAlert(
       '¿Quiere confirmar la cita con los siguiente datos?',
       message,
     );
+
+    result.pipe(take(1)).subscribe(async res => {
+      if (res) {
+        await this.confirmNewAppointment(this.agendaId);
+      }
+    });
   }
 
   async confirmNewAppointment(agendaId: string) {

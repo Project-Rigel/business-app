@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
-  static AppointmentMustBeConfirmed: Subject<any> = new Subject<any>();
-
   constructor(private alertController: AlertController) {}
 
   async presentSimpleAlert(header: string, message: string) {
@@ -19,23 +17,32 @@ export class AlertService {
     await alert.present();
   }
 
-  async presentOkCancelAlert(header: string, message: string) {
+  async presentOkCancelAlert(
+    header: string,
+    message: string,
+  ): Promise<Observable<boolean>> {
+    const userHasAccepted = new Subject<boolean>();
+    const userHasAccepted$: Observable<boolean> = userHasAccepted.asObservable();
     const alert = await this.alertController.create({
       header: header,
       message: message,
       buttons: [
         {
           text: 'Cancelar',
+          handler: async () => {
+            userHasAccepted.next(false);
+          },
         },
         {
           text: 'Aceptar',
           handler: async () => {
-            AlertService.AppointmentMustBeConfirmed.next(true);
+            userHasAccepted.next(true);
           },
         },
       ],
     });
     await alert.present();
+    return userHasAccepted$;
   }
 
   async presentAlertWithSubheader(

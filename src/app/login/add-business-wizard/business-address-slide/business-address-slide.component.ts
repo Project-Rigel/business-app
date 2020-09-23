@@ -5,7 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-business-address-slide',
@@ -21,7 +21,7 @@ export class BusinessAddressSlideComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertController: AlertController,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit() {
@@ -36,12 +36,10 @@ export class BusinessAddressSlideComponent implements OnInit {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessAddressForm.valid) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Por favor, rellene todos los campos correctamente',
-        buttons: ['OK'],
-      });
-      await alert.present();
+      await this.alertService.presentSimpleAlert(
+        'Error',
+        'Por favor, rellene todos los campos correctamente',
+      );
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;

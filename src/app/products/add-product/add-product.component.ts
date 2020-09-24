@@ -7,8 +7,10 @@ import {
 } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonInput, ModalController } from '@ionic/angular';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { ErrorToastService } from '../../services/error-toast.service';
+import { LoaderService } from '../../services/loader.service';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
@@ -18,7 +20,7 @@ import { ProductsService } from '../../services/products.service';
 })
 export class AddProductComponent implements OnInit {
   productForm: FormGroup;
-  submitEnabled: boolean = true;
+  submitEnabled = true;
   submitClicked = false;
   @ViewChild('productName') input: IonInput;
 
@@ -29,6 +31,8 @@ export class AddProductComponent implements OnInit {
     private errorToastService: ErrorToastService,
     public readonly auth: AuthService,
     private keyboard: Keyboard,
+    private loader: LoaderService,
+    private alertService: AlertService,
   ) {}
 
   async ngOnInit() {
@@ -70,14 +74,20 @@ export class AddProductComponent implements OnInit {
           : 'Rellene los campos obligatorios.',
       });
     } else {
+      await this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
-      await this.productService.addProduct(
-        businessId,
-        value.name.toString().toLowerCase(),
-        value.description.toString().toLowerCase(),
-        parseInt(value.duration),
-      );
+      try {
+        await this.productService.addProduct(
+          businessId,
+          value.name.toString().toLowerCase(),
+          value.description.toString().toLowerCase(),
+          parseInt(value.duration),
+        );
+        await this.presentSuccess();
+      } finally {
+        await this.loader.hideLoader();
+      }
 
       await this.ctrl.dismiss({ done: true, values: this.productForm.value });
       this.submitClicked = false;
@@ -111,5 +121,12 @@ export class AddProductComponent implements OnInit {
     }
 
     return false;
+  }
+
+  async presentSuccess() {
+    await this.alertService.presentSimpleAlert(
+      'Confirmación',
+      'Producto añadido con éxito.',
+    );
   }
 }

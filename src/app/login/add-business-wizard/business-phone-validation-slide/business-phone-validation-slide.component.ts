@@ -5,8 +5,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { AlertController, IonInput } from '@ionic/angular';
-// import { SmsRetriever } from '@ionic-native/sms-retriever/ngx';
+import { IonInput } from '@ionic/angular';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-business-phone-validation-slide',
@@ -22,7 +22,7 @@ export class BusinessPhoneValidationSlideComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertController: AlertController, // private platform: Platform, // private smsRetriever: SmsRetriever
+    private alertService: AlertService, // private platform: Platform, // private smsRetriever: SmsRetriever
   ) {}
 
   ngOnInit() {
@@ -34,12 +34,10 @@ export class BusinessPhoneValidationSlideComponent {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessCodeForm.valid) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Tiene que escribir el código recibido por sms',
-        buttons: ['OK'],
-      });
-      await alert.present();
+      await this.alertService.presentSimpleAlert(
+        'Error',
+        'Tiene que escribir el código recibido por sms',
+      );
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;

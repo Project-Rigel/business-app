@@ -107,15 +107,13 @@ export class AppointmentsService {
     customerId: string,
   ) {
     if (this.appointmentToBeConfirmed) {
-      this.callable({
+      await this.callable({
         uid: customerId,
         businessId: businessId,
         productId: productId,
         timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
         agendaId: agendaId,
-      }).subscribe(a => {
-        console.log(a);
-      });
+      }).subscribe(res => console.log(res));
     }
     this.appointmentToBeConfirmed = null;
   }

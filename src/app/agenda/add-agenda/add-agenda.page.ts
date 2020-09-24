@@ -1,11 +1,12 @@
-import { Component, ViewChild } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { AngularFireStorage } from "@angular/fire/storage";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { IonInput, IonSlides, ModalController, Platform } from "@ionic/angular";
-import { take } from "rxjs/operators";
-import { AgendaService } from "../../services/agenda.service";
-import { AuthService } from "../../services/auth.service";
+import { Component, ViewChild } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IonInput, IonSlides, ModalController, Platform } from '@ionic/angular';
+import { take } from 'rxjs/operators';
+import { AgendaService } from '../../services/agenda.service';
+import { AuthService } from '../../services/auth.service';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -28,6 +29,7 @@ export class AddAgendaPage {
     private storage: AngularFireStorage,
     private afs: AngularFirestore,
     private auth: AuthService,
+    private loader: LoaderService,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -41,31 +43,38 @@ export class AddAgendaPage {
   }
 
   async createAgenda() {
-    this.auth.user$.pipe(take(1)).subscribe(async user => {
-      this.loading = true;
-      const id = this.afs.createId();
+    await this.loader.showLoader();
+    this.auth.user$.pipe(take(1)).subscribe(
+      async user => {
+        this.loading = true;
+        const id = this.afs.createId();
 
-      let imageUrl: string = null;
-      if (this.imageUrl) {
-        const task = await this.storage
-          .ref(id)
-          .putString(this.imageUrl, 'base64');
+        let imageUrl: string = null;
+        if (this.imageUrl) {
+          const task = await this.storage
+            .ref(id)
+            .putString(this.imageUrl, 'base64');
 
-        imageUrl = await task.ref.getDownloadURL();
-      }
+          imageUrl = await task.ref.getDownloadURL();
+        }
 
-      await this.agendaService.addAgenda(
-        id,
-        this.form.get('name').value,
-        this.minuteSelected,
-        imageUrl,
-        user.businessId, // Esto tiene que ser el id de el bussiness
-      );
+        await this.agendaService.addAgenda(
+          id,
+          this.form.get('name').value,
+          this.minuteSelected,
+          imageUrl,
+          user.businessId, // Esto tiene que ser el id de el bussiness
+        );
 
-      await this.modalController.dismiss({});
+        await this.loader.hideLoader();
+        await this.modalController.dismiss({});
 
-      this.loading = false;
-    });
+        this.loading = false;
+      },
+      err => {
+        this.loader.hideLoader();
+      },
+    );
   }
 
   async closeModal() {

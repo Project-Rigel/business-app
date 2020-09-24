@@ -6,10 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { AlertController, IonInput, ModalController } from '@ionic/angular';
+import { IonInput, ModalController } from '@ionic/angular';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { ErrorToastService } from '../../services/error-toast.service';
+import { LoaderService } from '../../services/loader.service';
 import { PhoneValidatorService } from '../../services/phone-validator.service';
 
 @Component({
@@ -30,7 +32,8 @@ export class AddCustomerPage implements OnInit {
     private errorToastService: ErrorToastService,
     public readonly auth: AuthService,
     private keyboard: Keyboard,
-    public readonly alertController: AlertController,
+    public readonly alertService: AlertService,
+    private loader: LoaderService,
   ) {}
 
   async ngOnInit() {
@@ -76,23 +79,28 @@ export class AddCustomerPage implements OnInit {
         message: this.getErrorMessage(),
       });
     } else {
+      await this.loader.showLoader();
       this.keyboard.hide();
       this.submitEnabled = false;
-      await this.customersService
-        .addCustomer(
+      try {
+        await this.customersService.addCustomer(
           clientId,
           value.name.toString().toLowerCase(),
           value.firstSurname.toString().toLowerCase(),
           value.secondSurname.toString().toLowerCase(),
           value.email,
           value.phone,
-        )
-        .then(() => {
-          this.presentSuccess(
-            value.name.toString(),
+        );
+        await this.alertService.presentSimpleAlert(
+          'Confirmación',
+          'Cliente añadido con éxito. <br> ' +
+            value.name.toString() +
+            ' ' +
             value.firstSurname.toString(),
-          );
-        });
+        );
+      } finally {
+        await this.loader.hideLoader();
+      }
 
       await this.ctrl.dismiss({ done: true, values: this.customerForm.value });
       this.submitClicked = false;
@@ -135,19 +143,6 @@ export class AddCustomerPage implements OnInit {
     }
 
     return false;
-  }
-
-  async presentSuccess(name: string, surname: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'alert',
-      mode: 'ios',
-      header: 'Confirmación',
-      subHeader: 'Cliente añadido con éxito.',
-      message: name + ' ' + surname,
-      buttons: ['OK'],
-    });
-
-    await alert.present();
   }
 
   getErrorMessage(): string {

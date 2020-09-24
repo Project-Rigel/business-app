@@ -6,18 +6,20 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { AlertController, IonSlides, ModalController } from '@ionic/angular';
+import { IonSlides, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
 import { User } from '../../interfaces/user';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import {
   AvailableTimesResponse,
   GetAvailableIntervalsService,
 } from '../../services/get-available-intervals.service';
+import { LoaderService } from '../../services/loader.service';
 import { PaginationService } from '../../services/pagination-service.service';
 import { ProductsService } from '../../services/products.service';
 
@@ -37,7 +39,6 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   daySelected: Date;
   selectedCustomer: Customer;
   selectedProduct: Product;
-  loading: boolean;
   user: User;
 
   searcherStyle = 17;
@@ -51,8 +52,9 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     public readonly paginationService: PaginationService,
     public readonly productsService: ProductsService,
     public readonly intervalsService: GetAvailableIntervalsService,
-    public readonly alertController: AlertController,
+    public readonly alertService: AlertService,
     private chRef: ChangeDetectorRef,
+    private loader: LoaderService,
     private keyboard: Keyboard,
   ) {
     // Para detectar los cambios de la variable loading en el html
@@ -127,8 +129,8 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  closeModal() {
-    this.loading = true;
+  async closeModal() {
+    await this.loader.showLoader();
     this.intervalsService
       .endpoint({
         businessId: this.user.businessId, //not needed yet
@@ -139,7 +141,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
       .pipe(take(1))
       .subscribe(
         async (intervals: AvailableTimesResponse) => {
-          this.loading = false;
+          await this.loader.hideLoader();
           await this.modalController.dismiss({
             done: true,
             intervals: intervals,
@@ -147,12 +149,14 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
             product: this.selectedProduct,
           });
         },
-        err => {
-          this.presentError().then(() => {
-            this.loading = false;
-            this.chRef.detectChanges();
-            console.log(err);
-          });
+        async err => {
+          await this.loader.hideLoader();
+          await this.alertService.presentAlertWithSubheader(
+            'Error',
+            'Servidor temporalmente no disponible. ',
+            'Inténtelo de nuevo más tarde.',
+          );
+          this.chRef.detectChanges();
         },
       );
   }
@@ -166,19 +170,5 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
 
   async cancel() {
     await this.modalController.dismiss({ done: false });
-  }
-
-  // Mover a un componente a parte
-  async presentError() {
-    const alert = await this.alertController.create({
-      cssClass: 'alert',
-      mode: 'ios',
-      header: 'Error',
-      subHeader: 'Servidor temporalmente no disponible. ',
-      message: 'Inténtelo de nuevo más tarde.',
-      buttons: ['OK'],
-    });
-
-    await alert.present();
   }
 }

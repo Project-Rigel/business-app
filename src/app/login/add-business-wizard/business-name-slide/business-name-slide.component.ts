@@ -11,7 +11,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { AlertController, IonInput } from '@ionic/angular';
+import { IonInput } from '@ionic/angular';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-business-name-slide',
@@ -27,7 +28,7 @@ export class BusinessNameSlideComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertController: AlertController,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit() {
@@ -39,12 +40,10 @@ export class BusinessNameSlideComponent implements OnInit {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessNameForm.valid) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Tiene que indicar un nombre',
-        buttons: ['OK'],
-      });
-      await alert.present();
+      await this.alertService.presentSimpleAlert(
+        'Error',
+        'Tiene que indicar un nombre',
+      );
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;

@@ -1,10 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  AnimationController,
-  ModalController,
-} from '@ionic/angular';
+import { AnimationController, ModalController } from '@ionic/angular';
 import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
@@ -40,7 +37,6 @@ export class AgendaDetailsPage implements OnInit {
     customer: Customer;
     product: Product;
   };
-
   dateTimeValue = new Date();
   selectedStartTime = false;
   possibleAppointmentId: string;
@@ -139,28 +135,13 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
-  async selectTime($event) {
-    await this.updatePossibleAppointment($event);
+  async onSelectedTime($event) {
+    await this.formatDateTimeValueFromChipString($event);
+    await this.updatePossibleAppointment();
     this.selectedStartTime = !this.selectedStartTime;
   }
 
-  async updatePossibleAppointment($event: any) {
-    let hour = parseInt($event.target.innerText.split(':')[0]);
-    let minutes = parseInt($event.target.innerText.split(':')[1]);
-    if (isNaN(hour)) {
-      hour = parseInt($event.target.parentNode.innerText.split(':')[0]);
-      minutes = parseInt($event.target.parentNode.innerText.split(':')[1]);
-    }
-
-    this.dateTimeValue.setHours(hour);
-    this.dateTimeValue.setMinutes(minutes);
-    this.dateTimeValue.setSeconds(0);
-    this.dateTimeValue.setMilliseconds(0);
-
-    if (!this.possibleAppointmentId) {
-      this.possibleAppointmentId = this.appointmentsService.getId();
-    }
-
+  async updatePossibleAppointment() {
     const productDuration = moment.duration(
       this.addingAppointmentInfo.product.duration,
       'minutes',
@@ -203,7 +184,6 @@ export class AgendaDetailsPage implements OnInit {
       '¿Quiere confirmar la cita con los siguiente datos?',
       message,
     );
-
     result.pipe(take(1)).subscribe(async res => {
       if (res) {
         await this.confirmNewAppointment(this.agendaId);
@@ -263,11 +243,8 @@ export class AgendaDetailsPage implements OnInit {
       );
       this.existingAppointment = null;
     }
-
-    if (this.selectedStartTime) {
+    if (this.selectedStartTime)
       this.selectedStartTime = !this.selectedStartTime;
-    }
-
     this.possibleAppointmentId = null;
   }
 
@@ -279,6 +256,24 @@ export class AgendaDetailsPage implements OnInit {
     this.appointment = null;
     this.existingAppointment = null;
     this.appointmentGaps = [];
+  }
+
+  formatDateTimeValueFromChipString(event) {
+    let hour = parseInt(event.target.innerText.split(':')[0]);
+    let minutes = parseInt(event.target.innerText.split(':')[1]);
+    if (isNaN(hour)) {
+      hour = parseInt(event.target.parentNode.innerText.split(':')[0]);
+      minutes = parseInt(event.target.parentNode.innerText.split(':')[1]);
+    }
+
+    this.dateTimeValue.setHours(hour);
+    this.dateTimeValue.setMinutes(minutes);
+    this.dateTimeValue.setSeconds(0);
+    this.dateTimeValue.setMilliseconds(0);
+
+    if (!this.possibleAppointmentId) {
+      this.possibleAppointmentId = this.appointmentsService.getId();
+    }
   }
 
   capitalize(text: string) {

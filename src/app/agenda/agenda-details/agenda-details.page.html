@@ -26,7 +26,7 @@
           [appointmentGaps]="appointmentGaps"
           [dateTime]="dateTimeValue"
           [selectedStartTime]="selectedStartTime"
-          (onTimeChipSelected)="selectTime($event)"
+          (onTimeChipSelected)="onSelectedTime($event)"
           (onTimeChipDeselected)="selectedStartTime = !selectedStartTime"
           (onConfirmButtonPressed)="showConfirmAppointment(this.route.snapshot.paramMap.get('id'))"
         ></app-agenda-time-selector>

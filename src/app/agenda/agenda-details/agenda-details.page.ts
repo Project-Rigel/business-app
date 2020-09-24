@@ -2,7 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  AlertController,
   AnimationController,
   ModalController,
 } from '@ionic/angular';
@@ -15,6 +14,7 @@ import { Agenda } from '../../interfaces/agenda';
 import { Customer } from '../../interfaces/customer';
 import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
+import { AlertService } from '../../services/alert.service';
 import { AppointmentsService } from '../../services/appointments.service';
 import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
@@ -47,6 +47,7 @@ export class AgendaDetailsPage implements OnInit {
   appointment;
   existingAppointment = null;
   businessId: string;
+  agendaId: string;
 
   startDate: Moment;
   endDate: Moment;
@@ -58,7 +59,7 @@ export class AgendaDetailsPage implements OnInit {
     private agendaService: AgendaService,
     public route: ActivatedRoute,
     private modalController: ModalController,
-    public alertController: AlertController,
+    public alertService: AlertService,
     private auth: AuthService,
     private loader: LoaderService,
   ) {
@@ -178,6 +179,7 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   async showConfirmAppointment(agendaId: string) {
+    this.agendaId = agendaId;
     const customerMessagePiece =
       '<strong>Cliente: </strong> ' +
       this.capitalize(this.addingAppointmentInfo.customer.name) +
@@ -197,22 +199,16 @@ export class AgendaDetailsPage implements OnInit {
       productMessagePiece +
       '<br>' +
       dateMessagePiece;
-    const alert = await this.alertController.create({
-      header: '¿Quiere confirmar la cita con los siguiente datos?',
-      message: message,
-      buttons: [
-        {
-          text: 'Cancelar',
-        },
-        {
-          text: 'OK',
-          handler: async () => {
-            await this.confirmNewAppointment(agendaId);
-          },
-        },
-      ],
+    const result = await this.alertService.presentOkCancelAlert(
+      '¿Quiere confirmar la cita con los siguiente datos?',
+      message,
+    );
+
+    result.pipe(take(1)).subscribe(async res => {
+      if (res) {
+        await this.confirmNewAppointment(this.agendaId);
+      }
     });
-    await alert.present();
   }
 
   async confirmNewAppointment(agendaId: string) {
@@ -226,29 +222,16 @@ export class AgendaDetailsPage implements OnInit {
       );
       this.clearPossibleAppointmentData();
       await this.loader.hideLoader();
-      const alert = await this.alertController.create({
-        header: 'Éxito',
-        message: 'La cita se ha confirmado con éxito.',
-        buttons: [
-          {
-            text: 'Aceptar',
-          },
-        ],
-      });
-      await alert.present();
+      await this.alertService.presentSimpleAlert(
+        'Éxito',
+        'La cita se ha confirmado con éxito.',
+      );
     } catch (e) {
       await this.loader.hideLoader();
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message:
-          'Se ha producido un error inesperado. Vuelva a intentarlo en unos instantes.',
-        buttons: [
-          {
-            text: 'Aceptar',
-          },
-        ],
-      });
-      await alert.present();
+      await this.alertService.presentSimpleAlert(
+        'Error',
+        'Se ha producido un error inesperado. Vuelva a intentarlo en unos instantes.',
+      );
     }
   }
 

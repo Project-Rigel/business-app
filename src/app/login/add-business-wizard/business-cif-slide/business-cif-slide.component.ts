@@ -11,7 +11,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { AlertController, IonInput } from '@ionic/angular';
+import { IonInput } from '@ionic/angular';
+import { AlertService } from '../../../services/alert.service';
 import { NifValidatorService } from '../../../services/nif-validator.service';
 
 @Component({
@@ -28,7 +29,7 @@ export class BusinessCifSlideComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertController: AlertController,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit() {
@@ -40,12 +41,10 @@ export class BusinessCifSlideComponent implements OnInit {
   async submitForm(value: any) {
     this.submitClicked = true;
     if (!this.businessCIFForm.valid) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Tiene que indicar un NIF/NIE/CIF correcto',
-        buttons: ['OK'],
-      });
-      await alert.present();
+      await this.alertService.presentSimpleAlert(
+        'Error',
+        'Tiene que indicar un NIF/NIE/CIF correcto',
+      );
     } else {
       this.submitEnabled = false;
       this.submitClicked = false;

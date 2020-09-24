@@ -21,7 +21,15 @@
       class="ion-margin-bottom ion-justify-content-center ion-align-items-center ion-text-center"
     >
       <ion-col>
-        <app-agenda-time-selector></app-agenda-time-selector>
+        <app-agenda-time-selector
+          [isAddingAppointment]="addingAppointment"
+          [appointmentGaps]="appointmentGaps"
+          [dateTime]="dateTimeValue"
+          [selectedStartTime]="selectedStartTime"
+          (onTimeChipSelected)="selectTime($event)"
+          (onTimeChipDeselected)="selectedStartTime = !selectedStartTime"
+          (onConfirmButtonPressed)="showConfirmAppointment(this.route.snapshot.paramMap.get('id'))"
+        ></app-agenda-time-selector>
       </ion-col>
     </ion-row>
 

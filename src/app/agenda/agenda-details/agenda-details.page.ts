@@ -31,7 +31,6 @@ export class AgendaDetailsPage implements OnInit {
   isCalendarOpen = true;
   calendarButtonColor = 'primary';
 
-  isConfirmAppointmentOpen = false;
   appointmentGaps: string[] = [];
 
   agenda$: Observable<Agenda>;
@@ -41,7 +40,7 @@ export class AgendaDetailsPage implements OnInit {
     customer: Customer;
     product: Product;
   };
-  dateTimeInitialValue: Moment;
+
   dateTimeValue = new Date();
   selectedStartTime = false;
   possibleAppointmentId: string;
@@ -66,9 +65,6 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
     this.interval = duration(30, 'minutes');
-    this.dateTimeInitialValue = moment(
-      new Date().setHours(this.startDate.get('hours')),
-    );
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
 
@@ -135,7 +131,6 @@ export class AgendaDetailsPage implements OnInit {
   getAndShowAppointmentGaps(possibleAppointmentInfo: any) {
     this.addingAppointment = true;
     this.addingAppointmentInfo = possibleAppointmentInfo;
-    this.isConfirmAppointmentOpen = !this.isConfirmAppointmentOpen;
     const intervals = this.addingAppointmentInfo.intervals;
     for (const gap of intervals) {
       const item = moment(gap.from).utc(true);
@@ -143,10 +138,9 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
-  selectTime($event) {
-    this.updatePossibleAppointment($event);
+  async selectTime($event) {
+    await this.updatePossibleAppointment($event);
     this.selectedStartTime = !this.selectedStartTime;
-    this.isConfirmAppointmentOpen = !this.isConfirmAppointmentOpen;
   }
 
   async updatePossibleAppointment($event: any) {

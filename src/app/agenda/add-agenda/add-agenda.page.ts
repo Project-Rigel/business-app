@@ -1,17 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import {
-  IonInput,
-  ModalController,
-  PickerController,
-  Platform,
-} from '@ionic/angular';
-import { take } from 'rxjs/operators';
-import { AgendaService } from '../../services/agenda.service';
-import { AuthService } from '../../services/auth.service';
+import { Component, ViewChild } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireStorage } from "@angular/fire/storage";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { IonInput, IonSlides, ModalController, Platform } from "@ionic/angular";
+import { take } from "rxjs/operators";
+import { AgendaService } from "../../services/agenda.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: 'app-add-agenda',
@@ -21,15 +15,13 @@ import { AuthService } from '../../services/auth.service';
 export class AddAgendaPage {
   form: FormGroup;
   minuteSelected = '30';
-  minutes = ['15', '30', '60', '120'];
   loading = false;
   imageUrl;
-
   @ViewChild('inputNombre') input: IonInput;
+  @ViewChild(IonSlides) ionSlides: IonSlides;
+
   constructor(
     private formBuilder: FormBuilder,
-    private imagePicker: ImagePicker,
-    private pickerController: PickerController,
     private modalController: ModalController,
     private agendaService: AgendaService,
     private platform: Platform,
@@ -42,8 +34,10 @@ export class AddAgendaPage {
     });
   }
 
-  ionViewDidEnter() {
-    setTimeout(() => this.input.setFocus(), 100);
+  async ionViewDidEnter() {
+    //setTimeout(() => this.input.setFocus(), 100);
+    await this.ionSlides.lockSwipeToNext(true);
+    await this.ionSlides.lockSwipeToPrev(true);
   }
 
   async createAgenda() {
@@ -74,69 +68,22 @@ export class AddAgendaPage {
     });
   }
 
-  async selectImage(event) {
-    if (this.platform.is('cordova')) {
-      try {
-        const pictures = await this.imagePicker.getPictures({ outputType: 1 });
-        console.log(pictures);
-
-        if (pictures) {
-          this.imageUrl = pictures[0];
-        }
-      } catch (e) {
-        console.log(e);
-        throw e;
-      }
-    } else {
-      console.log(event);
-    }
-  }
-  async showPicker() {
-    const picker = await this.pickerController.create({
-      columns: [
-        {
-          name: 'Minutes',
-          options: this.getColumnOptions(),
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Confirm',
-          handler: value => {
-            if (value.Minutes.value) {
-              console.log(value.Minutes.value);
-
-              this.minuteSelected = value.Minutes.value;
-            }
-          },
-        },
-      ],
-    });
-
-    await picker.present();
-  }
-
-  private getColumnOptions() {
-    const options = [];
-    this.minutes.forEach(x => {
-      if (x === this.minuteSelected) {
-        options.push({ text: x + ' minutes', value: x, selected: true });
-      } else {
-        options.push({ text: x + ' minutes', value: x });
-      }
-    });
-    return options;
-  }
-
   async closeModal() {
     await this.modalController.dismiss({});
     this.form.reset();
   }
+
   get name() {
     return this.form.get('name');
+  }
+
+  async nextSlide() {
+    await this.ionSlides.lockSwipeToNext(false);
+    await this.ionSlides.slideNext();
+  }
+
+  async previousSlide(): Promise<void> {
+    await this.ionSlides.lockSwipeToPrev(false);
+    await this.ionSlides.slidePrev();
   }
 }

@@ -13,65 +13,32 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content class="bg-modal">
   <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
-
-  <ion-grid fixed class="bg-modal">
-    <ion-row class="ion-justify-content-center ion-align-items-center">
-      <ion-col size="12" class="ion-align-self-center">
-        <ion-avatar
-          (click)="selectImage($event)"
-          *ngIf="imageUrl"
-          class="agenda-avatar"
-        >
-          <img src="data:image/jpg;base64,{{imageUrl}}" />
-        </ion-avatar>
-
-        <div
-          *ngIf="!imageUrl"
-          (click)="selectImage($event)"
-          class="dot ion-margin-top image-margin"
-        >
-          <ion-icon
-            name="camera-outline"
-            size="large"
-            class="image-text"
-          ></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-
-    <ion-row
-      class="ion-justify-content-center ion-align-items-center ion-margin-top "
-    >
-      <form [formGroup]="form">
-        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
-          <ion-item lines="none" class="min-width-item">
-            <ion-input
-              #inputNombre
-              enterkeyhint="enter"
-              placeholder="Nombre (Obligatorio)"
-              required
-              type="text"
-              formControlName="name"
-            ></ion-input>
-          </ion-item>
-        </ion-list>
-
-        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
-          <ion-item
-            lines="none"
-            button
-            (click)="showPicker()"
-            class="min-width-item"
-          >
-            <ion-label slot="start">Intervalos</ion-label>
-            <ion-label class="ion-margin-right" slot="end"
-              >{{minuteSelected}} minutos</ion-label
-            >
-          </ion-item>
-        </ion-list>
-      </form>
-    </ion-row>
-  </ion-grid>
+<ion-slides>
+  <ion-slide>
+    <div class="slide">
+      <div style="height: 80%;">
+        <app-add-agenda-basic-info [form]="form"></app-add-agenda-basic-info>
+      </div>
+      <div style="height: 20%;">
+        <ion-button (click)="nextSlide()" size="large" fill="clear">
+          <ion-icon color="primary" name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </ion-slide>
+  <ion-slide class="slide bg-modal">
+    <div class="slide">
+      <div style="height: 80%;">
+        <app-add-agenda-config></app-add-agenda-config>
+      </div>
+      <div style="height: 20%;">
+        <ion-button (click)="previousSlide()" size="large" fill="clear">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </ion-slide>
+</ion-slides>
 </ion-content>

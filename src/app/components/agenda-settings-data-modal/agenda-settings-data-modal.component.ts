@@ -30,11 +30,11 @@ export class AgendaSettingsDataModalComponent implements OnInit {
   }
 
   selectedStartTime(event) {
-    this.startTime = event.detail.value;
+    this.startTime = new Date(event.detail.value).toISOString();
   }
 
   selectedEndTime(event) {
-    this.endTime = event.detail.value;
+    this.endTime = new Date(event.detail.value).toISOString();
   }
 
   async closeSuccessModal() {
@@ -55,6 +55,7 @@ export class AgendaSettingsDataModalComponent implements OnInit {
   initializeValues() {
     this.dayOfWeek = 'Monday';
     const today = new Date();
+    const offset = today.getTimezoneOffset();
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);

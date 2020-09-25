@@ -1,27 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { AgendaSettingsDataModalComponent } from '../../components/agenda-settings-data-modal/agenda-settings-data-modal.component';
 
 @Component({
   selector: 'app-add-agenda-config',
   templateUrl: './add-agenda-config.page.html',
   styleUrls: ['./add-agenda-config.page.scss'],
 })
-export class AddAgendaConfigPage implements OnInit {
+export class AddAgendaConfigPage {
+  constructor(private modalController: ModalController) {}
 
-  segmentValue: string = AddAgendaConfigPage.DAY_OF_WEEK_SEGMENT_VALUE;
+  async showAgendaSettingsDataModal() {
+    const modal = await this.modalController.create({
+      component: AgendaSettingsDataModalComponent,
+      cssClass: 'agenda-data-modal',
+      swipeToClose: true,
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
 
-  static DAY_OF_WEEK_SEGMENT_VALUE = 'dayOfWeek';
-  static SPECIFIC_DATE_SEGMENT_VALUE = 'specificDate';
-
-  constructor() { }
-
-  ngOnInit() {
+    if (data && data.done) {
+      console.log(data.value);
+    } else {
+      console.log('not done');
+    }
   }
-
-  addSettingAgendaSetting() {}
-
-  segmentChanged($event: any) {
-    this.segmentValue = $event.detail.value;
-    console.log($event.detail.value);
-  }
-
 }

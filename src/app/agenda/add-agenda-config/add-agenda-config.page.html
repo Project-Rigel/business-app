@@ -1,42 +1,64 @@
-<ion-content class="bg-modal">
-<ion-grid>
-  <ion-row class="ion-justify-content-center ion-margin-top">
-    <ion-text>
-      <h1>Configuración de citación</h1>
-    </ion-text>
-  </ion-row>
-  <ion-row class="ion-justify-content-center">
-    <ion-col size="8">
-      <ion-segment (ionChange)="segmentChanged($event)" value="dayOfWeek" >
-        <ion-segment-button value="dayOfWeek" layout="icon-hide">
-          <ion-label>Semanal</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="specificDate" layout="icon-hide">
-          <ion-label>Fecha específica</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-    </ion-col>
-  </ion-row>
-
-  <ion-row *ngIf="segmentValue === 'dayOfWeek'" class="ion-justify-content-center">
-    <ion-col size="8">
-      <ion-label> Día de la semana </ion-label>
-      <ion-select value="Monday">
-        <ion-select-option value="Monday">Lunes</ion-select-option>
-        <ion-select-option value="Tuesday">Martes</ion-select-option>
-        <ion-select-option value="Wednesday">Miércoles</ion-select-option>
-        <ion-select-option value="Thursday">Jueves</ion-select-option>
-        <ion-select-option value="Friday">Viernes</ion-select-option>
-        <ion-select-option value="Saturday">Sábado</ion-select-option>
-        <ion-select-option value="Sunday">Domingo</ion-select-option>
-      </ion-select>
-    </ion-col>
-  </ion-row>
-
-  <ion-row class="ion-justify-content-center">
-    <ion-col size="8">
-      <ion-button expand="block" (click)="addSettingAgendaSetting()">Añadir configuración</ion-button>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<ion-content class="bg-modal" style="height: 20%">
+  <ion-grid>
+    <ion-row class="ion-margin-start">
+      <ion-text style="width: 75%">
+        <h3>Configuración de citación</h3>
+      </ion-text>
+      <div style="width: 25%">
+        <ion-button (click)="showAgendaSettingsDataModal()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-content class="bg-modal" style="height: 80%;">
+  <ion-list class="centered-list">
+    <ion-list-header>Configuraciones actuales</ion-list-header>
+    <ion-item class="min-width-item ">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item ">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class=" rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class=" rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+    <ion-item class="min-width-item rounded">
+      <ion-label> Lunes 10:00-12:00 </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

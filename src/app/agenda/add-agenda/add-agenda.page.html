@@ -1,4 +1,4 @@
-<ion-header xmlns="http://www.w3.org/1999/html">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="closeModal()">
@@ -15,30 +15,33 @@
 </ion-header>
 <ion-content class="bg-modal">
   <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
-<ion-slides>
-  <ion-slide>
-    <div class="slide">
-      <div style="height: 80%;">
-        <app-add-agenda-basic-info [form]="form"></app-add-agenda-basic-info>
+  <ion-slides>
+    <ion-slide>
+      <div class="slide">
+        <div style="height: 80%;">
+          <app-add-agenda-basic-info [form]="form"></app-add-agenda-basic-info>
+        </div>
+        <div style="height: 20%;" class="vertical-align-content">
+          <ion-button expand="block" class="slide-button" (click)="nextSlide()"
+            >Siguiente</ion-button
+          >
+        </div>
       </div>
-      <div style="height: 20%;">
-        <ion-button (click)="nextSlide()" size="large" fill="clear">
-          <ion-icon color="primary" name="chevron-forward-outline"></ion-icon>
-        </ion-button>
+    </ion-slide>
+    <ion-slide class="slide bg-modal">
+      <div class="slide">
+        <div style="height: 80%;">
+          <app-add-agenda-config></app-add-agenda-config>
+        </div>
+        <div style="height: 20%;" class="vertical-align-content">
+          <ion-button
+            expand="block"
+            class="slide-button"
+            (click)="previousSlide()"
+            >Volver</ion-button
+          >
+        </div>
       </div>
-    </div>
-  </ion-slide>
-  <ion-slide class="slide bg-modal">
-    <div class="slide">
-      <div style="height: 80%;">
-        <app-add-agenda-config></app-add-agenda-config>
-      </div>
-      <div style="height: 20%;">
-        <ion-button (click)="previousSlide()" size="large" fill="clear">
-          <ion-icon name="chevron-back-outline"></ion-icon>
-        </ion-button>
-      </div>
-    </div>
-  </ion-slide>
-</ion-slides>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

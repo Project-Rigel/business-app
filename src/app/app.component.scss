@@ -85,3 +85,8 @@ ion-menu.ios ion-item ion-icon {
 ion-menu.ios ion-item.selected ion-icon {
   color: var(--ion-color-primary);
 }
+
+.agenda-data-modal {
+  height: 50%!important;
+  transform: translateY(100%);
+}

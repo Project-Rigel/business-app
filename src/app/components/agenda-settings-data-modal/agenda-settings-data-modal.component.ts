@@ -10,8 +10,8 @@ export class AgendaSettingsDataModalComponent implements OnInit {
   segmentValue: string =
     AgendaSettingsDataModalComponent.DAY_OF_WEEK_SEGMENT_VALUE;
   dayOfWeek: string;
-  startTime: string;
-  endTime: string;
+  startTime: Date;
+  endTime: Date;
   static DAY_OF_WEEK_SEGMENT_VALUE = 'dayOfWeek';
   static SPECIFIC_DATE_SEGMENT_VALUE = 'specificDate';
 
@@ -30,11 +30,11 @@ export class AgendaSettingsDataModalComponent implements OnInit {
   }
 
   selectedStartTime(event) {
-    this.startTime = new Date(event.detail.value).toISOString();
+    this.startTime = new Date(event.detail.value);
   }
 
   selectedEndTime(event) {
-    this.endTime = new Date(event.detail.value).toISOString();
+    this.endTime = new Date(event.detail.value);
   }
 
   async closeSuccessModal() {
@@ -42,8 +42,9 @@ export class AgendaSettingsDataModalComponent implements OnInit {
       done: true,
       value: {
         day: this.dayOfWeek,
-        starTime: this.startTime,
+        startTime: this.startTime,
         endTime: this.endTime,
+        segment: this.segmentValue,
       },
     });
   }
@@ -55,12 +56,11 @@ export class AgendaSettingsDataModalComponent implements OnInit {
   initializeValues() {
     this.dayOfWeek = 'Monday';
     const today = new Date();
-    const offset = today.getTimezoneOffset();
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);
-    this.startTime = today.toISOString();
+    this.startTime = today;
     today.setHours(today.getHours() + 4);
-    this.endTime = today.toISOString();
+    this.endTime = today;
   }
 }

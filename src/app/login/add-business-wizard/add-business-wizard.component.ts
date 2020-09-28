@@ -17,6 +17,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
   businessAddress: any;
   businessPhoneNumber: number;
   maxTries: number;
+  userId: string;
 
   constructor(
     private modalController: ModalController,
@@ -24,7 +25,12 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     private keyboard: Keyboard,
     private alertService: AlertService,
     private platform: Platform,
-  ) {}
+    private auth: AuthService,
+  ) {
+    this.auth.user$.subscribe(user => {
+      this.userId = user.id;
+    });
+  }
 
   ngOnInit() {
     this.maxTries = 3;
@@ -66,6 +72,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
           nif: this.businessNIF,
           address: this.businessAddress,
           phone: this.businessPhoneNumber,
+          ownerId: this.userId,
         },
       });
     } catch (e) {

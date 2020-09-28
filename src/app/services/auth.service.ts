@@ -177,7 +177,7 @@ export class AuthService {
     if (!firebaseData.exists) {
       const businessId = this.firestore.createId();
       this.businessService.setBusinessId(businessId);
-      user.businessId = businessId;
+      appUser.businessId = businessId;
 
       await userRef.set(appUser, { merge: true });
     }

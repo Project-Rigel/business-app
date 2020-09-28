@@ -28,7 +28,9 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     private auth: AuthService,
   ) {
     this.auth.user$.subscribe(user => {
-      this.userId = user.id;
+      if (user) {
+        this.userId = user.id;
+      }
     });
   }
 

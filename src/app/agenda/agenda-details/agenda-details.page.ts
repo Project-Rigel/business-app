@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnimationController, ModalController } from '@ionic/angular';
 import { Animation } from '@ionic/core';
@@ -9,11 +9,13 @@ import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Agenda } from '../../interfaces/agenda';
 import { Customer } from '../../interfaces/customer';
+import { Interval } from '../../interfaces/interval';
 import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
 import { AlertService } from '../../services/alert.service';
 import { AppointmentsService } from '../../services/appointments.service';
 import { AuthService } from '../../services/auth.service';
+import { GetAgendaConfigService } from '../../services/get-agenda-config.service';
 import { LoaderService } from '../../services/loader.service';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 
@@ -44,6 +46,7 @@ export class AgendaDetailsPage implements OnInit {
   existingAppointment = null;
   businessId: string;
   agendaId: string;
+  intervals: Interval[];
 
   startDate: Moment;
   endDate: Moment;
@@ -52,12 +55,14 @@ export class AgendaDetailsPage implements OnInit {
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
+    public intervalService: GetAgendaConfigService,
     private agendaService: AgendaService,
     public route: ActivatedRoute,
     private modalController: ModalController,
     public alertService: AlertService,
     private auth: AuthService,
     private loader: LoaderService,
+    private chRef: ChangeDetectorRef,
   ) {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
@@ -65,9 +70,27 @@ export class AgendaDetailsPage implements OnInit {
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
 
-    this.auth.user$.subscribe(user => {
+    this.auth.user$.subscribe(async user => {
       if (user) {
         this.businessId = user.businessId;
+        await this.intervalService
+          .endpoint({
+            agendaId: value,
+            businessId: this.businessId,
+            showOnlyValidConfig: true,
+          })
+          .pipe(take(1))
+          .subscribe(
+            async (configs: any) => {
+              configs.map(data => {
+                this.intervals = data.intervals;
+                this.chRef.detectChanges();
+              });
+            },
+            async err => {
+              console.log(err);
+            },
+          );
       }
     });
   }

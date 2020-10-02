@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Duration, Moment } from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Appointment } from '../../interfaces/appointment';
+import { Interval } from '../../interfaces/interval';
 import { AppointmentsService } from '../../services/appointments.service';
 
 interface TimeBlock {
@@ -25,6 +26,7 @@ interface AppointmentBlock {
 })
 export class DayTimelineComponent implements OnInit {
   @Input() appointments: Observable<Appointment[]>;
+  @Input() intervals: Interval[];
   @Input() startDate: Moment;
   @Input() endDate: Moment;
   @Input() intervalsLength: Duration;
@@ -41,6 +43,7 @@ export class DayTimelineComponent implements OnInit {
   constructor(private appointmentsService: AppointmentsService) {}
 
   ngOnInit() {
+    console.log(this.intervals);
     this.dayLengthMinutes = this.endDate.diff(this.startDate, 'minutes');
     const nBlocks = Math.floor(
       this.dayLengthMinutes / this.intervalsLength.asMinutes(),

@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/tabs/agenda" text=""></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button
+        [color]="calendarButtonColor"
+        (click)="calendarButtonPressed()"
+      >
+        <ion-icon
+          [color]="calendarButtonColor"
+          slot="icon-only"
+          name="calendar-outline"
+        ></ion-icon>
+      </ion-button>
+
+      <ion-button
+        *ngIf="!isAddingAppointment"
+        (click)="addAppointmentButtonPressed()"
+        color="primary"
+      >
+        <ion-icon
+          color="primary"
+          slot="icon-only"
+          name="add-outline"
+        ></ion-icon>
+      </ion-button>
+
+      <ion-button
+        *ngIf="isAddingAppointment"
+        (click)="cancelAddAppointmentButtonPressed()"
+      >
+        <ion-label color="primary"> Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

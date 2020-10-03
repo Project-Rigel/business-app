@@ -21,6 +21,7 @@ export class AgendaIntervalsComponent implements OnInit {
   ngOnInit() {
     this.computeHeightAttribute();
     this.computeTopProperty();
+    console.log(this.interval);
   }
 
   private computeHeightAttribute() {

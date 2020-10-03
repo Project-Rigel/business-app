@@ -8,7 +8,7 @@
 
   <div class="intervals-wrapper">
     <app-agenda-intervals
-      *ngFor="let interval of this.intervals; index as i"
+      *ngFor="let interval of intervals | async; index as i"
       [startDate]="startDate"
       [dayLengthMinutes]="dayLengthMinutes"
       [parentContainerLengthPx]="componentHeight"

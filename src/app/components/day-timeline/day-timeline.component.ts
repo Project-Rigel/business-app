@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Duration, Moment } from 'moment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { AgendaDetailsPage } from '../../agenda/agenda-details/agenda-details.page';
 import { Appointment } from '../../interfaces/appointment';
 import { Interval } from '../../interfaces/interval';
 import { AppointmentsService } from '../../services/appointments.service';
@@ -26,11 +27,12 @@ interface AppointmentBlock {
 })
 export class DayTimelineComponent implements OnInit {
   @Input() appointments: Observable<Appointment[]>;
-  @Input() intervals: Interval[];
   @Input() startDate: Moment;
   @Input() endDate: Moment;
   @Input() intervalsLength: Duration;
   @Input() padding = 16;
+
+  intervals: Observable<Interval[]>;
 
   timeBlocks: TimeBlock[] = [];
   dayLengthMinutes: number;
@@ -40,10 +42,16 @@ export class DayTimelineComponent implements OnInit {
     AppointmentBlock[]
   >([]);
 
-  constructor(private appointmentsService: AppointmentsService) {}
+  constructor(
+    private appointmentsService: AppointmentsService,
+    agenda: AgendaDetailsPage,
+  ) {
+    agenda.intervals.subscribe(data => {
+      this.intervals = of(data);
+    });
+  }
 
   ngOnInit() {
-    console.log(this.intervals);
     this.dayLengthMinutes = this.endDate.diff(this.startDate, 'minutes');
     const nBlocks = Math.floor(
       this.dayLengthMinutes / this.intervalsLength.asMinutes(),
@@ -53,21 +61,5 @@ export class DayTimelineComponent implements OnInit {
       .map(v => {
         return { start: v };
       });
-
-    /* this.appointments.subscribe(appointments => {
-      const appointmentBlockArray: AppointmentBlock[] = [];
-      appointments.map(appointment => {
-        // mirar si coinciden
-        appointmentBlockArray.push({
-          startDate: appointment.startDate,
-          endDate: appointment.endDate,
-          name: appointment.name,
-          customerName: appointment.customerName,
-          sharesStartTimeWithOtherAppointment: true,
-          positionSharing: 1,
-        });
-      });
-      this.appointmentBlocks.next(appointmentBlockArray);
-    }); */
   }
 }

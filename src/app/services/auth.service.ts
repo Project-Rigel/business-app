@@ -46,6 +46,7 @@ export class AuthService {
       switchMap(user => {
         // Logged in
         if (user) {
+          console.log(user.getIdToken());
           this.temporalUser = user;
           return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
         } else {

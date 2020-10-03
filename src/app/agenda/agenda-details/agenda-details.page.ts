@@ -5,9 +5,10 @@ import { AnimationController, ModalController } from '@ionic/angular';
 import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Agenda } from '../../interfaces/agenda';
+import { AgendaConfig } from '../../interfaces/agenda-config';
 import { Customer } from '../../interfaces/customer';
 import { Interval } from '../../interfaces/interval';
 import { Product } from '../../interfaces/product';
@@ -46,7 +47,8 @@ export class AgendaDetailsPage implements OnInit {
   existingAppointment = null;
   businessId: string;
   agendaId: string;
-  intervals: Interval[];
+  agendaConfig: AgendaConfig[];
+  intervals: BehaviorSubject<Interval[]> = new BehaviorSubject<Interval[]>([]);
 
   startDate: Moment;
   endDate: Moment;
@@ -73,7 +75,7 @@ export class AgendaDetailsPage implements OnInit {
     this.auth.user$.subscribe(async user => {
       if (user) {
         this.businessId = user.businessId;
-        await this.intervalService
+        this.intervalService
           .endpoint({
             agendaId: value,
             businessId: this.businessId,
@@ -81,13 +83,10 @@ export class AgendaDetailsPage implements OnInit {
           })
           .pipe(take(1))
           .subscribe(
-            async (configs: any) => {
-              configs.map(data => {
-                this.intervals = data.intervals;
-                this.chRef.detectChanges();
-              });
+            (config: any) => {
+              this.agendaConfig = config;
             },
-            async err => {
+            err => {
               console.log(err);
             },
           );
@@ -119,7 +118,33 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(event.setHours(7, 0, 0, 0));
     this.endDate = moment(event.setHours(23, 0, 0, 0));
     this.dateTimeValue = event;
+    let intervals = [];
+    this.agendaConfig.map((config: AgendaConfig) => {
+      if (this.belongsToSelectedDate(config)) {
+        intervals = config.intervals;
+        return;
+      }
+    });
+    this.intervals.next(intervals);
     this.updateAppointments(event);
+    this.chRef.detectChanges();
+  }
+
+  belongsToSelectedDate(config: AgendaConfig): boolean {
+    if (config.dayOfWeek && config.dayOfWeek === this.dateTimeValue.getDay()) {
+      return true;
+    }
+    if (config.specificDate) {
+      const date = moment(config.specificDate).toDate();
+      if (
+        date.getDate() === this.dateTimeValue.getDate() &&
+        date.getMonth() === this.dateTimeValue.getMonth() &&
+        date.getFullYear() === this.dateTimeValue.getFullYear()
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   async showOrHideCalendar() {

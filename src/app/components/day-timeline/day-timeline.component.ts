@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Duration, Moment } from 'moment';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { AgendaDetailsPage } from '../../agenda/agenda-details/agenda-details.page';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Appointment } from '../../interfaces/appointment';
 import { Interval } from '../../interfaces/interval';
 import { AppointmentsService } from '../../services/appointments.service';
@@ -27,12 +26,11 @@ interface AppointmentBlock {
 })
 export class DayTimelineComponent implements OnInit {
   @Input() appointments: Observable<Appointment[]>;
+  @Input() intervals: Observable<Interval[]>;
   @Input() startDate: Moment;
   @Input() endDate: Moment;
   @Input() intervalsLength: Duration;
   @Input() padding = 16;
-
-  intervals: Observable<Interval[]>;
 
   timeBlocks: TimeBlock[] = [];
   dayLengthMinutes: number;
@@ -42,14 +40,7 @@ export class DayTimelineComponent implements OnInit {
     AppointmentBlock[]
   >([]);
 
-  constructor(
-    private appointmentsService: AppointmentsService,
-    agenda: AgendaDetailsPage,
-  ) {
-    agenda.intervals.subscribe(data => {
-      this.intervals = of(data);
-    });
-  }
+  constructor(private appointmentsService: AppointmentsService) {}
 
   ngOnInit() {
     this.dayLengthMinutes = this.endDate.diff(this.startDate, 'minutes');

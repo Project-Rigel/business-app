@@ -5,7 +5,7 @@ import { AnimationController, ModalController } from '@ionic/angular';
 import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Agenda } from '../../interfaces/agenda';
 import { AgendaConfig } from '../../interfaces/agenda-config';
@@ -47,12 +47,14 @@ export class AgendaDetailsPage implements OnInit {
   existingAppointment = null;
   businessId: string;
   agendaId: string;
-  agendaConfig: AgendaConfig[];
-  intervals: BehaviorSubject<Interval[]> = new BehaviorSubject<Interval[]>([]);
+  agendaConfig: Observable<any>;
+  intervals: Observable<Interval[]>;
 
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
+
+  a: Observable<any>;
 
   constructor(
     private animationController: AnimationController,
@@ -72,10 +74,22 @@ export class AgendaDetailsPage implements OnInit {
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
 
-    this.auth.user$.subscribe(async user => {
+    this.agendaConfig = this.auth.user$.pipe(
+      switchMap(user => {
+        this.businessId = user.businessId;
+        return this.intervalService.endpoint({
+          agendaId: value,
+          businessId: this.businessId,
+          showOnlyValidConfig: true,
+        });
+      }),
+      take(1),
+    );
+
+    /*this.auth.user$.subscribe(async user => {
       if (user) {
         this.businessId = user.businessId;
-        this.intervalService
+        await this.intervalService
           .endpoint({
             agendaId: value,
             businessId: this.businessId,
@@ -91,7 +105,7 @@ export class AgendaDetailsPage implements OnInit {
             },
           );
       }
-    });
+    });*/
   }
 
   ngOnInit() {
@@ -118,14 +132,33 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(event.setHours(7, 0, 0, 0));
     this.endDate = moment(event.setHours(23, 0, 0, 0));
     this.dateTimeValue = event;
-    let intervals = [];
-    this.agendaConfig.map((config: AgendaConfig) => {
+    //let intervals = [];
+    /*this.agendaConfig.filter((config: AgendaConfig) => {
       if (this.belongsToSelectedDate(config)) {
         intervals = config.intervals;
         return;
       }
-    });
-    this.intervals.next(intervals);
+    });*/
+    this.intervals = this.agendaConfig.pipe(
+      switchMap((configs: AgendaConfig[]) => {
+        return configs
+          .filter((config: AgendaConfig) => {
+            this.belongsToSelectedDate(config);
+          })
+          .map(config => {
+            console.log(config);
+            return config.intervals;
+          });
+      }),
+      take(1),
+    );
+
+    /*this.agendaConfig.subscribe(b => {
+      b.filter((config: AgendaConfig) => {
+        this.belongsToSelectedDate(config)
+      })
+    })*/
+    //this.intervals = of(intervals);
     this.updateAppointments(event);
     this.chRef.detectChanges();
   }

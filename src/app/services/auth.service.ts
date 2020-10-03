@@ -106,15 +106,11 @@ export class AuthService {
 
   async verifyPhoneNumber(code: string): Promise<void> {
     try {
-      console.log('Llego aquí');
-      console.log(code);
       const credential = firebase.auth.PhoneAuthProvider.credential(
         this.verificationId,
         code,
       );
-      console.log(credential);
       await firebase.auth().currentUser.linkWithCredential(credential);
-      console.log('Linked');
     } catch (e) {
       console.log(e);
       throw e;

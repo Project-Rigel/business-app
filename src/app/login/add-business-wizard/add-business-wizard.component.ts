@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonSlides, ModalController, Platform } from '@ionic/angular';
+import { take } from 'rxjs/operators';
 import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -31,7 +32,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
       if (user) {
         this.userId = user.id;
       }
-    });
+    }, take(1));
   }
 
   ngOnInit() {

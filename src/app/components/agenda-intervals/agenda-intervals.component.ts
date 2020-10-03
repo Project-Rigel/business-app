@@ -25,8 +25,8 @@ export class AgendaIntervalsComponent implements OnInit {
   topPx: number;
 
   ngOnInit() {
-    //this.computeHeightAttribute();
-    //this.computeTopProperty();
+    this.computeHeightAttribute();
+    this.computeTopProperty();
   }
 
   private computeHeightAttribute() {
@@ -36,11 +36,13 @@ export class AgendaIntervalsComponent implements OnInit {
     );
 
     const percentOfDayDuration = minuteDiff / this.dayLengthMinutes;
-    this.heightPx = percentOfDayDuration * this.parentContainerLengthPx - 1; // -1 para separar visualmente citas adyacentes verticalemnte
+    this.heightPx = percentOfDayDuration * this.parentContainerLengthPx;
   }
 
   private computeTopProperty() {
-    const diffFromStartOfDay = moment(this.interval.startHour, 'HH:mm').diff(
+    const startDateString = this.startDate.toDate().toDateString();
+    const startHour = moment(startDateString + ' ' + this.interval.startHour);
+    const diffFromStartOfDay = moment(startHour).diff(
       this.startDate,
       'minutes',
     );

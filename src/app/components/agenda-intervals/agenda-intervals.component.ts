@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Interval } from '../../interfaces/interval';
@@ -7,6 +12,7 @@ import { Interval } from '../../interfaces/interval';
   selector: 'app-agenda-intervals',
   templateUrl: './agenda-intervals.component.html',
   styleUrls: ['./agenda-intervals.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AgendaIntervalsComponent implements OnInit {
   @Input() startDate: Moment;
@@ -19,9 +25,8 @@ export class AgendaIntervalsComponent implements OnInit {
   topPx: number;
 
   ngOnInit() {
-    this.computeHeightAttribute();
-    this.computeTopProperty();
-    console.log(this.interval);
+    //this.computeHeightAttribute();
+    //this.computeTopProperty();
   }
 
   private computeHeightAttribute() {

@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { Duration, Moment } from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Appointment } from '../../interfaces/appointment';
@@ -22,7 +27,7 @@ interface AppointmentBlock {
   selector: 'app-day-timeline',
   templateUrl: './day-timeline.component.html',
   styleUrls: ['./day-timeline.component.scss'],
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayTimelineComponent implements OnInit {
   @Input() appointments: Observable<Appointment[]>;

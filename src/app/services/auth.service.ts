@@ -46,7 +46,6 @@ export class AuthService {
       switchMap(user => {
         // Logged in
         if (user) {
-          console.log(user.getIdToken());
           this.temporalUser = user;
           return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
@@ -152,7 +151,6 @@ export class AuthService {
   }
 
   private async createUserInFirebaseIfNew(user: any): Promise<User> {
-    console.log(user);
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
       `users/${user.uid}`,

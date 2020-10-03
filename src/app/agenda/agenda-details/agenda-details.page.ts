@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnimationController, ModalController } from '@ionic/angular';
 import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Agenda } from '../../interfaces/agenda';
 import { AgendaConfig } from '../../interfaces/agenda-config';
@@ -47,14 +47,15 @@ export class AgendaDetailsPage implements OnInit {
   existingAppointment = null;
   businessId: string;
   agendaId: string;
-  agendaConfig: Observable<any>;
-  intervals: Observable<Interval[]>;
+  agendaConfig$: Observable<any>;
+  intervals$: Observable<Interval[]>;
 
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
 
   a: Observable<any>;
+  private dateChangeSubject: BehaviorSubject<any>;
 
   constructor(
     private animationController: AnimationController,
@@ -66,7 +67,6 @@ export class AgendaDetailsPage implements OnInit {
     public alertService: AlertService,
     private auth: AuthService,
     private loader: LoaderService,
-    private chRef: ChangeDetectorRef,
   ) {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
@@ -74,7 +74,9 @@ export class AgendaDetailsPage implements OnInit {
     const value = this.route.snapshot.paramMap.get('id');
     this.agenda$ = this.agendaService.getAgendaById(value);
 
-    this.agendaConfig = this.auth.user$.pipe(
+    this.dateChangeSubject = new BehaviorSubject<any>(new Date());
+
+    this.agendaConfig$ = this.auth.user$.pipe(
       switchMap(user => {
         this.businessId = user.businessId;
         return this.intervalService.endpoint({
@@ -86,26 +88,18 @@ export class AgendaDetailsPage implements OnInit {
       take(1),
     );
 
-    /*this.auth.user$.subscribe(async user => {
-      if (user) {
-        this.businessId = user.businessId;
-        await this.intervalService
-          .endpoint({
-            agendaId: value,
-            businessId: this.businessId,
-            showOnlyValidConfig: true,
-          })
-          .pipe(take(1))
-          .subscribe(
-            (config: any) => {
-              this.agendaConfig = config;
-            },
-            err => {
-              console.log(err);
-            },
-          );
-      }
-    });*/
+    this.intervals$ = combineLatest(
+      this.agendaConfig$,
+      this.dateChangeSubject.asObservable(),
+    ).pipe(
+      switchMap(configs => {
+        return of(
+          configs[0].filter(config => {
+            return this.belongsToSelectedDate(config);
+          })[0]?.intervals,
+        );
+      }),
+    );
   }
 
   ngOnInit() {
@@ -132,35 +126,8 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(event.setHours(7, 0, 0, 0));
     this.endDate = moment(event.setHours(23, 0, 0, 0));
     this.dateTimeValue = event;
-    //let intervals = [];
-    /*this.agendaConfig.filter((config: AgendaConfig) => {
-      if (this.belongsToSelectedDate(config)) {
-        intervals = config.intervals;
-        return;
-      }
-    });*/
-    this.intervals = this.agendaConfig.pipe(
-      switchMap((configs: AgendaConfig[]) => {
-        return configs
-          .filter((config: AgendaConfig) => {
-            this.belongsToSelectedDate(config);
-          })
-          .map(config => {
-            console.log(config);
-            return config.intervals;
-          });
-      }),
-      take(1),
-    );
-
-    /*this.agendaConfig.subscribe(b => {
-      b.filter((config: AgendaConfig) => {
-        this.belongsToSelectedDate(config)
-      })
-    })*/
-    //this.intervals = of(intervals);
     this.updateAppointments(event);
-    this.chRef.detectChanges();
+    this.dateChangeSubject.next(event);
   }
 
   belongsToSelectedDate(config: AgendaConfig): boolean {

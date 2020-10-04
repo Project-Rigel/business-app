@@ -28,11 +28,11 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     private platform: Platform,
     private auth: AuthService,
   ) {
-    this.auth.user$.subscribe(user => {
+    this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.userId = user.id;
       }
-    }, take(1));
+    });
   }
 
   ngOnInit() {

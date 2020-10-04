@@ -152,7 +152,6 @@ export class AuthService {
   }
 
   private async createUserInFirebaseIfNew(user: any): Promise<User> {
-    console.log(user);
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
       `users/${user.uid}`,

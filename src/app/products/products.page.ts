@@ -43,7 +43,7 @@ export class ProductsPage implements OnInit {
   }
 
   async search(event) {
-    let input = event.target.value.toString();
+    const input = event.target.value.toString();
 
     if (input.length === 0) {
       this.searching = false;
@@ -61,7 +61,6 @@ export class ProductsPage implements OnInit {
   }
 
   cancelSearch() {
-    console.log('cancelling');
     this.searching = false;
   }
 }

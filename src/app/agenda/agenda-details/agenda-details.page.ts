@@ -54,7 +54,6 @@ export class AgendaDetailsPage implements OnInit {
   endDate: Moment;
   interval: Duration;
 
-  a: Observable<any>;
   private dateChangeSubject: BehaviorSubject<any>;
 
   constructor(
@@ -71,16 +70,14 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
     this.interval = duration(30, 'minutes');
-    const value = this.route.snapshot.paramMap.get('id');
-    this.agenda$ = this.agendaService.getAgendaById(value);
-
+    this.agendaId = this.route.snapshot.paramMap.get('id');
+    this.agenda$ = this.agendaService.getAgendaById(this.agendaId);
     this.dateChangeSubject = new BehaviorSubject<any>(new Date());
-
     this.agendaConfig$ = this.auth.user$.pipe(
       switchMap(user => {
         this.businessId = user.businessId;
         return this.intervalService.endpoint({
-          agendaId: value,
+          agendaId: this.agendaId,
           businessId: this.businessId,
           showOnlyValidConfig: true,
         });
@@ -93,17 +90,24 @@ export class AgendaDetailsPage implements OnInit {
       this.dateChangeSubject.asObservable(),
     ).pipe(
       switchMap(configs => {
-        return of(
-          configs[0].filter(config => {
-            return this.belongsToSelectedDate(config);
-          })[0]?.intervals,
-        );
+        let filteredConfigs = configs[0].filter(config => {
+          return this.belongsToSelectedDate(config);
+        });
+
+        if (filteredConfigs.length > 1) {
+          filteredConfigs = filteredConfigs.filter(config => {
+            return config.specificDate !== null;
+          });
+        }
+        return of(filteredConfigs[0]?.intervals);
       }),
     );
   }
 
   ngOnInit() {
-    this.updateAppointments(new Date());
+    setTimeout(() => {
+      this.onDateChange(new Date());
+    }, 1000);
   }
 
   ionViewDidEnter() {

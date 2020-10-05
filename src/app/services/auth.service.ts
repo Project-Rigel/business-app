@@ -112,6 +112,7 @@ export class AuthService {
       );
       await firebase.auth().currentUser.linkWithCredential(credential);
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }
@@ -151,7 +152,6 @@ export class AuthService {
   }
 
   private async createUserInFirebaseIfNew(user: any): Promise<User> {
-    console.log(user);
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
       `users/${user.uid}`,
@@ -172,7 +172,7 @@ export class AuthService {
     if (!firebaseData.exists) {
       const businessId = this.firestore.createId();
       this.businessService.setBusinessId(businessId);
-      user.businessId = businessId;
+      appUser.businessId = businessId;
 
       await userRef.set(appUser, { merge: true });
     }

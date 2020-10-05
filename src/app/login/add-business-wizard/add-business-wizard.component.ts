@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonSlides, ModalController, Platform } from '@ionic/angular';
+import { take } from 'rxjs/operators';
 import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -17,6 +18,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
   businessAddress: any;
   businessPhoneNumber: number;
   maxTries: number;
+  userId: string;
 
   constructor(
     private modalController: ModalController,
@@ -24,7 +26,14 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
     private keyboard: Keyboard,
     private alertService: AlertService,
     private platform: Platform,
-  ) {}
+    private auth: AuthService,
+  ) {
+    this.auth.user$.pipe(take(1)).subscribe(user => {
+      if (user) {
+        this.userId = user.id;
+      }
+    });
+  }
 
   ngOnInit() {
     this.maxTries = 3;
@@ -66,6 +75,7 @@ export class AddBusinessWizardComponent implements OnInit, AfterViewInit {
           nif: this.businessNIF,
           address: this.businessAddress,
           phone: this.businessPhoneNumber,
+          ownerId: this.userId,
         },
       });
     } catch (e) {

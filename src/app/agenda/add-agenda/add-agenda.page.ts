@@ -4,6 +4,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonInput, IonSlides, ModalController, Platform } from '@ionic/angular';
 import { take } from 'rxjs/operators';
+import { Configuration } from '../../interfaces/configuration';
 import { AgendaService } from '../../services/agenda.service';
 import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
@@ -19,6 +20,7 @@ export class AddAgendaPage {
   loading = false;
   imageUrl;
   canSaveAgenda = false;
+  configurations: Configuration[];
   @ViewChild('inputNombre') input: IonInput;
   @ViewChild(IonSlides) ionSlides: IonSlides;
 
@@ -38,9 +40,14 @@ export class AddAgendaPage {
   }
 
   async ionViewDidEnter() {
-    //setTimeout(() => this.input.setFocus(), 100);
     await this.ionSlides.lockSwipeToNext(true);
     await this.ionSlides.lockSwipeToPrev(true);
+  }
+
+  changedConfigrations(event: Configuration[]) {
+    this.configurations = event;
+    console.log(this.configurations);
+    console.log(this.form.get('name').value);
   }
 
   async createAgenda() {

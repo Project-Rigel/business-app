@@ -1,13 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AgendaSettingsDataModalComponent } from '../../components/agenda-settings-data-modal/agenda-settings-data-modal.component';
-
-interface Configuration {
-  day: string;
-  startTime: Date;
-  endTime: Date;
-  specificDate: Date;
-}
+import { Configuration } from '../../interfaces/configuration';
 
 @Component({
   selector: 'app-add-agenda-config',
@@ -15,6 +9,10 @@ interface Configuration {
   styleUrls: ['./add-agenda-config.page.scss'],
 })
 export class AddAgendaConfigPage {
+  @Output() onConfigsChanged: EventEmitter<Configuration[]> = new EventEmitter<
+    Configuration[]
+  >();
+
   englishDays = [
     'Monday',
     'Tuesday',
@@ -50,6 +48,7 @@ export class AddAgendaConfigPage {
     if (data && data.done) {
       data.value.day = this.translateDayIntoSpanish(data.value.day);
       this.configurations.push(data.value);
+      this.onConfigsChanged.emit(this.configurations);
     } else {
       console.log('canceled');
     }

@@ -38,7 +38,9 @@
     <ion-slide class="slide bg-modal">
       <div class="slide">
         <div style="height: 80%;">
-          <app-add-agenda-config></app-add-agenda-config>
+          <app-add-agenda-config
+            (onConfigsChanged)="changedConfigrations($event)"
+          ></app-add-agenda-config>
         </div>
         <div style="height: 20%;" class="vertical-align-content">
           <ion-button

@@ -18,6 +18,7 @@ export class AddAgendaPage {
   minuteSelected = '30';
   loading = false;
   imageUrl;
+  canSaveAgenda = false;
   @ViewChild('inputNombre') input: IonInput;
   @ViewChild(IonSlides) ionSlides: IonSlides;
 
@@ -89,10 +90,12 @@ export class AddAgendaPage {
   async nextSlide() {
     await this.ionSlides.lockSwipeToNext(false);
     await this.ionSlides.slideNext();
+    this.canSaveAgenda = true;
   }
 
   async previousSlide(): Promise<void> {
     await this.ionSlides.lockSwipeToPrev(false);
     await this.ionSlides.slidePrev();
+    this.canSaveAgenda = false;
   }
 }

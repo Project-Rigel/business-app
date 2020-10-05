@@ -7,7 +7,10 @@
     </ion-buttons>
     <ion-title>Añadir una agenda</ion-title>
     <ion-buttons slot="end">
-      <ion-button [disabled]="form.invalid || loading" (click)="createAgenda()">
+      <ion-button
+        [disabled]="!canSaveAgenda || loading"
+        (click)="createAgenda()"
+      >
         <ion-label color="primary"> Añadir</ion-label>
       </ion-button>
     </ion-buttons>
@@ -22,7 +25,11 @@
           <app-add-agenda-basic-info [form]="form"></app-add-agenda-basic-info>
         </div>
         <div style="height: 20%;" class="vertical-align-content">
-          <ion-button expand="block" class="slide-button" (click)="nextSlide()"
+          <ion-button
+            [disabled]="form.invalid"
+            expand="block"
+            class="slide-button"
+            (click)="nextSlide()"
             >Siguiente</ion-button
           >
         </div>

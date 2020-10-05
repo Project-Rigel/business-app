@@ -8,6 +8,7 @@ import { Configuration } from '../../interfaces/configuration';
 import { AgendaService } from '../../services/agenda.service';
 import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
+import { SetAgendaConfigService } from '../../services/set-agenda-config.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -33,6 +34,7 @@ export class AddAgendaPage {
     private afs: AngularFirestore,
     private auth: AuthService,
     private loader: LoaderService,
+    private setAgendaService: SetAgendaConfigService,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -74,11 +76,21 @@ export class AddAgendaPage {
           user.businessId, // Esto tiene que ser el id de el bussiness
         );
 
+        await this.setAgendaService.endpoint({
+          agendaId: '',
+          businessId: '',
+          dayOfWeek: '',
+          specificDate: '',
+          expirationDate: '',
+          intervals: [], // Interval[]
+        });
+
         await this.loader.hideLoader();
         await this.modalController.dismiss({});
 
         this.loading = false;
       },
+
       err => {
         this.loader.hideLoader();
       },

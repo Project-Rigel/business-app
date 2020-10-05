@@ -12,6 +12,7 @@ export class AgendaSettingsDataModalComponent implements OnInit {
   dayOfWeek: string;
   startTime: Date;
   endTime: Date;
+  specificDate: Date;
   static DAY_OF_WEEK_SEGMENT_VALUE = 'dayOfWeek';
   static SPECIFIC_DATE_SEGMENT_VALUE = 'specificDate';
 
@@ -23,6 +24,14 @@ export class AgendaSettingsDataModalComponent implements OnInit {
 
   segmentChanged($event: any) {
     this.segmentValue = $event.detail.value;
+    this.segmentValue ===
+    AgendaSettingsDataModalComponent.SPECIFIC_DATE_SEGMENT_VALUE
+      ? (this.specificDate = new Date())
+      : (this.specificDate = null);
+    this.segmentValue ===
+    AgendaSettingsDataModalComponent.DAY_OF_WEEK_SEGMENT_VALUE
+      ? (this.dayOfWeek = 'Lunes')
+      : (this.dayOfWeek = null);
   }
 
   selectedDayOfWeek(event) {
@@ -37,6 +46,10 @@ export class AgendaSettingsDataModalComponent implements OnInit {
     this.endTime = new Date(event.detail.value);
   }
 
+  selectedSpecificDate(event) {
+    this.specificDate = new Date(event.detail.value);
+  }
+
   async closeSuccessModal() {
     await this.modalController.dismiss({
       done: true,
@@ -44,7 +57,7 @@ export class AgendaSettingsDataModalComponent implements OnInit {
         day: this.dayOfWeek,
         startTime: this.startTime,
         endTime: this.endTime,
-        segment: this.segmentValue,
+        specificDate: this.specificDate,
       },
     });
   }

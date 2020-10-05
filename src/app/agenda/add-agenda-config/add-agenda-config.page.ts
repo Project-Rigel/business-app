@@ -6,7 +6,7 @@ interface Configuration {
   day: string;
   startTime: Date;
   endTime: Date;
-  segment: string;
+  specificDate: Date;
 }
 
 @Component({
@@ -53,6 +53,12 @@ export class AddAgendaConfigPage {
     } else {
       console.log('canceled');
     }
+  }
+
+  sortBy(field: string) {
+    return this.configurations.sort((a, b) =>
+      a[field] > b[field] ? 1 : a[field] === b[field] ? 0 : -1,
+    );
   }
 
   translateDayIntoSpanish(day: string) {

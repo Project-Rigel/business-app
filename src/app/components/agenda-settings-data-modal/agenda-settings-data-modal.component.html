@@ -81,16 +81,17 @@
     >
       <ion-col size="8">
         <ion-item lines="none">
-          <ion-label><strong> Dia </strong></ion-label>
-          <ion-select value="Monday" (ionChange)="selectedDayOfWeek($event)">
-            <ion-select-option value="Monday">Lunes</ion-select-option>
-            <ion-select-option value="Tuesday">Martes</ion-select-option>
-            <ion-select-option value="Wednesday">Miércoles</ion-select-option>
-            <ion-select-option value="Thursday">Jueves</ion-select-option>
-            <ion-select-option value="Friday">Viernes</ion-select-option>
-            <ion-select-option value="Saturday">Sábado</ion-select-option>
-            <ion-select-option value="Sunday">Domingo</ion-select-option>
-          </ion-select>
+          <ion-label><strong> Fecha </strong></ion-label>
+          <ion-datetime
+            display-format="MMM DD YYYY"
+            picker-format="MMM DD YYYY"
+            min="{{ startTime.getFullYear() }}"
+            max="{{ startTime.getFullYear() + 10 }}"
+            value="{{ startTime }}"
+            month-short-names="Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic"
+            (ionChange)="selectedSpecificDate($event)"
+            class="ion-align-items-center"
+          ></ion-datetime>
         </ion-item>
       </ion-col>
 

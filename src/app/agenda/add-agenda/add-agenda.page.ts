@@ -8,7 +8,10 @@ import { Configuration } from '../../interfaces/configuration';
 import { AgendaService } from '../../services/agenda.service';
 import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
-import { SetAgendaConfigService } from '../../services/set-agenda-config.service';
+import {
+  Config,
+  SetAgendaConfigService,
+} from '../../services/set-agenda-config.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -16,12 +19,31 @@ import { SetAgendaConfigService } from '../../services/set-agenda-config.service
   styleUrls: ['./add-agenda.page.scss'],
 })
 export class AddAgendaPage {
+  englishDays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  spanishDays = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+  ];
+
   form: FormGroup;
   minuteSelected = '30';
   loading = false;
   imageUrl;
   canSaveAgenda = false;
-  configurations: Configuration[];
+  configurations: Configuration[] = [];
   @ViewChild('inputNombre') input: IonInput;
   @ViewChild(IonSlides) ionSlides: IonSlides;
 
@@ -48,8 +70,6 @@ export class AddAgendaPage {
 
   changedConfigrations(event: Configuration[]) {
     this.configurations = event;
-    console.log(this.configurations);
-    console.log(this.form.get('name').value);
   }
 
   async createAgenda() {
@@ -73,17 +93,29 @@ export class AddAgendaPage {
           this.form.get('name').value,
           this.minuteSelected,
           imageUrl,
-          user.businessId, // Esto tiene que ser el id de el bussiness
+          user.businessId,
         );
 
-        await this.setAgendaService.endpoint({
-          agendaId: '',
-          businessId: '',
-          dayOfWeek: '',
-          specificDate: '',
-          expirationDate: '',
-          intervals: [], // Interval[]
-        });
+        //////////////////////////////////////////////////////
+        if (this.configurations.length > 0) {
+          const confs: {
+            [date: string]: Config;
+          } = this.mapUserConfigurationsIntoDto();
+          for (const key in confs) {
+            console.log('hola');
+            await this.setAgendaService
+              .endpoint({
+                agendaId: id,
+                businessId: user.businessId,
+                dayOfWeek: confs[key].dayOfWeek,
+                specificDate: confs[key].specificDate,
+                expirationDate: confs[key].expirationDate,
+                intervals: confs[key].intervals,
+              })
+              .subscribe(res => console.log(res));
+          }
+        }
+        /////////////////////////////////////////////
 
         await this.loader.hideLoader();
         await this.modalController.dismiss({});
@@ -116,5 +148,75 @@ export class AddAgendaPage {
     await this.ionSlides.lockSwipeToPrev(false);
     await this.ionSlides.slidePrev();
     this.canSaveAgenda = false;
+  }
+
+  mapUserConfigurationsIntoDto(): { [date: string]: Config } {
+    const confs: { [date: string]: Config } = {};
+    this.configurations.map((intervalConfiration: Configuration) => {
+      if (intervalConfiration.specificDate) {
+        // Si es specifica
+        if (confs[intervalConfiration.specificDate.getTime()]) {
+          // Si ya existe
+          confs[intervalConfiration.specificDate.getTime()].intervals.push({
+            startHour: intervalConfiration.startTime
+              .toTimeString()
+              .substring(0, 5),
+            endHour: intervalConfiration.startTime
+              .toTimeString()
+              .substring(0, 5),
+          });
+        } else {
+          // Si no existe
+          confs[intervalConfiration.specificDate.getTime()] = {
+            expirationDate: new Date().toISOString(), // Cambiar
+            specificDate: intervalConfiration.specificDate.toISOString(),
+            dayOfWeek: null,
+            intervals: [
+              {
+                startHour: intervalConfiration.startTime
+                  .toTimeString()
+                  .substring(0, 5),
+                endHour: intervalConfiration.startTime
+                  .toTimeString()
+                  .substring(0, 5),
+              },
+            ],
+          };
+        }
+      } else {
+        // Si es semanal
+        if (confs[intervalConfiration.day]) {
+          // Si ya existe
+          confs[intervalConfiration.day].intervals.push({
+            startHour: intervalConfiration.startTime
+              .toTimeString()
+              .substring(0, 5),
+            endHour: intervalConfiration.startTime
+              .toTimeString()
+              .substring(0, 5),
+          });
+        } else {
+          // Si no existe
+          confs[intervalConfiration.day] = {
+            expirationDate: new Date().toISOString(), // Cambiar
+            specificDate: null,
+            dayOfWeek: this.englishDays[
+              this.spanishDays.indexOf(intervalConfiration.day)
+            ],
+            intervals: [
+              {
+                startHour: intervalConfiration.startTime
+                  .toTimeString()
+                  .substring(0, 5),
+                endHour: intervalConfiration.startTime
+                  .toTimeString()
+                  .substring(0, 5),
+              },
+            ],
+          };
+        }
+      }
+    });
+    return confs;
   }
 }

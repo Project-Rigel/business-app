@@ -97,15 +97,14 @@ export class AddAgendaPage {
           user.businessId,
         );
 
-        //////////////////////////////////////////////////////
         if (this.configurations.length > 0) {
           const confs: {
             [date: string]: Config;
           } = this.mapUserConfigurationsIntoDto();
-          const configs: Config[] = [];
-          for (const key in confs) {
-            configs.push(confs[key]);
-          }
+
+          const configs: Config[] = Object.keys(confs).map(key => {
+            return confs[key];
+          });
 
           await this.setAgendaBulkService
             .endpoint({
@@ -114,16 +113,7 @@ export class AddAgendaPage {
               configs,
             })
             .subscribe(res => console.log(res));
-          /*const promises = []; //array de observables
-
-          observables.forEach(val => {
-            promises.push(val.toPromise());
-          });
-
-          const response = await Promise.all(promises);
-          console.log(response);*/
         }
-        /////////////////////////////////////////////
 
         await this.loader.hideLoader();
         await this.modalController.dismiss({});

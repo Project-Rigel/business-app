@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SetAgendaConfigService } from './set-agenda-config.service';
+import { SetAgendaConfigService } from './set-agenda-config-bulk.service';
 
 describe('SetAgendaConfigService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

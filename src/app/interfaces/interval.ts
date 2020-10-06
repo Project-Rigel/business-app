@@ -1,4 +1,4 @@
-export interface Interval {
+export class Interval {
   startHour: string;
   endHour: string;
 }

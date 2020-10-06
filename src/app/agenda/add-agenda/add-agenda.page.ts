@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonInput, IonSlides, ModalController, Platform } from '@ionic/angular';
+import * as moment from 'moment';
 import { take } from 'rxjs/operators';
 import { Configuration } from '../../interfaces/configuration';
 import { AgendaService } from '../../services/agenda.service';
@@ -10,8 +11,8 @@ import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
 import {
   Config,
-  SetAgendaConfigService,
-} from '../../services/set-agenda-config.service';
+  SetAgendaConfigBulkService,
+} from '../../services/set-agenda-config-bulk.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -56,7 +57,7 @@ export class AddAgendaPage {
     private afs: AngularFirestore,
     private auth: AuthService,
     private loader: LoaderService,
-    private setAgendaService: SetAgendaConfigService,
+    private setAgendaBulkService: SetAgendaConfigBulkService,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -101,19 +102,26 @@ export class AddAgendaPage {
           const confs: {
             [date: string]: Config;
           } = this.mapUserConfigurationsIntoDto();
+          const configs: Config[] = [];
           for (const key in confs) {
-            console.log('hola');
-            await this.setAgendaService
-              .endpoint({
-                agendaId: id,
-                businessId: user.businessId,
-                dayOfWeek: confs[key].dayOfWeek,
-                specificDate: confs[key].specificDate,
-                expirationDate: confs[key].expirationDate,
-                intervals: confs[key].intervals,
-              })
-              .subscribe(res => console.log(res));
+            configs.push(confs[key]);
           }
+
+          await this.setAgendaBulkService
+            .endpoint({
+              agendaId: id,
+              businessId: user.businessId,
+              configs,
+            })
+            .subscribe(res => console.log(res));
+          /*const promises = []; //array de observables
+
+          observables.forEach(val => {
+            promises.push(val.toPromise());
+          });
+
+          const response = await Promise.all(promises);
+          console.log(response);*/
         }
         /////////////////////////////////////////////
 
@@ -158,27 +166,27 @@ export class AddAgendaPage {
         if (confs[intervalConfiration.specificDate.getTime()]) {
           // Si ya existe
           confs[intervalConfiration.specificDate.getTime()].intervals.push({
-            startHour: intervalConfiration.startTime
-              .toTimeString()
-              .substring(0, 5),
-            endHour: intervalConfiration.startTime
-              .toTimeString()
-              .substring(0, 5),
+            startHour: moment(intervalConfiration.startTime.toISOString())
+              .utc()
+              .format('HH:mm'),
+            endHour: moment(intervalConfiration.endTime.toISOString())
+              .utc()
+              .format('HH:mm'),
           });
         } else {
           // Si no existe
           confs[intervalConfiration.specificDate.getTime()] = {
-            expirationDate: new Date().toISOString(), // Cambiar
+            expirationDate: null,
             specificDate: intervalConfiration.specificDate.toISOString(),
             dayOfWeek: null,
             intervals: [
               {
-                startHour: intervalConfiration.startTime
-                  .toTimeString()
-                  .substring(0, 5),
-                endHour: intervalConfiration.startTime
-                  .toTimeString()
-                  .substring(0, 5),
+                startHour: moment(intervalConfiration.startTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
+                endHour: moment(intervalConfiration.endTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
               },
             ],
           };
@@ -188,29 +196,29 @@ export class AddAgendaPage {
         if (confs[intervalConfiration.day]) {
           // Si ya existe
           confs[intervalConfiration.day].intervals.push({
-            startHour: intervalConfiration.startTime
-              .toTimeString()
-              .substring(0, 5),
-            endHour: intervalConfiration.startTime
-              .toTimeString()
-              .substring(0, 5),
+            startHour: moment(intervalConfiration.startTime.toISOString())
+              .utc()
+              .format('HH:mm'),
+            endHour: moment(intervalConfiration.endTime.toISOString())
+              .utc()
+              .format('HH:mm'),
           });
         } else {
           // Si no existe
           confs[intervalConfiration.day] = {
-            expirationDate: new Date().toISOString(), // Cambiar
+            expirationDate: new Date().toISOString(),
             specificDate: null,
             dayOfWeek: this.englishDays[
               this.spanishDays.indexOf(intervalConfiration.day)
             ],
             intervals: [
               {
-                startHour: intervalConfiration.startTime
-                  .toTimeString()
-                  .substring(0, 5),
-                endHour: intervalConfiration.startTime
-                  .toTimeString()
-                  .substring(0, 5),
+                startHour: moment(intervalConfiration.startTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
+                endHour: moment(intervalConfiration.endTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
               },
             ],
           };

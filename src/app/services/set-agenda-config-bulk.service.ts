@@ -4,20 +4,17 @@ import { Observable } from 'rxjs';
 import { FunctionNames } from '../constants';
 import { Interval } from '../interfaces/interval';
 
-export interface Config {
+export class Config {
   expirationDate: string;
   specificDate: string;
   dayOfWeek: string;
   intervals: Interval[];
 }
 
-export interface SetAgendaConfigDTO {
+export interface SetAgendaConfigBulkDTO {
   agendaId: string;
   businessId: string;
-  dayOfWeek: string;
-  specificDate: string;
-  expirationDate: string;
-  intervals: Interval[];
+  configs: Config[];
 }
 
 export interface SetAgendaConfigResponse {
@@ -31,16 +28,16 @@ export interface SetAgendaConfigResponse {
 @Injectable({
   providedIn: 'root',
 })
-export class SetAgendaConfigService {
+export class SetAgendaConfigBulkService {
   private readonly _endpoint: (
-    data: SetAgendaConfigDTO,
+    data: SetAgendaConfigBulkDTO,
   ) => Observable<SetAgendaConfigResponse>;
 
   constructor(private functions: AngularFireFunctions) {
     this._endpoint = this.functions.httpsCallable<
-      SetAgendaConfigDTO,
+      SetAgendaConfigBulkDTO,
       SetAgendaConfigResponse
-    >(FunctionNames.SET_AGENDA_CONFIG);
+    >(FunctionNames.SET_AGENDA_CONFIG_BULK);
   }
 
   get endpoint() {

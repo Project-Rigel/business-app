@@ -30,10 +30,9 @@ export class AgendaIntervalsComponent implements OnInit {
   }
 
   private computeHeightAttribute() {
-    const minuteDiff = moment(this.interval.endHour, 'HH:mm').diff(
-      moment(this.interval.startHour, 'HH:mm'),
-      'minutes',
-    );
+    const minuteDiff = moment
+      .utc(this.interval.endHour, 'HH:mm')
+      .diff(moment.utc(this.interval.startHour, 'HH:mm'), 'minutes');
 
     const percentOfDayDuration = minuteDiff / this.dayLengthMinutes;
     this.heightPx = percentOfDayDuration * this.parentContainerLengthPx;
@@ -41,11 +40,12 @@ export class AgendaIntervalsComponent implements OnInit {
 
   private computeTopProperty() {
     const startDateString = this.startDate.toDate().toDateString();
-    const startHour = moment(startDateString + ' ' + this.interval.startHour);
-    const diffFromStartOfDay = moment(startHour).diff(
-      this.startDate,
-      'minutes',
+    const startHour = moment.utc(
+      startDateString + ' ' + this.interval.startHour,
     );
+    const diffFromStartOfDay = moment(startHour)
+      .local()
+      .diff(this.startDate, 'minutes');
     const percentOfTotalDayDuration =
       diffFromStartOfDay / this.dayLengthMinutes;
     this.topPx =

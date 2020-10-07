@@ -107,7 +107,7 @@ export class AgendaDetailsPage implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.onDateChange(new Date());
-    }, 1000);
+    }, 1500);
   }
 
   ionViewDidEnter() {

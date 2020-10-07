@@ -64,27 +64,26 @@ export class DatePickerComponent implements OnInit {
     backgroundColor: 'lightgreen',
   };
 
+  @Input() freeDaySelectedStyle = {
+    backgroundColor: 'var(--ion-color-primary)',
+  };
+
   @Input() insideitemSelectedStyle = {
-    textAlign: 'center',
     backgroundColor: 'var(--ion-color-primary)',
     width: '25px',
     height: '25px',
     borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   };
 
   @Input() insideTodaySelectedStyle = {
-    textAlign: 'center',
     backgroundColor: 'var(--ion-color-primary)',
     width: '25px',
     height: '25px',
     borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   };
 
   //@Input() agendaConfig: Observable<GetAgendaConfigResponse>;
@@ -462,8 +461,6 @@ export class DatePickerComponent implements OnInit {
 
   getDaySelectedStyle(day: Day) {
     let style = {};
-    style = { ...style, ...this.getDayConfigStyle(day) };
-
     if (
       this.daySelected &&
       day.dayIdentifier === this.daySelected.dayIdentifier
@@ -471,9 +468,31 @@ export class DatePickerComponent implements OnInit {
       if (this.isToday(this.daySelected.dayOfMonth)) {
         style = { ...style, ...this.insideTodaySelectedStyle };
       } else {
-        style = { ...style, ...this.insideitemSelectedStyle };
+        if (this.agendaConfigurations) {
+          let found = false;
+          for (let i = 0; i < this.agendaConfigurations.length; i++) {
+            if (
+              this.isAWeeklyConfigurationDay(
+                this.agendaConfigurations[i],
+                day,
+              ) ||
+              this.isASpecificConfigurationDay(
+                this.agendaConfigurations[i],
+                day,
+              )
+            ) {
+              style = { ...style, ...this.freeDaySelectedStyle };
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            style = { ...style, ...this.insideitemSelectedStyle };
+          }
+        }
       }
     }
+    style = { ...style, ...this.getDayConfigStyle(day) };
 
     return style;
   }
@@ -486,8 +505,13 @@ export class DatePickerComponent implements OnInit {
           this.isAWeeklyConfigurationDay(this.agendaConfigurations[i], day) ||
           this.isASpecificConfigurationDay(this.agendaConfigurations[i], day)
         ) {
-          style = { ...style, ...this.freeDayStyle };
-          break;
+          if (
+            !this.daySelected ||
+            day.dayIdentifier !== this.daySelected.dayIdentifier
+          ) {
+            style = { ...style, ...this.freeDayStyle };
+            break;
+          }
         }
       }
     return style;

@@ -52,7 +52,10 @@
         [ngStyle]="getDayStyle(day)"
         class="ion-text-center"
       >
-        <span [ngStyle]="!day.inCalendar && notInCalendarStyle">
+        <span
+          [ngStyle]="!day.inCalendar && notInCalendarStyle"
+          style="width: 100%"
+        >
           <span
             class="day-number"
             [ngStyle]="

@@ -6,6 +6,18 @@
     *ngFor="let block of this.timeBlocks; index as i"
   ></div>
 
+  <div class="intervals-wrapper">
+    <app-agenda-intervals
+      *ngFor="let interval of intervals | async; index as i"
+      [startDate]="startDate"
+      [dayLengthMinutes]="dayLengthMinutes"
+      [parentContainerLengthPx]="componentHeight"
+      [parentPadding]="padding"
+      [interval]="interval"
+    >
+    </app-agenda-intervals>
+  </div>
+
   <div class="appointments-wrapper">
     <app-agenda-appointment
       *ngFor="let appointment of appointments | async; index as i"

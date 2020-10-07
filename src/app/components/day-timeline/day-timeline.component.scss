@@ -23,8 +23,14 @@
   justify-content: flex-end;
 }
 
+.intervals-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
 
 .appointments-wrapper {
+  z-index: 0;
   display: flex;
   justify-content: flex-end;
 }

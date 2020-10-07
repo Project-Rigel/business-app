@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { AgendaSettingsDataModalComponent } from '../components/agenda-settings-data-modal/agenda-settings-data-modal.component';
 import { CustomersPageModule } from '../customers/customers.module';
 import { ProductsPageModule } from '../products/products.module';
 import { AddAgendaPageModule } from './add-agenda/add-agenda.module';
@@ -21,6 +22,10 @@ import { AgendaPage } from './agenda.page';
     CustomersPageModule,
     ProductsPageModule,
   ],
-  declarations: [AgendaPage, AddAppointmentWizardComponent],
+  declarations: [
+    AgendaPage,
+    AddAppointmentWizardComponent,
+    AgendaSettingsDataModalComponent,
+  ],
 })
 export class AgendaPageModule {}

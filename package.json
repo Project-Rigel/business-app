@@ -34,6 +34,7 @@
     "@ionic/angular": "^5.1.1",
     "@logisticinfotech/ionic4-datepicker": "^1.4.3",
     "@teamhive/lottie-player": "^1.0.0",
+    "class-transformer": "^0.3.1",
     "cordova-browser": "^6.0.0",
     "cordova-ios-plugin-no-export-compliance": "0.0.6",
     "cordova-plugin-firebase-authentication": "3.4.1",
@@ -45,6 +46,7 @@
     "google-libphonenumber": "^3.2.10",
     "ionic4-date-picker": "^0.1.0",
     "moment": "^2.25.3",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

@@ -1,0 +1,38 @@
+<ion-content class="bg-modal" style="height: 20%">
+  <ion-grid>
+    <ion-row class="ion-margin-start">
+      <ion-text style="width: 75%">
+        <h3>Configuración de citación</h3>
+      </ion-text>
+      <div style="width: 25%">
+        <ion-button (click)="showAgendaSettingsDataModal()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-content class="bg-modal" style="height: 80%;">
+  <ion-list class="centered-list">
+    <ion-list-header *ngIf="configurations.length > 0" class="flex"
+      >Configuraciones actuales</ion-list-header
+    >
+    <ion-item
+      class="min-width-item min-height-item flex"
+      *ngFor="let conf of sortBy('day')"
+    >
+      <ion-icon *ngIf="conf.specificDate" name="today-outline"></ion-icon>
+      <ion-label *ngIf="conf.specificDate" class="ion-margin-start">
+        {{conf.specificDate | date}}
+      </ion-label>
+      <ion-icon *ngIf="!conf.specificDate" name="calendar-outline"></ion-icon>
+      <ion-label *ngIf="!conf.specificDate" class="ion-margin-start">
+        {{conf.day}}
+      </ion-label>
+      <span class="ion-text-right"
+        ><strong>Inicio:</strong>{{conf.startTime | date : 'HH:mm'}}
+        <br /><strong> Fin:</strong>{{conf.endTime | date : 'HH:mm'}}</span
+      >
+    </ion-item>
+  </ion-list>
+</ion-content>

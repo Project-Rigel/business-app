@@ -2,17 +2,17 @@ import { Component, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import {
-  IonInput,
-  ModalController,
-  PickerController,
-  Platform,
-} from '@ionic/angular';
+import { IonInput, IonSlides, ModalController, Platform } from '@ionic/angular';
+import * as moment from 'moment';
 import { take } from 'rxjs/operators';
+import { Configuration } from '../../interfaces/configuration';
 import { AgendaService } from '../../services/agenda.service';
 import { AuthService } from '../../services/auth.service';
 import { LoaderService } from '../../services/loader.service';
+import {
+  Config,
+  SetAgendaConfigBulkService,
+} from '../../services/set-agenda-config-bulk.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -20,17 +20,36 @@ import { LoaderService } from '../../services/loader.service';
   styleUrls: ['./add-agenda.page.scss'],
 })
 export class AddAgendaPage {
+  englishDays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  spanishDays = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+  ];
+
   form: FormGroup;
   minuteSelected = '30';
-  minutes = ['15', '30', '60', '120'];
   loading = false;
   imageUrl;
-
+  canSaveAgenda = false;
+  configurations: Configuration[] = [];
   @ViewChild('inputNombre') input: IonInput;
+  @ViewChild(IonSlides) ionSlides: IonSlides;
+
   constructor(
     private formBuilder: FormBuilder,
-    private imagePicker: ImagePicker,
-    private pickerController: PickerController,
     private modalController: ModalController,
     private agendaService: AgendaService,
     private platform: Platform,
@@ -38,14 +57,20 @@ export class AddAgendaPage {
     private afs: AngularFirestore,
     private auth: AuthService,
     private loader: LoaderService,
+    private setAgendaBulkService: SetAgendaConfigBulkService,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
     });
   }
 
-  ionViewDidEnter() {
-    setTimeout(() => this.input.setFocus(), 100);
+  async ionViewDidEnter() {
+    await this.ionSlides.lockSwipeToNext(true);
+    await this.ionSlides.lockSwipeToPrev(true);
+  }
+
+  changedConfigrations(event: Configuration[]) {
+    this.configurations = event;
   }
 
   async createAgenda() {
@@ -69,83 +94,127 @@ export class AddAgendaPage {
           this.form.get('name').value,
           this.minuteSelected,
           imageUrl,
-          user.businessId, // Esto tiene que ser el id de el bussiness
+          user.businessId,
         );
+
+        if (this.configurations.length > 0) {
+          const confs: {
+            [date: string]: Config;
+          } = this.mapUserConfigurationsIntoDto();
+
+          const configs: Config[] = Object.keys(confs).map(key => {
+            return confs[key];
+          });
+
+          await this.setAgendaBulkService
+            .endpoint({
+              agendaId: id,
+              businessId: user.businessId,
+              configs,
+            })
+            .subscribe(res => console.log(res));
+        }
 
         await this.loader.hideLoader();
         await this.modalController.dismiss({});
 
         this.loading = false;
       },
+
       err => {
         this.loader.hideLoader();
       },
     );
   }
 
-  async selectImage(event) {
-    if (this.platform.is('cordova')) {
-      try {
-        const pictures = await this.imagePicker.getPictures({ outputType: 1 });
-        console.log(pictures);
-
-        if (pictures) {
-          this.imageUrl = pictures[0];
-        }
-      } catch (e) {
-        console.log(e);
-        throw e;
-      }
-    } else {
-      console.log(event);
-    }
-  }
-  async showPicker() {
-    const picker = await this.pickerController.create({
-      columns: [
-        {
-          name: 'Minutes',
-          options: this.getColumnOptions(),
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Confirm',
-          handler: value => {
-            if (value.Minutes.value) {
-              console.log(value.Minutes.value);
-
-              this.minuteSelected = value.Minutes.value;
-            }
-          },
-        },
-      ],
-    });
-
-    await picker.present();
-  }
-
-  private getColumnOptions() {
-    const options = [];
-    this.minutes.forEach(x => {
-      if (x === this.minuteSelected) {
-        options.push({ text: x + ' minutes', value: x, selected: true });
-      } else {
-        options.push({ text: x + ' minutes', value: x });
-      }
-    });
-    return options;
-  }
-
   async closeModal() {
     await this.modalController.dismiss({});
     this.form.reset();
   }
+
   get name() {
     return this.form.get('name');
+  }
+
+  async nextSlide() {
+    await this.ionSlides.lockSwipeToNext(false);
+    await this.ionSlides.slideNext();
+    this.canSaveAgenda = true;
+  }
+
+  async previousSlide(): Promise<void> {
+    await this.ionSlides.lockSwipeToPrev(false);
+    await this.ionSlides.slidePrev();
+    this.canSaveAgenda = false;
+  }
+
+  mapUserConfigurationsIntoDto(): { [date: string]: Config } {
+    const confs: { [date: string]: Config } = {};
+    this.configurations.map((intervalConfiration: Configuration) => {
+      if (intervalConfiration.specificDate) {
+        // Si es specifica
+        if (confs[intervalConfiration.specificDate.getTime()]) {
+          // Si ya existe
+          confs[intervalConfiration.specificDate.getTime()].intervals.push({
+            startHour: moment(intervalConfiration.startTime.toISOString())
+              .utc()
+              .format('HH:mm'),
+            endHour: moment(intervalConfiration.endTime.toISOString())
+              .utc()
+              .format('HH:mm'),
+          });
+        } else {
+          // Si no existe
+          confs[intervalConfiration.specificDate.getTime()] = {
+            expirationDate: null,
+            specificDate: intervalConfiration.specificDate.toISOString(),
+            dayOfWeek: null,
+            intervals: [
+              {
+                startHour: moment(intervalConfiration.startTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
+                endHour: moment(intervalConfiration.endTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
+              },
+            ],
+          };
+        }
+      } else {
+        // Si es semanal
+        if (confs[intervalConfiration.day]) {
+          // Si ya existe
+          confs[intervalConfiration.day].intervals.push({
+            startHour: moment(intervalConfiration.startTime.toISOString())
+              .utc()
+              .format('HH:mm'),
+            endHour: moment(intervalConfiration.endTime.toISOString())
+              .utc()
+              .format('HH:mm'),
+          });
+        } else {
+          // Si no existe
+          confs[intervalConfiration.day] = {
+            expirationDate: new Date().toISOString(),
+            specificDate: null,
+            dayOfWeek: this.englishDays[
+              this.spanishDays.indexOf(intervalConfiration.day)
+            ],
+            intervals: [
+              {
+                startHour: moment(intervalConfiration.startTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
+                endHour: moment(intervalConfiration.endTime.toISOString())
+                  .utc()
+                  .format('HH:mm'),
+              },
+            ],
+          };
+        }
+      }
+    });
+    return confs;
   }
 }

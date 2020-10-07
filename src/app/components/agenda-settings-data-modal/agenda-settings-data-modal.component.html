@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar class="bg-header">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeCancelModal()">
+        <ion-label color="primary"> Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeSuccessModal()">
+        <ion-label color="primary"> Añadir</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-modal">
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="8">
+        <ion-segment (ionChange)="segmentChanged($event)" value="dayOfWeek">
+          <ion-segment-button value="dayOfWeek" layout="icon-hide">
+            <ion-label>Semanal</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="specificDate" layout="icon-hide">
+            <ion-label>Fecha específica</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      *ngIf="segmentValue === 'dayOfWeek'"
+      class="ion-justify-content-center ion-margin-top"
+    >
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-label><strong> Dia </strong></ion-label>
+          <ion-select value="Monday" (ionChange)="selectedDayOfWeek($event)">
+            <ion-select-option value="Monday">Lunes</ion-select-option>
+            <ion-select-option value="Tuesday">Martes</ion-select-option>
+            <ion-select-option value="Wednesday">Miércoles</ion-select-option>
+            <ion-select-option value="Thursday">Jueves</ion-select-option>
+            <ion-select-option value="Friday">Viernes</ion-select-option>
+            <ion-select-option value="Saturday">Sábado</ion-select-option>
+            <ion-select-option value="Sunday">Domingo</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-label><strong> Inicio </strong></ion-label>
+          <ion-datetime
+            display-format="HH:mm"
+            picker-format="HH:mm"
+            minute-values="0, 30"
+            value="{{ startTime }}"
+            (ionChange)="selectedStartTime($event)"
+            class="ion-align-items-center"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-label><strong> Fin </strong></ion-label>
+          <ion-datetime
+            display-format="HH:mm"
+            picker-format="HH:mm"
+            minute-values="0, 30"
+            value="{{ endTime }}"
+            (ionChange)="selectedEndTime($event)"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      *ngIf="segmentValue === 'specificDate'"
+      class="ion-justify-content-center ion-margin-top"
+    >
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-label><strong> Fecha </strong></ion-label>
+          <ion-datetime
+            display-format="MMM DD YYYY"
+            picker-format="MMM DD YYYY"
+            min="{{ startTime.getFullYear() }}"
+            max="{{ startTime.getFullYear() + 10 }}"
+            value="{{ startTime }}"
+            month-short-names="Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic"
+            (ionChange)="selectedSpecificDate($event)"
+            class="ion-align-items-center"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-label><strong> Inicio </strong></ion-label>
+          <ion-datetime
+            display-format="HH:mm"
+            picker-format="HH:mm"
+            value="{{ startTime }}"
+            (ionChange)="selectedStartTime($event)"
+            class="ion-align-items-center"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-label><strong> Fin </strong></ion-label>
+          <ion-datetime
+            display-format="HH:mm"
+            picker-format="HH:mm"
+            value="{{ endTime }}"
+            (ionChange)="selectedEndTime($event)"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

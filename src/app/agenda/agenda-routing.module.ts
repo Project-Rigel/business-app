@@ -18,7 +18,15 @@ const routes: Routes = [
     path: 'add-agenda',
     loadChildren: () =>
       import('./add-agenda/add-agenda.module').then(m => m.AddAgendaPageModule),
+  },  {
+    path: 'add-agenda-config',
+    loadChildren: () => import('./add-agenda-config/add-agenda-config.module').then( m => m.AddAgendaConfigPageModule)
   },
+  {
+    path: 'add-agenda-basic-info',
+    loadChildren: () => import('./add-agenda-basic-info/add-agenda-basic-info.module').then( m => m.AddAgendaBasicInfoPageModule)
+  },
+
 ];
 
 @NgModule({

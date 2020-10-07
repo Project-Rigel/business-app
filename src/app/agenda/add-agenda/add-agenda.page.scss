@@ -1,37 +1,25 @@
-.dot {
-  height: 100px;
-  width: 100px;
-  background-color: #bbb;
-  border-radius: 50%;
-  margin: 0 auto;
-  padding: 35px 35px;
-}
-
-.image-text {
-  color: white;
-}
-
-.agenda-avatar {
-  height: 100px !important;
-  width: 100px !important;
-  margin: 0 auto !important;
-}
-
-.image-margin {
-  margin-top: 32px;
-}
-.ion-item-round {
-  border-radius: 10px !important;
-  margin-top: 0px !important;
-}
-.bg-modal {
-  background-color: #f4f5f8;
+ion-slides {
   height: 100%;
 }
 
-.error-msg-text {
-  font-size: 14px;
+.slide{
+  height: 100%;
+  width: 100%;
 }
-.min-width-item {
-  min-width: 300px !important;
+
+.bg-modal {
+  --background: #f4f5f8;
+}
+
+.slide-button {
+  margin-right: 15%;
+  margin-left: 15%;
+  width: 100%;
+}
+
+.vertical-align-content
+{
+  display: flex!important;
+  align-content: center!important;
+  align-items: center!important;
 }

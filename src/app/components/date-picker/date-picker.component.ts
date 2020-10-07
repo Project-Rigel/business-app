@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AnimationController } from '@ionic/angular';
 import { Calendar, Day } from 'dayspan';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { Config } from '../../services/set-agenda-config-bulk.service';
 
 @Component({
   selector: 'date-picker',
@@ -9,8 +10,6 @@ import * as moment from 'moment';
   styleUrls: ['./date-picker.component.scss'],
 })
 export class DatePickerComponent implements OnInit {
-  constructor(private animationController: AnimationController) {}
-
   @Input() monthLabels = [
     'Enero',
     'Febrero',
@@ -61,6 +60,10 @@ export class DatePickerComponent implements OnInit {
     color: '#ffffff',
   };
 
+  @Input() freeDayStyle = {
+    backgroundColor: 'lightgreen',
+  };
+
   @Input() insideitemSelectedStyle = {
     textAlign: 'center',
     backgroundColor: 'var(--ion-color-primary)',
@@ -84,6 +87,8 @@ export class DatePickerComponent implements OnInit {
     alignItems: 'center',
   };
 
+  //@Input() agendaConfig: Observable<GetAgendaConfigResponse>;
+  @Input() agendaConfig: Observable<any>;
   @Output() onSelect: EventEmitter<Date> = new EventEmitter();
 
   showView = 'calendar';
@@ -102,10 +107,14 @@ export class DatePickerComponent implements OnInit {
 
   startYear: number;
   endYear: number;
+  agendaConfigurations: Config[];
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initOptions();
     this.createCalendarWeeks();
+    await this.agendaConfig.subscribe(configs => {
+      this.agendaConfigurations = configs;
+    });
   }
 
   initOptions() {
@@ -453,6 +462,7 @@ export class DatePickerComponent implements OnInit {
 
   getDaySelectedStyle(day: Day) {
     let style = {};
+    style = { ...style, ...this.getDayConfigStyle(day) };
 
     if (
       this.daySelected &&
@@ -465,6 +475,21 @@ export class DatePickerComponent implements OnInit {
       }
     }
 
+    return style;
+  }
+
+  getDayConfigStyle(day: Day) {
+    let style = {};
+    if (this.agendaConfigurations)
+      for (let i = 0; i < this.agendaConfigurations.length; i++) {
+        if (
+          this.isAWeeklyConfigurationDay(this.agendaConfigurations[i], day) ||
+          this.isASpecificConfigurationDay(this.agendaConfigurations[i], day)
+        ) {
+          style = { ...style, ...this.freeDayStyle };
+          break;
+        }
+      }
     return style;
   }
 
@@ -496,4 +521,34 @@ export class DatePickerComponent implements OnInit {
     return style;
   }
   //End of styles
+
+  isAWeeklyConfigurationDay(config: Config, day: Day) {
+    if (config.dayOfWeek) {
+      if (
+        parseInt(config.dayOfWeek) === day.day &&
+        moment
+          .utc(config.expirationDate)
+          .toDate()
+          .getTime() > day.toDate().getTime()
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isASpecificConfigurationDay(config: Config, day: Day) {
+    if (config.specificDate) {
+      const specificDate = moment.utc(config.specificDate).toDate();
+      const dayDate = day.utc().toDate();
+      if (
+        specificDate.getDate() === dayDate.getDate() &&
+        specificDate.getMonth() === dayDate.getMonth() &&
+        specificDate.getFullYear() === dayDate.getFullYear()
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

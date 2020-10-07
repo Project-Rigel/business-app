@@ -5,15 +5,18 @@ import { AnimationController, ModalController } from '@ionic/angular';
 import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Agenda } from '../../interfaces/agenda';
+import { AgendaConfig } from '../../interfaces/agenda-config';
 import { Customer } from '../../interfaces/customer';
+import { Interval } from '../../interfaces/interval';
 import { Product } from '../../interfaces/product';
 import { AgendaService } from '../../services/agenda.service';
 import { AlertService } from '../../services/alert.service';
 import { AppointmentsService } from '../../services/appointments.service';
 import { AuthService } from '../../services/auth.service';
+import { GetAgendaConfigService } from '../../services/get-agenda-config.service';
 import { LoaderService } from '../../services/loader.service';
 import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
 
@@ -44,14 +47,19 @@ export class AgendaDetailsPage implements OnInit {
   existingAppointment = null;
   businessId: string;
   agendaId: string;
+  agendaConfig$: Observable<any>;
+  intervals$: Observable<Interval[]>;
 
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
 
+  private dateChangeSubject: BehaviorSubject<any>;
+
   constructor(
     private animationController: AnimationController,
     public appointmentsService: AppointmentsService,
+    public intervalService: GetAgendaConfigService,
     private agendaService: AgendaService,
     public route: ActivatedRoute,
     private modalController: ModalController,
@@ -62,18 +70,44 @@ export class AgendaDetailsPage implements OnInit {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
     this.interval = duration(30, 'minutes');
-    const value = this.route.snapshot.paramMap.get('id');
-    this.agenda$ = this.agendaService.getAgendaById(value);
-
-    this.auth.user$.subscribe(user => {
-      if (user) {
+    this.agendaId = this.route.snapshot.paramMap.get('id');
+    this.agenda$ = this.agendaService.getAgendaById(this.agendaId);
+    this.dateChangeSubject = new BehaviorSubject<any>(new Date());
+    this.agendaConfig$ = this.auth.user$.pipe(
+      switchMap(user => {
         this.businessId = user.businessId;
-      }
-    });
+        return this.intervalService.endpoint({
+          agendaId: this.agendaId,
+          businessId: this.businessId,
+          showOnlyValidConfig: true,
+        });
+      }),
+      take(1),
+    );
+
+    this.intervals$ = combineLatest(
+      this.agendaConfig$,
+      this.dateChangeSubject.asObservable(),
+    ).pipe(
+      switchMap(configs => {
+        let filteredConfigs = configs[0].filter(config => {
+          return this.belongsToSelectedDate(config);
+        });
+
+        if (filteredConfigs.length > 1) {
+          filteredConfigs = filteredConfigs.filter(config => {
+            return config.specificDate !== null;
+          });
+        }
+        return of(filteredConfigs[0]?.intervals);
+      }),
+    );
   }
 
   ngOnInit() {
-    this.updateAppointments(new Date());
+    setTimeout(() => {
+      this.onDateChange(new Date());
+    }, 1500);
   }
 
   ionViewDidEnter() {
@@ -97,6 +131,24 @@ export class AgendaDetailsPage implements OnInit {
     this.endDate = moment(event.setHours(23, 0, 0, 0));
     this.dateTimeValue = event;
     this.updateAppointments(event);
+    this.dateChangeSubject.next(event);
+  }
+
+  belongsToSelectedDate(config: AgendaConfig): boolean {
+    if (config.dayOfWeek && config.dayOfWeek === this.dateTimeValue.getDay()) {
+      return true;
+    }
+    if (config.specificDate) {
+      const date = moment(config.specificDate).toDate();
+      if (
+        date.getDate() === this.dateTimeValue.getDate() &&
+        date.getMonth() === this.dateTimeValue.getMonth() &&
+        date.getFullYear() === this.dateTimeValue.getFullYear()
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   async showOrHideCalendar() {

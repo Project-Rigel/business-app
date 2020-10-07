@@ -8,4 +8,5 @@ export abstract class FunctionNames {
     'setAgendaScheduleSettings';
   public static readonly SET_AGENDA_CONFIG = 'setAgendaConfig';
   public static readonly SET_AGENDA_CONFIG_BULK = 'setAgendaConfigBulk';
+  public static readonly GET_AGENDA_CONFIG = 'getAgendaConfig';
 }

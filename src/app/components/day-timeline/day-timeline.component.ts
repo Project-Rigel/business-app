@@ -1,7 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { Duration, Moment } from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Appointment } from '../../interfaces/appointment';
+import { Interval } from '../../interfaces/interval';
 import { AppointmentsService } from '../../services/appointments.service';
 
 interface TimeBlock {
@@ -21,10 +27,11 @@ interface AppointmentBlock {
   selector: 'app-day-timeline',
   templateUrl: './day-timeline.component.html',
   styleUrls: ['./day-timeline.component.scss'],
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayTimelineComponent implements OnInit {
   @Input() appointments: Observable<Appointment[]>;
+  @Input() intervals: Observable<Interval[]>;
   @Input() startDate: Moment;
   @Input() endDate: Moment;
   @Input() intervalsLength: Duration;
@@ -50,21 +57,5 @@ export class DayTimelineComponent implements OnInit {
       .map(v => {
         return { start: v };
       });
-
-    /* this.appointments.subscribe(appointments => {
-      const appointmentBlockArray: AppointmentBlock[] = [];
-      appointments.map(appointment => {
-        // mirar si coinciden
-        appointmentBlockArray.push({
-          startDate: appointment.startDate,
-          endDate: appointment.endDate,
-          name: appointment.name,
-          customerName: appointment.customerName,
-          sharesStartTimeWithOtherAppointment: true,
-          positionSharing: 1,
-        });
-      });
-      this.appointmentBlocks.next(appointmentBlockArray);
-    }); */
   }
 }

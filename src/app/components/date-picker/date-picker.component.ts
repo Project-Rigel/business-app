@@ -549,7 +549,7 @@ export class DatePickerComponent implements OnInit {
   isAWeeklyConfigurationDay(config: Config, day: Day) {
     if (config.dayOfWeek) {
       if (
-        parseInt(config.dayOfWeek) === day.day &&
+        parseInt(config.dayOfWeek, 10) === day.day &&
         moment
           .utc(config.expirationDate)
           .toDate()

@@ -92,6 +92,5 @@ ion-menu.ios ion-item.selected ion-icon {
 }
 
 .appointment-data-modal {
-  height: 62%!important;
-  transform: translateY(62%);
+  --height: 50%;
 }

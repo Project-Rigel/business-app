@@ -1,7 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AnimationController, ModalController } from '@ionic/angular';
+import {
+  AnimationController,
+  IonRouterOutlet,
+  ModalController,
+} from '@ionic/angular';
 import { Animation } from '@ionic/core';
 import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
@@ -37,7 +41,6 @@ export class AgendaDetailsPage implements OnInit {
   agenda$: Observable<Agenda>;
   addingAppointment = false;
   addingAppointmentInfo: {
-    intervals: { from: string; to: string }[];
     customer: Customer;
     product: Product;
   };
@@ -69,6 +72,7 @@ export class AgendaDetailsPage implements OnInit {
     public alertService: AlertService,
     private auth: AuthService,
     private loader: LoaderService,
+    private routerOutlet: IonRouterOutlet,
   ) {
     this.startDate = moment(new Date().setHours(7, 0, 0, 0));
     this.endDate = moment(new Date().setHours(23, 0, 0, 0));
@@ -171,27 +175,33 @@ export class AgendaDetailsPage implements OnInit {
         component: AppointmentSelectionTypeModalComponent,
         swipeToClose: true,
         backdropDismiss: true,
-        cssClass: 'appointment-data-modal',
-        showBackdrop: false,
+        showBackdrop: true,
+        presentingElement: this.routerOutlet.parentOutlet.nativeEl,
       });
       await modal.present();
       const { data } = await modal.onWillDismiss();
       this.openedAppointmentSelection = false;
       if (data && data.done) {
-        if (data.value.type === 'normal') {
-          await this.startAddAppointmentWizard();
+        if (data.value.type === 'guided') {
+          await this.startAddAppointmentWizard(data.value.type);
+        } else {
+          await this.alertService.presentSimpleAlert(
+            'Funcionalidad no disponible',
+            'Aun no esta disponible la siguiente funcionalidad.',
+          );
         }
       }
     }
   }
 
-  async startAddAppointmentWizard() {
+  async startAddAppointmentWizard(type: any) {
     const modal = await this.modalController.create({
       component: AddAppointmentWizardComponent,
       swipeToClose: true,
       componentProps: {
         agendaId: this.route.snapshot.paramMap.get('id'),
         daySelected: this.dateTimeValue,
+        appointmentType: type,
       },
     });
     await modal.present();
@@ -201,14 +211,13 @@ export class AgendaDetailsPage implements OnInit {
     }
   }
 
-  getAndShowAppointmentGaps(possibleAppointmentInfo: any) {
+  getAndShowAppointmentGaps(possibleAppointmentInfo: {
+    done: boolean;
+    customer: Customer;
+    product: Product;
+  }) {
     this.addingAppointment = true;
     this.addingAppointmentInfo = possibleAppointmentInfo;
-    const intervals = this.addingAppointmentInfo.intervals;
-    for (const gap of intervals) {
-      const item = moment(gap.from).utc(true);
-      this.appointmentGaps.push(item.format('HH:mm'));
-    }
   }
 
   async onSelectedTime($event) {
@@ -335,15 +344,7 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   formatDateTimeValueFromChipString(event) {
-    let hour = parseInt(event.target.innerText.split(':')[0]);
-    let minutes = parseInt(event.target.innerText.split(':')[1]);
-    if (isNaN(hour)) {
-      hour = parseInt(event.target.parentNode.innerText.split(':')[0]);
-      minutes = parseInt(event.target.parentNode.innerText.split(':')[1]);
-    }
-
-    this.dateTimeValue.setHours(hour);
-    this.dateTimeValue.setMinutes(minutes);
+    this.dateTimeValue = new Date(event);
     this.dateTimeValue.setSeconds(0);
     this.dateTimeValue.setMilliseconds(0);
 

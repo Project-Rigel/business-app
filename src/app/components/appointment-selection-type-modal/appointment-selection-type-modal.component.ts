@@ -9,7 +9,7 @@ import { ModalController } from '@ionic/angular';
 export class AppointmentSelectionTypeModalComponent {
   constructor(private modalController: ModalController) {}
 
-  async typeSelected(type: string) {
+  async typeSelected(type: 'guided' | 'custom') {
     await this.modalController.dismiss({
       done: true,
       value: {
@@ -18,7 +18,7 @@ export class AppointmentSelectionTypeModalComponent {
     });
   }
 
-  async closeCancelModal() {
+  async cancelModal() {
     await this.modalController.dismiss({});
   }
 }

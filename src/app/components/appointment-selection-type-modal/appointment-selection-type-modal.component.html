@@ -1,0 +1,26 @@
+<ion-list style="background-color: #fafaf7">
+  <ion-list-header>Seleccione un tipo de citación</ion-list-header>
+
+  <ion-card (click)="typeSelected('normal')" class="ion-text-center">
+    <ion-card-title class="ion-margin-top"
+      >Citación <ion-icon name="calendar-outline"></ion-icon>
+    </ion-card-title>
+    <ion-card-content class="ion-text-justify" style="color: black"
+      >Cite a sus clientes según la configuración establecida en su
+      agenda.</ion-card-content
+    >
+  </ion-card>
+
+  <ion-card (click)="typeSelected('libre')" class="ion-text-center">
+    <ion-card-title class="ion-margin-top"
+      >Citación personalizada <ion-icon name="build-outline"></ion-icon
+    ></ion-card-title>
+    <ion-card-content class="ion-text-justify" style="color: black"
+      >Cite a sus clientes en el horario que desee.
+      <p style="color: lightgray">
+        Nota: Solo usar esta citación para casos puntuales en los que se
+        necesitan citas fuera del horario.
+      </p>
+    </ion-card-content>
+  </ion-card>
+</ion-list>

@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { AppointmentSelectionTypeModalComponent } from '../../components/appointment-selection-type-modal/appointment-selection-type-modal.component';
 import { Agenda } from '../../interfaces/agenda';
 import { AgendaConfig } from '../../interfaces/agenda-config';
 import { Customer } from '../../interfaces/customer';
@@ -53,6 +54,8 @@ export class AgendaDetailsPage implements OnInit {
   startDate: Moment;
   endDate: Moment;
   interval: Duration;
+
+  openedAppointmentSelection = false;
 
   private dateChangeSubject: BehaviorSubject<any>;
 
@@ -159,6 +162,27 @@ export class AgendaDetailsPage implements OnInit {
       ? await this.closeCalendar.play()
       : await this.openCalendar.play();
     this.isCalendarOpen = !this.isCalendarOpen;
+  }
+
+  async openAppointmentSelectionTypeModal() {
+    if (!this.openedAppointmentSelection) {
+      this.openedAppointmentSelection = true;
+      const modal = await this.modalController.create({
+        component: AppointmentSelectionTypeModalComponent,
+        swipeToClose: true,
+        backdropDismiss: true,
+        cssClass: 'appointment-data-modal',
+        showBackdrop: false,
+      });
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+      this.openedAppointmentSelection = false;
+      if (data && data.done) {
+        if (data.value.type === 'normal') {
+          await this.startAddAppointmentWizard();
+        }
+      }
+    }
   }
 
   async startAddAppointmentWizard() {

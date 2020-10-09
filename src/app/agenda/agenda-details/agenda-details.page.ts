@@ -53,6 +53,7 @@ export class AgendaDetailsPage implements OnInit {
   agendaId: string;
   agendaConfig$: Observable<any>;
   intervals$: Observable<Interval[]>;
+  appointmentType: 'guided' | 'custom';
 
   startDate: Moment;
   endDate: Moment;
@@ -182,6 +183,7 @@ export class AgendaDetailsPage implements OnInit {
       const { data } = await modal.onWillDismiss();
       this.openedAppointmentSelection = false;
       if (data && data.done) {
+        this.appointmentType = data.value.type;
         if (data.value.type === 'guided') {
           await this.startAddAppointmentWizard(data.value.type);
         } else {
@@ -284,6 +286,7 @@ export class AgendaDetailsPage implements OnInit {
         agendaId,
         this.addingAppointmentInfo.product.id,
         this.addingAppointmentInfo.customer.id,
+        this.appointmentType,
       );
       this.clearPossibleAppointmentData();
       await this.loader.hideLoader();

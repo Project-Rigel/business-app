@@ -23,7 +23,9 @@ export class AppointmentsService {
   startHour = 7;
   endHour = 23;
   appointmentToBeConfirmed: Appointment;
-  callable = this.functions.httpsCallable(FunctionNames.BOOK_APPOINTMENT);
+  guidedBookingCallable = this.functions.httpsCallable(
+    FunctionNames.BOOK_APPOINTMENT_GUIDED,
+  );
 
   constructor(
     private afs: AngularFirestore,
@@ -105,15 +107,22 @@ export class AppointmentsService {
     agendaId: string,
     productId: string,
     customerId: string,
+    type: 'guided' | 'custom',
   ) {
     if (this.appointmentToBeConfirmed) {
-      await this.callable({
-        uid: customerId,
-        businessId: businessId,
-        productId: productId,
-        timestamp: this.appointmentToBeConfirmed.startDate.toISOString(),
-        agendaId: agendaId,
-      }).subscribe(res => console.log(res));
+      if (type === 'guided') {
+        console.log(this.guidedBookingCallable);
+        this.guidedBookingCallable({
+          customerId: customerId,
+          businessId: businessId,
+          productId: productId,
+          startDate: this.appointmentToBeConfirmed.startDate.toISOString(),
+          agendaId: agendaId,
+        }).subscribe(
+          res => console.log(res),
+          err => console.error(err),
+        );
+      }
     }
     this.appointmentToBeConfirmed = null;
   }

@@ -15,10 +15,7 @@ import { User } from '../../interfaces/user';
 import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
-import {
-  AvailableTimesResponse,
-  GetAvailableIntervalsService,
-} from '../../services/get-available-intervals.service';
+import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
 import { LoaderService } from '../../services/loader.service';
 import { PaginationService } from '../../services/pagination-service.service';
 import { ProductsService } from '../../services/products.service';
@@ -130,35 +127,11 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
   }
 
   async closeModal() {
-    await this.loader.showLoader();
-    this.intervalsService
-      .endpoint({
-        businessId: this.user.businessId, //not needed yet
-        agendaId: this.agendaId,
-        productId: this.selectedProduct.id,
-        timestamp: this.daySelected.toISOString(),
-      })
-      .pipe(take(1))
-      .subscribe(
-        async (intervals: AvailableTimesResponse) => {
-          await this.loader.hideLoader();
-          await this.modalController.dismiss({
-            done: true,
-            intervals: intervals,
-            customer: this.selectedCustomer,
-            product: this.selectedProduct,
-          });
-        },
-        async err => {
-          await this.loader.hideLoader();
-          await this.alertService.presentAlertWithSubheader(
-            'Error',
-            'Servidor temporalmente no disponible. ',
-            'Inténtelo de nuevo más tarde.',
-          );
-          this.chRef.detectChanges();
-        },
-      );
+    await this.modalController.dismiss({
+      done: true,
+      customer: this.selectedCustomer,
+      product: this.selectedProduct,
+    });
   }
 
   async nextSlide() {

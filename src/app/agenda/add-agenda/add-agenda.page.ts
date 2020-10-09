@@ -69,7 +69,7 @@ export class AddAgendaPage {
     await this.ionSlides.lockSwipeToPrev(true);
   }
 
-  changedConfigrations(event: Configuration[]) {
+  changedConfigurations(event: Configuration[]) {
     this.configurations = event;
   }
 

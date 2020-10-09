@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelModal()">
+        <ion-label color="primary"> Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Tipo de citación</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list style="background-color: #fafaf7">
+    <ion-list-header>
+      <ion-label class="ion-text-center">Seleccione una:</ion-label>
+    </ion-list-header>
+    <ion-card
+      (click)="typeSelected('guided')"
+      class="ion-text-center ion-padding"
+    >
+      <ion-card-title
+        class="d-flex ion-align-items-center ion-justify-content-center"
+      >
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label class="ion-margin-start" style="font-size: 1.4rem;"
+          >Guiada</ion-label
+        >
+      </ion-card-title>
+      <ion-card-content style="color: black"
+        >Cite a sus clientes según la configuración establecida en su
+        agenda.</ion-card-content
+      >
+    </ion-card>
+
+    <ion-card
+      (click)="typeSelected('custom')"
+      class="ion-text-center ion-padding"
+    >
+      <ion-card-title
+        class="d-flex ion-align-items-center ion-justify-content-center"
+      >
+        <ion-icon name="build-outline"></ion-icon>
+        <ion-label class="ion-margin-start" style="font-size: 1.4rem;"
+          >Libre</ion-label
+        >
+      </ion-card-title>
+      <ion-card-content style="color: black"
+        >Cite a sus clientes en el horario que desee.
+        <p style="color: lightgray">
+          Nota: Solo usar esta citación para casos puntuales en los que se
+          necesitan citas fuera del horario.
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

@@ -7,15 +7,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class AgendaTimeSelectorComponent {
   @Input() isAddingAppointment: boolean;
-  @Input() appointmentGaps: string[];
   @Input() dateTime: Date;
-  @Input() selectedStartTime: boolean;
   @Output() onTimeChipSelected = new EventEmitter<string>();
   @Output() onTimeChipDeselected = new EventEmitter();
   @Output() onConfirmButtonPressed = new EventEmitter();
+  selectedStartTime: boolean;
 
   async chipSelected(event) {
-    await this.onTimeChipSelected.emit(event);
+    this.selectedStartTime = true;
+    await this.onTimeChipSelected.emit(event.detail.value);
   }
 
   async chipDeselection() {

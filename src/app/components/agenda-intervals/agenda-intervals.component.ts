@@ -39,13 +39,19 @@ export class AgendaIntervalsComponent implements OnInit {
   }
 
   private computeTopProperty() {
-    const startDateString = this.startDate.toDate().toDateString();
+    const date = this.startDate.toDate();
+    date.setDate(15);
+    date.setFullYear(2020);
+    date.setMonth(5);
+
+    const startDateString = date.toDateString();
     const startHour = moment.utc(
       startDateString + ' ' + this.interval.startHour,
     );
+
     const diffFromStartOfDay = moment(startHour)
       .local()
-      .diff(this.startDate, 'minutes');
+      .diff(moment(date), 'minutes');
     const percentOfTotalDayDuration =
       diffFromStartOfDay / this.dayLengthMinutes;
     this.topPx =

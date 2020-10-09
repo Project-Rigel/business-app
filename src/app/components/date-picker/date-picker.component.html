@@ -1,11 +1,4 @@
 <div>
-  <!--  <ion-item *ngIf="showView === 'calendar'" [ngStyle]="backgroundStyle">-->
-  <!--    <ion-button fill="clear" (click)="showMonthView()" class="calendar-button">-->
-  <!--      {{monthLabels[monthSelected-1]}}-->
-  <!--    </ion-button>-->
-  <!--    <ion-button fill="clear" [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">-->
-  <!--      {{yearSelected}}-->
-  <!--    </ion-button>-->
   <ion-item
     [ngStyle]="backgroundStyle"
     lines="none"
@@ -52,7 +45,10 @@
         [ngStyle]="getDayStyle(day)"
         class="ion-text-center"
       >
-        <span [ngStyle]="!day.inCalendar && notInCalendarStyle">
+        <span
+          [ngStyle]="!day.inCalendar && notInCalendarStyle"
+          style="width: 100%"
+        >
           <span
             class="day-number"
             [ngStyle]="
@@ -66,21 +62,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!--  <ion-grid *ngIf="showView === 'month'">-->
-  <!--    <ion-row justify-content-end>-->
-  <!--      <ion-col text-end>-->
-  <!--        <ion-button fill="clear" (click)="resetView()">-->
-  <!--          <ion-icon slot="icon-only" name="close"></ion-icon>-->
-  <!--        </ion-button>-->
-  <!--      </ion-col>-->
-  <!--    </ion-row>-->
-  <!--    <ion-row>-->
-  <!--      <ion-col *ngFor="let monthLabel of monthLabels; let i = index" [ngStyle]="getMonthStyle(i)" size="3" (click)="selectMonth(i+1)" text-center>-->
-  <!--        <span [class.invalidMonth]="!isValidMonth(i)">{{monthLabel}}</span>-->
-  <!--      </ion-col>-->
-  <!--    </ion-row>-->
-  <!--  </ion-grid>-->
 
   <ion-grid *ngIf="showView === 'year'">
     <ion-row>

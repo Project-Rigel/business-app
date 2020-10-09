@@ -113,6 +113,7 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   ngOnInit() {
+    // Sin esto no se inicializa de entrada porque los observables están trabajando
     setTimeout(() => {
       this.onDateChange(new Date());
     }, 1500);

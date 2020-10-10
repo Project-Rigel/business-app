@@ -46,7 +46,6 @@ export class AuthService {
       switchMap(user => {
         // Logged in
         if (user) {
-          console.log(user.getIdToken());
           this.temporalUser = user;
           return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
@@ -193,7 +192,7 @@ export class AuthService {
     userRef.delete();
   }
 
-  saveBusiness(data: Business) {
-    this.businessService.addBusiness(data);
+  async saveBusiness(data: Business) {
+    await this.businessService.addBusiness(data);
   }
 }

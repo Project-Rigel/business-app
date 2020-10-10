@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { LoaderService } from '../services/loader.service';
 import { AddBusinessWizardComponent } from './add-business-wizard/add-business-wizard.component';
@@ -21,6 +21,7 @@ export class LoginPage implements OnInit {
     public authService: AuthService,
     public modalController: ModalController,
     private loader: LoaderService,
+    private alertService: AlertController,
   ) {
     this.authService.user$.subscribe(user => {
       if (user) {
@@ -75,8 +76,25 @@ export class LoginPage implements OnInit {
       await this.logOut();
       this.authService.deleteCurrentUser();
     } else {
-      this.authService.saveBusiness(data.values);
-      await this.router.navigate(['app', 'tabs']);
+      await this.authService.saveBusiness(data.values);
+      await this.authService.logOut();
+
+      const alert = await this.alertService.create({
+        backdropDismiss: false,
+        header: '¡Felicades!',
+        message:
+          'Se ha asociado el negocio a su cuenta. Se va a cerrar la sesión para aplicar los cambios.',
+        buttons: [
+          {
+            text: 'Ok',
+            handler: async blah => {
+              await this.router.navigate(['login']);
+            },
+          },
+        ],
+      });
+
+      await alert.present();
     }
   }
 }

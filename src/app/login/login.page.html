@@ -1,17 +1,23 @@
-<ion-content>
+<ion-content style="--overflow: hidden;">
   <ion-grid>
     <div *ngIf="!(authService.user$ | async)">
       <ion-row
         class="ion-align-items-center ion-justify-content-evenly ion-text-center"
       >
         <ion-col size="12">
-          <h1 class="login-title">PROJECT RIGEL</h1>
+          <h1 class="login-title">Green and In: Business</h1>
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center ion-justify-content-evenly">
-        <ion-col size-xs="12" size-sm="8" size-lg="6">
+        <ion-col
+          size-xs="12"
+          size-sm="8"
+          size-lg="6"
+          class="ion-margin-vertical"
+        >
           <lottie-player
-            src="https://assets10.lottiefiles.com/packages/lf20_u41SFE.json"
+            style="margin-bottom: 30px"
+            src="https://assets4.lottiefiles.com/private_files/lf30_BP4Us7.json"
             background="transparent"
             speed=".8"
             loop
@@ -24,60 +30,66 @@
           size-lg="6"
           class="ion-padding ion-align-self-center"
         >
-          <form [formGroup]="userForm" class="ion-padding">
-            <ion-item>
-              <ion-label position="floating">Nombre</ion-label>
-              <ion-input
-                type="text"
-                formControlName="fullName"
-                required
-              ></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Email/Usuario</ion-label>
-              <ion-input
-                type="text"
-                formControlName="email"
-                required
-              ></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Contraseña</ion-label>
-              <ion-input
-                type="password"
-                formControlName="password"
-                required
-              ></ion-input>
-            </ion-item>
+          <!--          <form [formGroup]="userForm" class="ion-padding">-->
+          <!--            <ion-item>-->
+          <!--              <ion-label position="floating">Nombre</ion-label>-->
+          <!--              <ion-input-->
+          <!--                type="text"-->
+          <!--                formControlName="fullName"-->
+          <!--                required-->
+          <!--              ></ion-input>-->
+          <!--            </ion-item>-->
+          <!--            <ion-item>-->
+          <!--              <ion-label position="floating">Email/Usuario</ion-label>-->
+          <!--              <ion-input-->
+          <!--                type="text"-->
+          <!--                formControlName="email"-->
+          <!--                required-->
+          <!--              ></ion-input>-->
+          <!--            </ion-item>-->
+          <!--            <ion-item>-->
+          <!--              <ion-label position="floating">Contraseña</ion-label>-->
+          <!--              <ion-input-->
+          <!--                type="password"-->
+          <!--                formControlName="password"-->
+          <!--                required-->
+          <!--              ></ion-input>-->
+          <!--            </ion-item>-->
 
-            <ion-item>
-              <ion-label position="floating">Repetir contraseña</ion-label>
-              <ion-input
-                type="password"
-                formControlName="password"
-                required
-              ></ion-input>
-            </ion-item>
+          <!--            <ion-item>-->
+          <!--              <ion-label position="floating">Repetir contraseña</ion-label>-->
+          <!--              <ion-input-->
+          <!--                type="password"-->
+          <!--                formControlName="password"-->
+          <!--                required-->
+          <!--              ></ion-input>-->
+          <!--            </ion-item>-->
 
-            <ion-button
-              class="login-button register-button"
-              color="light"
-              expand="block"
-              shape="round"
-              [disabled]="!userForm.valid"
-              (click)="registerUser()"
-              >Registrar
-            </ion-button>
-          </form>
-          <div class="ion-padding ion-text-center login-title">OR</div>
-          <ion-chip
+          <!--            <ion-button-->
+          <!--              class="login-button register-button"-->
+          <!--              color="light"-->
+          <!--              expand="block"-->
+          <!--              shape="round"-->
+          <!--              [disabled]="!userForm.valid"-->
+          <!--              (click)="registerUser()"-->
+          <!--              >Registrar-->
+          <!--            </ion-button>-->
+          <!--          </form>-->
+
+          <ion-button
             class="ion-padding login-button"
-            color="danger"
+            style="--color: orangered; margin-bottom: 12px"
             (click)="loginWithGoogle()"
+            color="danger"
           >
-            <ion-icon name="logo-google"></ion-icon>
+            <ion-icon name="logo-google" slot="start"></ion-icon>
             <ion-label>Iniciar con Google</ion-label>
-          </ion-chip>
+          </ion-button>
+
+          <ion-button class="ion-padding login-button" color="dark">
+            <ion-icon name="logo-apple" slot="start"></ion-icon>
+            <ion-label>Iniciar con Apple</ion-label>
+          </ion-button>
         </ion-col>
       </ion-row>
     </div>

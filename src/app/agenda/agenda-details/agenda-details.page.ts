@@ -112,10 +112,12 @@ export class AgendaDetailsPage implements OnInit {
     );
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.loader.showLoader();
     // Sin esto no se inicializa de entrada porque los observables están trabajando
-    setTimeout(() => {
+    setTimeout(async () => {
       this.onDateChange(new Date());
+      await this.loader.hideLoader();
     }, 1500);
   }
 

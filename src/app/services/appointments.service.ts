@@ -102,29 +102,29 @@ export class AppointmentsService {
     this.appointmentToBeConfirmed = appointment;
   }
 
-  async confirmNewAppointment(
+  confirmNewAppointment(
     businessId: string,
     agendaId: string,
     productId: string,
     customerId: string,
     type: 'guided' | 'custom',
-  ) {
+  ): Observable<any> {
+    let call;
     if (this.appointmentToBeConfirmed) {
       if (type === 'guided') {
-        console.log(this.guidedBookingCallable);
-        this.guidedBookingCallable({
+        call = this.guidedBookingCallable({
           customerId: customerId,
           businessId: businessId,
           productId: productId,
           startDate: this.appointmentToBeConfirmed.startDate.toISOString(),
           agendaId: agendaId,
-        }).subscribe(
-          res => console.log(res),
-          err => console.error(err),
-        );
+        });
       }
     }
     this.appointmentToBeConfirmed = null;
+    if (call) {
+      return call;
+    }
   }
 
   restoreExistingAppointment(appointment: Appointment) {

@@ -33,12 +33,12 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'agenda',
+        path: 'agenda-list',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../agenda/agenda.module').then(m => m.AgendaPageModule),
+              import('../agenda-list/agenda-list.module').then(m => m.AgendaPageModule),
           },
         ],
       },
@@ -81,7 +81,7 @@ const routes: Routes = [
 
       {
         path: '',
-        redirectTo: 'agenda',
+        redirectTo: 'agenda-list',
         pathMatch: 'full',
       },
     ],

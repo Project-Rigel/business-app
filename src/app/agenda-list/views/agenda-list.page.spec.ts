@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { AgendaPage } from './agenda.page';
+import { AgendaListPage } from './agenda-list.page';
 
 describe('AgendaPage', () => {
-  let component: AgendaPage;
-  let fixture: ComponentFixture<AgendaPage>;
+  let component: AgendaListPage;
+  let fixture: ComponentFixture<AgendaListPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AgendaPage],
+      declarations: [AgendaListPage],
       imports: [IonicModule.forRoot()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AgendaPage);
+    fixture = TestBed.createComponent(AgendaListPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

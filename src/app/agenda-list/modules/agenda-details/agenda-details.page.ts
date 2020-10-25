@@ -11,19 +11,19 @@ import * as moment from 'moment';
 import { duration, Duration, Moment } from 'moment';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { AppointmentSelectionTypeModalComponent } from '../../components/appointment-selection-type-modal/appointment-selection-type-modal.component';
-import { Agenda } from '../../interfaces/agenda';
-import { AgendaConfig } from '../../interfaces/agenda-config';
-import { Customer } from '../../interfaces/customer';
-import { Interval } from '../../interfaces/interval';
-import { Product } from '../../interfaces/product';
-import { AgendaService } from '../../services/agenda.service';
-import { AlertService } from '../../services/alert.service';
-import { AppointmentsService } from '../../services/appointments.service';
-import { AuthService } from '../../services/auth.service';
-import { GetAgendaConfigService } from '../../services/get-agenda-config.service';
-import { LoaderService } from '../../services/loader.service';
-import { AddAppointmentWizardComponent } from '../add-appointment-wizard/add-appointment-wizard.component';
+import { AppointmentSelectionTypeModalComponent } from '../../../components/appointment-selection-type-modal/appointment-selection-type-modal.component';
+import { Agenda } from '../../../interfaces/agenda';
+import { AgendaConfig } from '../../../interfaces/agenda-config';
+import { Customer } from '../../../interfaces/customer';
+import { Interval } from '../../../interfaces/interval';
+import { Product } from '../../../interfaces/product';
+import { AgendaService } from '../../../services/agenda.service';
+import { AlertService } from '../../../services/alert.service';
+import { AppointmentsService } from '../../../services/appointments.service';
+import { AuthService } from '../../../services/auth.service';
+import { GetAgendaConfigService } from '../../../services/get-agenda-config.service';
+import { LoaderService } from '../../../services/loader.service';
+import { AddAppointmentWizardComponent } from './add-appointment-wizard/add-appointment-wizard.component';
 
 @Component({
   selector: 'app-agenda-details',

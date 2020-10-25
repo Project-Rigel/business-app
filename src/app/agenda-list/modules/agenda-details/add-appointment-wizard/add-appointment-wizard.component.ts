@@ -9,16 +9,16 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { Customer } from '../../interfaces/customer';
-import { Product } from '../../interfaces/product';
-import { User } from '../../interfaces/user';
-import { AlertService } from '../../services/alert.service';
-import { AuthService } from '../../services/auth.service';
-import { CustomersService } from '../../services/customers.service';
-import { GetAvailableIntervalsService } from '../../services/get-available-intervals.service';
-import { LoaderService } from '../../services/loader.service';
-import { PaginationService } from '../../services/pagination-service.service';
-import { ProductsService } from '../../services/products.service';
+import { Customer } from '../../../../interfaces/customer';
+import { Product } from '../../../../interfaces/product';
+import { User } from '../../../../interfaces/user';
+import { AlertService } from '../../../../services/alert.service';
+import { AuthService } from '../../../../services/auth.service';
+import { CustomersService } from '../../../../services/customers.service';
+import { GetAvailableIntervalsService } from '../../../../services/get-available-intervals.service';
+import { LoaderService } from '../../../../services/loader.service';
+import { PaginationService } from '../../../../services/pagination-service.service';
+import { ProductsService } from '../../../../services/products.service';
 
 @Component({
   selector: 'app-add-appointment-wizard',

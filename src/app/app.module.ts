@@ -25,6 +25,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PaginationService } from './services/pagination-service.service';
+import { AddAgendaPageModule } from './add-agenda/add-agenda/add-agenda.module';
 // import { SmsRetriever } from '@ionic-native/sms-retriever/ngx';
 
 registerLocaleData(localeES, 'es');
@@ -42,6 +43,7 @@ registerLocaleData(localeES, 'es');
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAuthGuardModule,
+    AddAgendaPageModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

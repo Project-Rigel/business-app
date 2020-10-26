@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Agenda } from '../../interfaces/agenda';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Injectable()
 export class AgendaListApiService{
@@ -11,8 +12,7 @@ export class AgendaListApiService{
       return this.firestore
         .collection<Agenda>('agendas', ref => {
           return ref.where('businessId', '==', businessId);
-        })
-        .valueChanges();
+        }).valueChanges().pipe(take(1));
     }
 
 }

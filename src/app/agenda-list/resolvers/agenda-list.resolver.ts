@@ -3,6 +3,7 @@ import { Agenda } from '../../interfaces/agenda';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AgendaListFacade } from '../agenda-list.facade';
+import { take, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AgendaListResolver implements Resolve<Agenda[]> {

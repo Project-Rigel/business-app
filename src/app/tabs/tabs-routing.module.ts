@@ -17,7 +17,6 @@ const routes: Routes = [
   {
     path: 'tabs',
     component: TabsPage,
-    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectToLogin },
     children: [
       {
@@ -38,7 +37,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../agenda-list/agenda-list.module').then(m => m.AgendaPageModule),
+              import('../agenda-list/agenda-list.module').then(m => m.AgendaListModule),
           },
         ],
       },

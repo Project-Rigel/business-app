@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Agenda } from '../../interfaces/agenda';
 import { AddAgendaPage } from '../../add-agenda/add-agenda/add-agenda.page';
 import { AgendaListState } from '../agenda-list.state';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-agenda',

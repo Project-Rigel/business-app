@@ -7,6 +7,7 @@ import { AgendaTimeSelectorComponent } from '../../../components/agenda-time-sel
 import { ComponentsModule } from '../../../components/components.module';
 import { AgendaDetailsPageRoutingModule } from './agenda-details-routing.module';
 import { AgendaDetailsPage } from './agenda-details.page';
+import { AddAppointmentWizardComponent } from './add-appointment-wizard/add-appointment-wizard.component';
 
 @NgModule({
   imports: [

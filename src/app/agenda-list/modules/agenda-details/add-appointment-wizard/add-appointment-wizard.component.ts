@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
@@ -15,10 +9,8 @@ import { User } from '../../../../interfaces/user';
 import { AlertService } from '../../../../services/alert.service';
 import { AuthService } from '../../../../services/auth.service';
 import { CustomersService } from '../../../../services/customers.service';
-import { GetAvailableIntervalsService } from '../../../../services/get-available-intervals.service';
 import { LoaderService } from '../../../../services/loader.service';
 import { PaginationService } from '../../../../services/pagination-service.service';
-import { ProductsService } from '../../../../services/products.service';
 
 @Component({
   selector: 'app-add-appointment-wizard',
@@ -47,8 +39,6 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     private readonly auth: AuthService,
     private readonly modalController: ModalController,
     public readonly paginationService: PaginationService,
-    public readonly productsService: ProductsService,
-    public readonly intervalsService: GetAvailableIntervalsService,
     public readonly alertService: AlertService,
     private chRef: ChangeDetectorRef,
     private loader: LoaderService,
@@ -74,7 +64,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
         this.user = user;
         this.paginationService.init('customers', 'name', 15);
 
-        this.productsService.init('products', user.businessId, 'name', 15);
+        //this.productsService.init('products', user.businessId, 'name', 15);
       }
     });
   }
@@ -116,13 +106,13 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
     if (input.length > 0) {
       this.searching = true;
-      this.searchProduct$ = this.auth.user$.pipe(
+     /* this.searchProduct$ = this.auth.user$.pipe(
         switchMap(user => {
           if (user) {
             return this.productsService.findProductByField('name', input);
           }
         }),
-      );
+      );*/
     }
   }
 

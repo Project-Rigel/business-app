@@ -1,16 +1,22 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { Customer } from '../../../../interfaces/customer';
-import { Product } from '../../../../interfaces/product';
-import { User } from '../../../../interfaces/user';
-import { AlertService } from '../../../../services/alert.service';
-import { AuthService } from '../../../../services/auth.service';
-import { CustomersService } from '../../../../services/customers.service';
-import { LoaderService } from '../../../../services/loader.service';
-import { PaginationService } from '../../../../services/pagination-service.service';
+import { Customer } from '../../interfaces/customer';
+import { Product } from '../../interfaces/product';
+import { User } from '../../interfaces/user';
+import { AlertService } from '../../services/alert.service';
+import { AuthService } from '../../services/auth.service';
+import { CustomersService } from '../../services/customers.service';
+import { LoaderService } from '../../services/loader.service';
+import { PaginationService } from '../../services/pagination-service.service';
 
 @Component({
   selector: 'app-add-appointment-wizard',
@@ -106,7 +112,7 @@ export class AddAppointmentWizardComponent implements OnInit, AfterViewInit {
     }
     if (input.length > 0) {
       this.searching = true;
-     /* this.searchProduct$ = this.auth.user$.pipe(
+      /* this.searchProduct$ = this.auth.user$.pipe(
         switchMap(user => {
           if (user) {
             return this.productsService.findProductByField('name', input);

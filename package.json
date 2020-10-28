@@ -12,7 +12,8 @@
     "e2e": "ng e2e",
     "eslint": "eslint src/**/*.ts --fix",
     "reformat": "prettier --write src/**/*.{ts,js,css,html}",
-    "cordova-build:android:release": "cordova build android --prod --release --buildConfig -- --packageType=bundle"
+    "cordova-build:android:release": "cordova build android --prod --release --buildConfig -- --packageType=bundle",
+    "cypress:open": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -95,7 +96,8 @@
     "prettier": "^1.19.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "cypress": "^5.5.0"
   },
   "description": "An Ionic project",
   "cordova": {

@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { ProductElementComponent } from '../components/product-element/product-element.component';
-import { AddProductComponent } from './add-product/add-product.component';
-import { ProductsListComponent } from './products-list/products-list.component';
-import { ProductsPageRoutingModule } from './products-routing.module';
-import { ProductsPage } from './products.page';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { IonicModule } from "@ionic/angular";
+import { ProductElementComponent } from "../components/product-element/product-element.component";
+import { AddProductComponent } from "./add-product/add-product.component";
+import { ProductsListComponent } from "./products-list/components/products-list.component";
+import { ProductsPageRoutingModule } from "./products-routing.module";
+import { ProductsPage } from "./products-list/containers/products.page";
 
 @NgModule({
   entryComponents: [AddProductComponent],
@@ -15,7 +15,7 @@ import { ProductsPage } from './products.page';
     FormsModule,
     IonicModule,
     ProductsPageRoutingModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     ProductsPage,

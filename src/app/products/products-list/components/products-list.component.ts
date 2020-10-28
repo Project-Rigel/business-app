@@ -1,22 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { IonInfiniteScroll } from '@ionic/angular';
-import { Subscription } from 'rxjs';
-import { Product } from '../../interfaces/product';
-import { ProductsService } from '../../services/products.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { IonInfiniteScroll } from "@ionic/angular";
+import { Subscription } from "rxjs";
+import { Product } from "../../../interfaces/product";
+import { ProductsService } from "../../../services/products.service";
 
 @Component({
-  selector: 'app-products-list',
-  templateUrl: './products-list.component.html',
-  styleUrls: ['./products-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-products-list",
+  templateUrl: "./products-list.component.html",
+  styleUrls: ["./products-list.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsListComponent implements OnInit {
   @ViewChild(IonInfiniteScroll, { static: false })

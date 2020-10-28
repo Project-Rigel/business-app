@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
-import { Product } from '../interfaces/product';
-import { AuthService } from '../services/auth.service';
-import { ProductsService } from '../services/products.service';
-import { AddProductComponent } from './add-product/add-product.component';
+import { Component, OnInit } from "@angular/core";
+import { ModalController } from "@ionic/angular";
+import { Observable } from "rxjs";
+import { switchMap, take } from "rxjs/operators";
+import { Product } from "../../../interfaces/product";
+import { AuthService } from "../../../services/auth.service";
+import { ProductsService } from "../../../services/products.service";
+import { AddProductComponent } from "../../add-product/add-product.component";
 
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.page.html',
-  styleUrls: ['./products.page.scss'],
+  selector: "app-products",
+  templateUrl: "./products.page.html",
+  styleUrls: ["./products.page.scss"]
 })
 export class ProductsPage implements OnInit {
   search$: Observable<Product[]>;

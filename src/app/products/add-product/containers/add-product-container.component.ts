@@ -7,18 +7,18 @@ import {
 } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { IonInput, ModalController } from '@ionic/angular';
-import { AlertService } from '../../services/alert.service';
-import { AuthService } from '../../services/auth.service';
-import { ErrorToastService } from '../../services/error-toast.service';
-import { LoaderService } from '../../services/loader.service';
-import { ProductsService } from '../../services/products.service';
+import { AlertService } from '../../../services/alert.service';
+import { AuthService } from '../../../services/auth.service';
+import { ErrorToastService } from '../../../services/error-toast.service';
+import { LoaderService } from '../../../services/loader.service';
+import { ProductsService } from '../../../services/products.service';
 
 @Component({
   selector: 'app-add-product',
-  templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.scss'],
+  templateUrl: './add-product-container.component.html',
+  styleUrls: ['./add-product-container.component.scss'],
 })
-export class AddProductComponent implements OnInit {
+export class AddProductContainerComponent implements OnInit {
   productForm: FormGroup;
   submitEnabled = true;
   submitClicked = false;

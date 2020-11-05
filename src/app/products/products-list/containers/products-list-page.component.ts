@@ -5,7 +5,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { Product } from '../../../interfaces/product';
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
-import { AddProductComponent } from '../../add-product/add-product.component';
+import { AddProductContainerComponent } from '../../add-product/containers/add-product-container.component';
 
 @Component({
   selector: 'app-products',
@@ -32,7 +32,7 @@ export class ProductsListPage implements OnInit {
 
   async addProduct() {
     const modal = await this.modalCtrl.create({
-      component: AddProductComponent,
+      component: AddProductContainerComponent,
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();

@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   Resolve,
@@ -8,6 +9,7 @@ import { take } from 'rxjs/operators';
 import { Product } from '../../interfaces/product';
 import { ProductsFacade } from '../products.facade';
 
+@Injectable()
 export class ProductsListResolver implements Resolve<Product[]> {
   constructor(private readonly facade: ProductsFacade) {}
 

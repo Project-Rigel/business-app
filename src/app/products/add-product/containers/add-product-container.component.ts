@@ -12,6 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ErrorToastService } from '../../../services/error-toast.service';
 import { LoaderService } from '../../../services/loader.service';
 import { ProductsService } from '../../../services/products.service';
+import { ProductsFacade } from '../../products.facade';
 
 @Component({
   selector: 'app-add-product',
@@ -27,26 +28,22 @@ export class AddProductContainerComponent implements OnInit {
   constructor(
     private ctrl: ModalController,
     private formBuilder: FormBuilder,
-    private productService: ProductsService,
     private errorToastService: ErrorToastService,
-    public readonly auth: AuthService,
     private keyboard: Keyboard,
     private loader: LoaderService,
     private alertService: AlertService,
+    private productFacade: ProductsFacade
   ) {}
 
   async ngOnInit() {
     // this.keyboard.show(); TODO this only shows in android. In Ios just need to focus the element
     this.submitEnabled = true;
+
     this.productForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       duration: ['', [Validators.required]],
     });
-  }
-
-  ionViewDidEnter() {
-    setTimeout(() => this.input.setFocus(), 100);
   }
 
   async cancel() {
@@ -68,6 +65,8 @@ export class AddProductContainerComponent implements OnInit {
   async submitForm(value: any, businessId: string) {
     this.submitClicked = true;
     if (!this.productForm.valid) {
+
+      this.productForm.err
       await this.errorToastService.present({
         message: 'Error'
           ? 'El email no tiene el formato correcto.'
@@ -78,12 +77,7 @@ export class AddProductContainerComponent implements OnInit {
       this.keyboard.hide();
       this.submitEnabled = false;
       try {
-        await this.productService.addProduct(
-          businessId,
-          value.name.toString().toLowerCase(),
-          value.description.toString().toLowerCase(),
-          parseInt(value.duration),
-        );
+        this.productFacade.addProduct(businessId, value.name.toString().toLowerCase(), value.description.toString().toLowerCase(),parseInt(value.duration) );
         await this.presentSuccess();
       } finally {
         await this.loader.hideLoader();
@@ -92,35 +86,6 @@ export class AddProductContainerComponent implements OnInit {
       await this.ctrl.dismiss({ done: true, values: this.productForm.value });
       this.submitClicked = false;
     }
-  }
-
-  goToNext(event) {
-    event.setFocus();
-  }
-
-  get name() {
-    return this.productForm.get('name');
-  }
-  get description() {
-    return this.productForm.get('description');
-  }
-  get duration() {
-    return this.productForm.get('duration');
-  }
-
-  isInputInvalid(control: AbstractControl) {
-    if (this.submitClicked && control.invalid) {
-      return true;
-    }
-    if (control.invalid && control.touched && this.submitClicked) {
-      return true;
-    }
-
-    if (control.invalid && control.touched && !this.submitClicked) {
-      return false;
-    }
-
-    return false;
   }
 
   async presentSuccess() {

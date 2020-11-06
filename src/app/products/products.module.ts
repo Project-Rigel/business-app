@@ -10,6 +10,7 @@ import { ProductsPageRoutingModule } from './products-routing.module';
 import { ProductsFacade } from './products.facade';
 import { ProductsState } from './products.state';
 import { ProductsListResolver } from './resolvers/products-list.resolver';
+import { AddProductFormComponent } from './add-product/components/add-product-form/add-product-form.component';
 
 @NgModule({
   entryComponents: [AddProductContainerComponent],
@@ -25,6 +26,7 @@ import { ProductsListResolver } from './resolvers/products-list.resolver';
     ProductsListComponent,
     ProductElementComponent,
     AddProductContainerComponent,
+    AddProductFormComponent,
   ],
   exports: [ProductsListComponent],
   providers: [ProductsFacade, ProductsState, ProductsListResolver],

@@ -26,4 +26,8 @@ export class ProductsFacade {
         ),
       );
   }
+
+  addProduct(businessId: string, name: string, description: string, duration: number) {
+
+  }
 }

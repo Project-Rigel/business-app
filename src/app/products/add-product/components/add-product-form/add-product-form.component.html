@@ -1,0 +1,41 @@
+<form [formGroup]="productForm">
+  <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
+    <ion-item lines="none">
+      <ion-input
+              #productName
+              enterkeyhint="enter"
+              [color]="isInputInvalid(name) ? 'danger' : 'undefined'"
+              placeholder="Nombre (Obligatorio)"
+              (keyup.enter)="triggerNextElement($event)"
+              required
+              type="text"
+              formControlName="name"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+              #productDescription
+              enterkeyhint="enter"
+              required
+              placeholder="Descripción (Opcional)"
+              [color]="isInputInvalid(description) ? 'danger' : 'undefined'"
+              type="text"
+              formControlName="description"
+              (keyup.enter)="goToNext(productDuration)"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+              #productDuration
+              placeholder="Duración (Obligatorio)"
+              enterkeyhint="enter"
+              required
+              [color]="isInputInvalid(duration) ? 'danger' : 'undefined'"
+              type="number"
+              formControlName="duration"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+</form>

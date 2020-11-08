@@ -1,18 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { IonInput, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { AlertService } from '../../../services/alert.service';
-import { AuthService } from '../../../services/auth.service';
 import { ErrorToastService } from '../../../services/error-toast.service';
 import { LoaderService } from '../../../services/loader.service';
-import { ProductsService } from '../../../services/products.service';
 import { ProductsFacade } from '../../products.facade';
+import { ProductsState } from '../../products.state';
 
 @Component({
   selector: 'app-add-product',
@@ -21,23 +15,20 @@ import { ProductsFacade } from '../../products.facade';
 })
 export class AddProductContainerComponent implements OnInit {
   productForm: FormGroup;
-  submitEnabled = true;
-  submitClicked = false;
-  @ViewChild('productName') input: IonInput;
+  isFormSubmitEnabled = true;
+  static readonly TIME_TO_CLOSE_KEYBOARD: number = 100;
 
   constructor(
     private ctrl: ModalController,
     private formBuilder: FormBuilder,
-    private errorToastService: ErrorToastService,
     private keyboard: Keyboard,
     private loader: LoaderService,
     private alertService: AlertService,
-    private productFacade: ProductsFacade
+    private productFacade: ProductsFacade,
   ) {}
 
   async ngOnInit() {
     // this.keyboard.show(); TODO this only shows in android. In Ios just need to focus the element
-    this.submitEnabled = true;
 
     this.productForm = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -46,52 +37,39 @@ export class AddProductContainerComponent implements OnInit {
     });
   }
 
-  async cancel() {
+  async cancelSubmission() {
+    this.isFormSubmitEnabled = false;
     this.keyboard.hide();
     try {
       await this.errorToastService.dismiss();
-    } catch (e) {
-      console.log(e);
     } finally {
       setTimeout(async () => {
         await this.ctrl.dismiss({ done: false });
-        this.submitClicked = false;
-      }, 100);
+        this.isFormSubmitEnabled = true;
+      }, AddProductContainerComponent.TIME_TO_CLOSE_KEYBOARD);
     }
-
-    //theres a bug in the animation of the keyboard which starts at the same time as the modal.
   }
 
-  async submitForm(value: any, businessId: string) {
-    this.submitClicked = true;
-    if (!this.productForm.valid) {
+  async submitProduct(value: any, businessId: string) {
+    this.productFacade.setUpdating(true);
 
-      this.productForm.err
-      await this.errorToastService.present({
-        message: 'Error'
-          ? 'El email no tiene el formato correcto.'
-          : 'Rellene los campos obligatorios.',
-      });
+    if (!this.productForm.valid) {
+      await this.alertService.presentSimpleAlert("Error", "Introduzca los datos correctamente");
     } else {
       await this.loader.showLoader();
       this.keyboard.hide();
-      this.submitEnabled = false;
       try {
         this.productFacade.addProduct(businessId, value.name.toString().toLowerCase(), value.description.toString().toLowerCase(),parseInt(value.duration) );
-        await this.presentSuccess();
+        await this.alertService.presentSimpleAlert(
+          'Confirmación',
+          'Producto añadido con éxito.',
+        );
       } finally {
         await this.loader.hideLoader();
+        this.productFacade.setUpdating(false);
       }
 
       await this.ctrl.dismiss({ done: true, values: this.productForm.value });
-      this.submitClicked = false;
     }
-  }
-
-  async presentSuccess() {
-    await this.alertService.presentSimpleAlert(
-      'Confirmación',
-      'Producto añadido con éxito.',
-    );
   }
 }

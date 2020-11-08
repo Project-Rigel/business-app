@@ -11,7 +11,7 @@ export class ProductsState {
     return this.updating$.asObservable();
   }
 
-  setUpdating$(isUpdating: boolean) {
+  setUpdating(isUpdating: boolean) {
     this.updating$.next(isUpdating);
   }
 

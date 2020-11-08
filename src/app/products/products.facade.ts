@@ -30,4 +30,8 @@ export class ProductsFacade {
   addProduct(businessId: string, name: string, description: string, duration: number) {
 
   }
+
+  setUpdating(value: boolean){
+    this.state.setUpdating(value);
+  }
 }

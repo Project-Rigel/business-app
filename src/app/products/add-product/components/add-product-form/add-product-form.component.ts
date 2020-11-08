@@ -10,13 +10,19 @@ import { IonInput } from '@ionic/angular';
 export class AddProductFormComponent {
 
   @ViewChild('productName') input: IonInput;
-  submitClicked = false;
+
+  @Input()
+  isSubmitEnabled: boolean = true;
 
   @Input()
   form: FormGroup;
 
   @Output()
   onNextElementTriggered: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  onFormSubmit: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  onFormCancel: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(    private formBuilder: FormBuilder,
   ) {
@@ -28,18 +34,17 @@ export class AddProductFormComponent {
   }
 
   isInputInvalid(control: AbstractControl) {
-    if (this.submitClicked && control.invalid) {
-      return true;
-    }
-    if (control.invalid && control.touched && this.submitClicked) {
+
+    if (control.invalid && control.touched && !this.isSubmitEnabled) {
       return true;
     }
 
-    if (control.invalid && control.touched && !this.submitClicked) {
+    if (control.invalid && control.touched && !this.isSubmitEnabled) {
       return false;
     }
 
-    return false;
+    return control.invalid;
+
   }
 
   get name() {

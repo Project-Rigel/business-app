@@ -282,26 +282,33 @@ export class AgendaDetailsPage implements OnInit {
   }
 
   async confirmNewAppointment(agendaId: string) {
-    try {
-      await this.loader.showLoader();
-      await this.appointmentsService.confirmNewAppointment(
-        this.businessId,
-        agendaId,
-        this.addingAppointmentInfo.product.id,
-        this.addingAppointmentInfo.customer.id,
-        this.appointmentType,
-      );
-      this.clearPossibleAppointmentData();
-      await this.loader.hideLoader();
-      await this.alertService.presentSimpleAlert(
-        'Éxito',
-        'La cita se ha confirmado con éxito.',
-      );
-    } catch (e) {
-      await this.loader.hideLoader();
-      await this.alertService.presentSimpleAlert(
-        'Error',
-        'Se ha producido un error inesperado. Vuelva a intentarlo en unos instantes.',
+    await this.loader.showLoader();
+    const obs = this.appointmentsService.confirmNewAppointment(
+      this.businessId,
+      agendaId,
+      this.addingAppointmentInfo.product.id,
+      this.addingAppointmentInfo.customer.id,
+      this.appointmentType,
+    );
+    if (obs) {
+      obs.subscribe(
+        async val => {
+          this.clearPossibleAppointmentData();
+          await this.loader.hideLoader();
+          await this.alertService.presentSimpleAlert(
+            'Éxito',
+            'La cita se ha confirmado con éxito.',
+          );
+        },
+        async err => {
+          console.log(err);
+          this.clearPossibleAppointmentData();
+          await this.loader.hideLoader();
+          await this.alertService.presentSimpleAlert(
+            'Error',
+            'Se ha producido un error inesperado. Vuelva a intentarlo en unos instantes.',
+          );
+        },
       );
     }
   }

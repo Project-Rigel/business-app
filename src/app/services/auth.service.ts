@@ -1,20 +1,23 @@
-import { Injectable } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { AngularFirestore, AngularFirestoreDocument } from "@angular/fire/firestore";
-import { Router } from "@angular/router";
-import { FirebaseAuthentication } from "@ionic-native/firebase-authentication/ngx";
-import { GooglePlus } from "@ionic-native/google-plus/ngx";
-import { Platform } from "@ionic/angular";
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/performance";
-import { Observable, of } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
-import { Business } from "../interfaces/business";
-import { User } from "../interfaces/user";
-import { BusinessService } from "./business.service";
-import { ErrorToastService } from "./error-toast.service";
-import { UserState } from "../core/user/user.state";
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { Platform } from '@ionic/angular';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/performance';
+import { Observable, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { UserState } from '../core/user/user.state';
+import { Business } from '../interfaces/business';
+import { User } from '../interfaces/user';
+import { BusinessService } from './business.service';
+import { ErrorToastService } from './error-toast.service';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +34,7 @@ export class AuthService {
     private googlePlus: GooglePlus,
     private firebaseAuth: FirebaseAuthentication,
     private businessService: BusinessService,
-    private state: UserState
+    private state: UserState,
   ) {
     if (this.platform.is('cordova')) {
       this.googlePlus.trySilentLogin({
@@ -43,16 +46,18 @@ export class AuthService {
       switchMap(user => {
         // Logged in
         if (user) {
+          console.log(user);
           this.temporalUser = user;
           return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
           // Logged out
+          console.log('out');
           return of(null);
         }
       }),
       tap(user => {
         this.state.setUser(user);
-      })
+      }),
     );
   }
 

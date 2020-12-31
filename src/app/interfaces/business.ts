@@ -4,5 +4,4 @@ export interface Business {
   name: string;
   phone: string;
   address: string;
-  ownerId: string;
 }

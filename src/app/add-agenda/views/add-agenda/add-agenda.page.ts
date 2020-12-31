@@ -3,16 +3,16 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonInput, IonSlides, ModalController, Platform } from '@ionic/angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import { take } from 'rxjs/operators';
-import { Configuration } from '../../interfaces/configuration';
-import { AgendaService } from '../../services/agenda.service';
-import { AuthService } from '../../services/auth.service';
-import { LoaderService } from '../../services/loader.service';
+import { Configuration } from '../../../interfaces/configuration';
+import { AgendaService } from '../../../services/agenda.service';
+import { AuthService } from '../../../services/auth.service';
+import { LoaderService } from '../../../services/loader.service';
 import {
   Config,
   SetAgendaConfigBulkService,
-} from '../../services/set-agenda-config-bulk.service';
+} from '../../../services/set-agenda-config-bulk.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -121,7 +121,7 @@ export class AddAgendaPage {
         this.loading = false;
       },
 
-      err => {
+      () => {
         this.loader.hideLoader();
       },
     );

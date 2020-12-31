@@ -1,2 +1,5 @@
-<app-add-product-form [form]="productForm" (onFormSubmit)="submitProduct()" (onFormCancel)="cancelSubmission()" [isSubmitEnabled]="isFormSubmitEnabled" ></app-add-product-form>
-
+<app-add-product-form
+  [form]="productForm"
+  (onFormCancel)="cancelSubmission()"
+  [isSubmitEnabled]="isFormSubmitEnabled"
+></app-add-product-form>

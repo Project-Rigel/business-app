@@ -7,8 +7,7 @@ import {
   ModalController,
 } from '@ionic/angular';
 import { Animation } from '@ionic/core';
-import * as moment from 'moment';
-import { duration, Duration, Moment } from 'moment';
+import moment, { duration, Duration, Moment } from 'moment';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AppointmentSelectionTypeModalComponent } from '../components/appointment-selection-type-modal/appointment-selection-type-modal.component';

@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { ImagePicker } from "@ionic-native/image-picker/ngx";
-import { ModalController, PickerController, Platform } from "@ionic/angular";
-import { AgendaService } from "../../services/agenda.service";
+import { Component, Input } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { ModalController, PickerController, Platform } from '@ionic/angular';
+import { AgendaService } from '../../../services/agenda.service';
 
 @Component({
   selector: 'app-add-agenda-basic-info',
   templateUrl: './add-agenda-basic-info.page.html',
   styleUrls: ['./add-agenda-basic-info.page.scss'],
 })
-export class AddAgendaBasicInfoPage implements OnInit {
+export class AddAgendaBasicInfoPage {
   imageUrl;
   minutes = ['15', '30', '60', '120'];
   minuteSelected = '30';
@@ -22,10 +22,7 @@ export class AddAgendaBasicInfoPage implements OnInit {
     private modalController: ModalController,
     private agendaService: AgendaService,
     private platform: Platform,
-  ) {
-  }
-
-  ngOnInit() {}
+  ) {}
 
   async selectImage(event) {
     if (this.platform.is('cordova')) {
@@ -68,7 +65,7 @@ export class AddAgendaBasicInfoPage implements OnInit {
 
     await picker.present();
   }
-   private getColumnOptions() {
+  private getColumnOptions() {
     const options = [];
     this.minutes.forEach(x => {
       if (x === this.minuteSelected) {
@@ -79,5 +76,4 @@ export class AddAgendaBasicInfoPage implements OnInit {
     });
     return options;
   }
-
 }

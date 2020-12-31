@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddAgendaPage } from './add-agenda.page';
+import { AddAgendaPage } from './views/add-agenda/add-agenda.page';
 
 const routes: Routes = [
   {

@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "rigel-admin"
+    "staging": "rigel-admin",
+    "default": "rigel-admin"
   }
 }

@@ -25,6 +25,7 @@ export class AddProductContainerComponent implements OnInit {
     private loader: LoaderService,
     private alertService: AlertService,
     private productFacade: ProductsFacade,
+    private errorToastService: ErrorToastService
   ) {}
 
   async ngOnInit() {

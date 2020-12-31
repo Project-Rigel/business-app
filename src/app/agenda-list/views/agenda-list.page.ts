@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IonRouterOutlet, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { AddAgendaPage } from '../../add-agenda/views/add-agenda/add-agenda.page';
 import { Agenda } from '../../interfaces/agenda';
-import { AddAgendaPage } from '../../add-agenda/add-agenda/add-agenda.page';
 import { AgendaListState } from '../agenda-list.state';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-agenda',
@@ -15,7 +14,7 @@ export class AgendaListPage implements OnInit {
   constructor(
     private modalController: ModalController,
     private routerOutlet: IonRouterOutlet,
-    private agendaListState: AgendaListState
+    private agendaListState: AgendaListState,
   ) {}
 
   agendas$: Observable<Agenda[]>;
@@ -24,7 +23,6 @@ export class AgendaListPage implements OnInit {
   ngOnInit() {
     this.agendas$ = this.agendaListState.getAgendas$();
   }
-
 
   async addAgenda() {
     const modal = await this.modalController.create({

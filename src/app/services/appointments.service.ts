@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import * as moment from 'moment';
+import moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FunctionNames } from '../constants';
@@ -12,25 +12,33 @@ import { Appointment } from '../interfaces/appointment';
   providedIn: 'root',
 })
 export class AppointmentsService {
+  guidedBookingCallable = this.functions.httpsCallable(
+    FunctionNames.BOOK_APPOINTMENT_GUIDED,
+  );
   private appointments: BehaviorSubject<Appointment[]> = new BehaviorSubject<
     Appointment[]
   >([]);
-  public appointments$: Observable<
-    Appointment[]
-  > = this.appointments.asObservable();
   appointmentInterval = 30;
   //de 0 a 23 horas
   startHour = 7;
   endHour = 23;
   appointmentToBeConfirmed: Appointment;
-  guidedBookingCallable = this.functions.httpsCallable(
-    FunctionNames.BOOK_APPOINTMENT_GUIDED,
-  );
+  public appointments$: Observable<
+    Appointment[]
+  > = this.appointments.asObservable();
 
   constructor(
     private afs: AngularFirestore,
     private functions: AngularFireFunctions,
   ) {}
+
+  private static getStringDate(date: Date) {
+    const month = date.getMonth(); //months from 1-12
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return day + '_' + month + '_' + year;
+  }
 
   getAllPossibleAppointments() {
     const total: Date[] = [];
@@ -52,7 +60,7 @@ export class AppointmentsService {
   }
 
   updateDayAppointments(agendaId: string, date = new Date()) {
-    const strDate = this.getStringDate(date);
+    const strDate = AppointmentsService.getStringDate(date);
 
     return this.afs
       .doc(`agendas/${agendaId}`)
@@ -82,15 +90,6 @@ export class AppointmentsService {
           return this.appointments.value;
         }),
       );
-  }
-
-  private getStringDate(date: Date) {
-    const month = date.getMonth(); //months from 1-12
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    const strDate = day + '_' + month + '_' + year;
-    return strDate;
   }
 
   updatePossibleAppointment(appointment: Appointment) {

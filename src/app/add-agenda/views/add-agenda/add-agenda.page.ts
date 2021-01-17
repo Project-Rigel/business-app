@@ -1,18 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonInput, IonSlides, ModalController, Platform } from '@ionic/angular';
-import moment from 'moment';
-import { take } from 'rxjs/operators';
+import { IonInput, IonSlides, ModalController } from '@ionic/angular';
 import { Configuration } from '../../../interfaces/configuration';
-import { AgendaService } from '../../../services/agenda.service';
-import { AuthService } from '../../../services/auth.service';
-import { LoaderService } from '../../../services/loader.service';
-import {
-  Config,
-  SetAgendaConfigBulkService,
-} from '../../../services/set-agenda-config-bulk.service';
+import { Config } from '../../../services/set-agenda-config-bulk.service';
 
 @Component({
   selector: 'app-add-agenda',
@@ -20,25 +10,6 @@ import {
   styleUrls: ['./add-agenda.page.scss'],
 })
 export class AddAgendaPage {
-  englishDays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
-  spanishDays = [
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-    'Domingo',
-  ];
-
   form: FormGroup;
   minuteSelected = '30';
   loading = false;
@@ -50,14 +21,15 @@ export class AddAgendaPage {
 
   constructor(
     private formBuilder: FormBuilder,
-    private modalController: ModalController,
-    private agendaService: AgendaService,
-    private platform: Platform,
-    private storage: AngularFireStorage,
-    private afs: AngularFirestore,
-    private auth: AuthService,
-    private loader: LoaderService,
-    private setAgendaBulkService: SetAgendaConfigBulkService,
+    private modalController: ModalController /*    private agendaService: AgendaService,
+        private platform: Platform,
+        private storage: AngularFireStorage,
+        private afs: AngularFirestore,
+        private auth: AuthService,
+        private loader: LoaderService,
+        private setAgendaBulkService: SetAgendaConfigBulkService,
+        private dayOfWeekService: DayOfWeekTranslatorService,
+        private addAgendaFacade: AddAgendaFacade*/,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -74,7 +46,7 @@ export class AddAgendaPage {
   }
 
   async createAgenda() {
-    await this.loader.showLoader();
+    /*await this.loader.showLoader();
     this.auth.user$.pipe(take(1)).subscribe(
       async user => {
         this.loading = true;
@@ -124,7 +96,7 @@ export class AddAgendaPage {
       () => {
         this.loader.hideLoader();
       },
-    );
+    );*/
   }
 
   async closeModal() {
@@ -150,7 +122,7 @@ export class AddAgendaPage {
 
   mapUserConfigurationsIntoDto(): { [date: string]: Config } {
     const confs: { [date: string]: Config } = {};
-    this.configurations.map((intervalConfiration: Configuration) => {
+    /*this.configurations.map((intervalConfiration: Configuration) => {
       if (intervalConfiration.specificDate) {
         // Si es specifica
         if (confs[intervalConfiration.specificDate.getTime()]) {
@@ -198,9 +170,7 @@ export class AddAgendaPage {
           confs[intervalConfiration.day] = {
             expirationDate: new Date().toISOString(),
             specificDate: null,
-            dayOfWeek: this.englishDays[
-              this.spanishDays.indexOf(intervalConfiration.day)
-            ],
+            dayOfWeek: this.dayOfWeekService.translateDayInto(intervalConfiration.day, "EN"),
             intervals: [
               {
                 startHour: moment(intervalConfiration.startTime.toISOString())
@@ -214,7 +184,7 @@ export class AddAgendaPage {
           };
         }
       }
-    });
+    });*/
     return confs;
   }
 }

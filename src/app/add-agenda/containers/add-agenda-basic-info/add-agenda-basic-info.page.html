@@ -10,6 +10,7 @@
           (click)="selectImage($event)"
           *ngIf="imageUrl"
           class="agenda-avatar"
+          aria-label="Image Selector"
         >
           <img src="data:image/jpg;base64,{{imageUrl}}" alt="agenda-image" />
         </ion-avatar>
@@ -34,13 +35,17 @@
       <form [formGroup]="form">
         <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
           <ion-item lines="none" class="min-width-item">
+            <label for="name">Name</label>
             <ion-input
               #inputNombre
               enterkeyhint="enter"
-              placeholder="Nombre (Obligatorio)"
+              class="ion-text-end"
               required
+              id="name"
+              name="name"
               type="text"
               formControlName="name"
+              placeholder="Tu nombre"
             ></ion-input>
           </ion-item>
         </ion-list>
@@ -51,11 +56,13 @@
             button
             (click)="showPicker()"
             class="min-width-item"
+            aria-label="Interval selection"
+            role="button"
           >
             <ion-label slot="start">Intervalos</ion-label>
             <ion-label class="ion-margin-right" slot="end"
-              >{{minuteSelected}} minutos</ion-label
-            >
+              >{{minuteSelected}} minutos
+            </ion-label>
           </ion-item>
         </ion-list>
       </form>

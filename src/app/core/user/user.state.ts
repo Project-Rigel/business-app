@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Platform } from '@ionic/angular';
 import { BehaviorSubject, of } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { User } from '../../interfaces/user';
@@ -8,10 +9,12 @@ import { User } from '../../interfaces/user';
 @Injectable()
 export class UserState {
   private user$ = new BehaviorSubject<User>(null);
+  private isCordovaPlatform$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private firestore: AngularFirestore,
     private fireAuth: AngularFireAuth,
+    private platform: Platform,
   ) {
     this.fireAuth.user
       .pipe(
@@ -36,5 +39,10 @@ export class UserState {
 
   setUser(user: User) {
     this.user$.next(user);
+  }
+
+  isCordova$() {
+    this.isCordovaPlatform$.next(this.platform.is('cordova'));
+    return this.isCordovaPlatform$.asObservable();
   }
 }

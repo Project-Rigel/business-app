@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import { ModalController, PickerController, Platform } from '@ionic/angular';
-import { AgendaService } from '../../../services/agenda.service';
+import { PickerController } from '@ionic/angular';
+import { take } from 'rxjs/operators';
+import { UserState } from '../../../core/user/user.state';
 
 @Component({
   selector: 'app-add-agenda-basic-info',
@@ -16,28 +17,30 @@ export class AddAgendaBasicInfoPage {
   @Input() form: FormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
     private imagePicker: ImagePicker,
     private pickerController: PickerController,
-    private modalController: ModalController,
-    private agendaService: AgendaService,
-    private platform: Platform,
+    private userState: UserState,
   ) {}
 
-  async selectImage(event) {
-    if (this.platform.is('cordova')) {
-      try {
-        const pictures = await this.imagePicker.getPictures({ outputType: 1 });
+  async selectImage() {
+    this.userState
+      .isCordova$()
+      .pipe(take(1))
+      .subscribe(async isCordova => {
+        if (isCordova) {
+          try {
+            const pictures = await this.imagePicker.getPictures({
+              outputType: 1,
+            });
 
-        if (pictures) {
-          this.imageUrl = pictures[0];
+            if (pictures) {
+              this.imageUrl = pictures[0];
+            }
+          } catch (e) {
+            throw e;
+          }
         }
-      } catch (e) {
-        throw e;
-      }
-    } else {
-      console.log(event);
-    }
+      });
   }
   async showPicker() {
     const picker = await this.pickerController.create({

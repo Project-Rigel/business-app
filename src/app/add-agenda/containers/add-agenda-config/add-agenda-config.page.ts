@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AgendaSettingsDataModalComponent } from '../../../components/agenda-settings-data-modal/agenda-settings-data-modal.component';
 import { Configuration } from '../../../interfaces/configuration';
+import { DayOfWeekTranslatorService } from '../../services/day-of-week-translator.service';
 
 @Component({
   selector: 'app-add-agenda-config',
@@ -13,28 +14,12 @@ export class AddAgendaConfigPage {
     Configuration[]
   >();
 
-  englishDays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
-  spanishDays = [
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-    'Domingo',
-  ];
-
   configurations: Configuration[] = [];
 
-  constructor(private modalController: ModalController) {}
+  constructor(
+    private modalController: ModalController,
+    private translationService: DayOfWeekTranslatorService,
+  ) {}
 
   async showAgendaSettingsDataModal() {
     const modal = await this.modalController.create({
@@ -46,7 +31,7 @@ export class AddAgendaConfigPage {
     const { data } = await modal.onDidDismiss();
 
     if (data && data.done) {
-      data.value.day = this.translateDayIntoSpanish(data.value.day);
+      data.value.day = this.translationService.translateDayInto(data.value.day);
       this.configurations.push(data.value);
       this.onConfigsChanged.emit(this.configurations);
     } else {
@@ -58,10 +43,5 @@ export class AddAgendaConfigPage {
     return this.configurations.sort((a, b) =>
       a[field] > b[field] ? 1 : a[field] === b[field] ? 0 : -1,
     );
-  }
-
-  translateDayIntoSpanish(day: string) {
-    const dayIndex = this.englishDays.indexOf(day);
-    return this.spanishDays[dayIndex];
   }
 }

@@ -5,7 +5,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { Agenda } from '../../interfaces/agenda';
 import { AgendaListFacade } from '../agenda-list.facade';
 
@@ -17,9 +17,6 @@ export class AgendaListResolver implements Resolve<Agenda[]> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
   ): Observable<Agenda[]> {
-    return this.settingsFacade.loadAgendas$().pipe(
-      tap(() => console.log('hello')),
-      take(1),
-    );
+    return this.settingsFacade.loadAgendas$().pipe(take(1));
   }
 }

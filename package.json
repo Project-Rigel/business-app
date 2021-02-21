@@ -154,7 +154,6 @@
       "eslint --fix"
     ],
     "*.ts": [
-      "organize-imports-cli",
       "prettier --write"
     ]
   }

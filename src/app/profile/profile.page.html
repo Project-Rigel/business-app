@@ -1,45 +1,51 @@
 <ion-header translucent="true">
-  <ion-toolbar>
-    <ion-title>{{(auth.user$ | async)?.displayName}}</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>{{(auth.user$ | async)?.displayName}}</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-chip outline="false" color="light" slot="start">
-        <ion-avatar>
-          <ion-img [src]="(auth.user$ | async)?.avatar"></ion-img>
-        </ion-avatar>
-      </ion-chip>
-      <ion-title size="medium">{{(auth.user$ | async)?.displayName}}</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-chip outline="false" color="light" slot="start">
+                <ion-avatar>
+                    <ion-img [src]="(auth.user$ | async)?.avatar"></ion-img>
+                </ion-avatar>
+            </ion-chip>
+            <ion-title size="medium">{{(auth.user$ | async)?.displayName}}</ion-title>
+            <ion-buttons slot="end" collapse="true">
+                <ion-button color="dark">
+                    <ion-icon name="cog-outline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
 
-  <div class="bg-list" *ngIf="(auth.user$ | async) as user">
-    <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
-      <ion-item>
-        <ion-note slot="start">Nombre:</ion-note>
-        <ion-label> {{ user.displayName}}</ion-label>
-      </ion-item>
+    </ion-header>
 
-      <ion-item>
-        <ion-note slot="start">Email:</ion-note>
-        <ion-label> {{ user.email}}</ion-label>
-      </ion-item>
+    <div class="bg-list" *ngIf="(auth.user$ | async) as user">
+        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
 
-      <ion-item>
-        <ion-note slot="start">Suscripción:</ion-note>
-        <ion-label>Estándar</ion-label>
-      </ion-item>
-    </ion-list>
+            <ion-item detail="true">
+                <ion-note slot="start">Nombre:</ion-note>
+                <ion-label> {{ user.displayName}}</ion-label>
+            </ion-item>
 
-    <ion-list inset lines="inset" class="ion-item-round ion-margin-top">
-      <ion-item (click)="auth.logOut()">
-        <ion-label class="ion-text-center" color="danger"
-          >Cerrar sesión</ion-label
-        >
-      </ion-item>
-    </ion-list>
-  </div>
+            <ion-item detail="true">
+                <ion-note slot="start">Email:</ion-note>
+                <ion-label> {{ user.email}}</ion-label>
+            </ion-item>
+
+            <ion-item detail="true">
+                <ion-note slot="start">Suscripción:</ion-note>
+                <ion-label>Estándar</ion-label>
+            </ion-item>
+        </ion-list>
+
+        <ion-list inset lines="inset" class="ion-item-round ion-margin-top">
+            <ion-item
+                    detail="true" (click)="auth.logOut()">
+                <ion-label color="danger">Cerrar sesión</ion-label>
+            </ion-item>
+        </ion-list>
+    </div>
 </ion-content>

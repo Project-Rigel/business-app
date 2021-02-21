@@ -5,6 +5,6 @@ export interface User {
   displayName: string;
   avatar: string;
   email: string;
-  customers: Customer[];
-  businessId: string;
+  customers : Customer[],
+  businessId: string
 }

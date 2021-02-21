@@ -1,0 +1,71 @@
+<ion-content class="bg-modal">
+  <ion-grid fixed>
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <ion-text>
+        <h1>Datos de la agenda</h1>
+      </ion-text>
+
+      <ion-col size="12" class="ion-align-self-center">
+        <ion-avatar
+          (click)="selectImage()"
+          *ngIf="imageUrl"
+          class="agenda-avatar"
+          aria-label="Image Selector"
+        >
+          <img src="data:image/jpg;base64,{{imageUrl}}" alt="agenda-image" />
+        </ion-avatar>
+
+        <div
+          *ngIf="!imageUrl"
+          (click)="selectImage()"
+          class="dot ion-margin-top image-margin"
+        >
+          <ion-icon
+            name="camera-outline"
+            size="large"
+            class="image-text"
+          ></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      class="ion-justify-content-center ion-align-items-center ion-margin-top "
+    >
+      <form [formGroup]="form">
+        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
+          <ion-item lines="none" class="min-width-item">
+            <label for="name">Name</label>
+            <ion-input
+              #inputNombre
+              enterkeyhint="enter"
+              class="ion-text-end"
+              required
+              id="name"
+              name="name"
+              type="text"
+              formControlName="name"
+              placeholder="Tu nombre"
+            ></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <ion-list inset lines="inset" class="ion-item-round ion-no-margin">
+          <ion-item
+            lines="none"
+            button
+            (click)="showPicker()"
+            class="min-width-item"
+            aria-label="Interval selection"
+            role="button"
+          >
+            <ion-label slot="start">Intervalos</ion-label>
+            <ion-label class="ion-margin-right" slot="end"
+              >{{minuteSelected}} minutos
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </form>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,38 @@
+<ion-header translucent="true">
+  <ion-toolbar class="ion-margin-top">
+    <ion-title>Productos</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="addProduct()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Productos</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar
+        debounce="500"
+        placeholder="Producto"
+        (ionChange)="search($event)"
+        (ionCancel)="cancelSearch()"
+        (ionClear)="cancelSearch()"
+        [(ngModel)]="searchValue"
+      ></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-products-list
+    [loadedData]="productService.data | async"
+    [isSearching]="searching"
+    [done]="productService.done | async"
+    [loading]="productService.loading | async"
+    [searchResult]="search$ | async"
+  >
+  </app-products-list>
+</ion-content>

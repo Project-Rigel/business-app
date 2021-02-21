@@ -5,14 +5,21 @@
       >{{ product.description | titlecase }}
     </ion-label>
   </ion-label>
-  <span slot="end">{{ product.duration }}'</span>
+  <span slot="end">{{ product.duration.asMinutes() }}'</span>
   <ion-icon
-    *ngIf="isSelectable; else selectable"
+    *ngIf="!isSelectable; else selectable"
     slot="start"
     color="primary"
     name="information-circle-outline"
+    aria-hidden="true"
   ></ion-icon>
   <ng-template #selectable>
-    <ion-radio slot="end" color="primary" value="{{ product.id }}"></ion-radio>
+    <ion-radio
+      aria-label="Select product"
+      color="primary"
+      data-testid="radio-selector"
+      slot="end"
+      value="{{ product.id }}"
+    ></ion-radio>
   </ng-template>
 </ion-item>

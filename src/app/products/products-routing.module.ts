@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProductsPage } from './products.page';
+import { ProductsListPage } from './products-list/containers/products-list-page.component';
+import { ProductsListResolver } from './resolvers/products-list.resolver';
 
 const routes: Routes = [
   {
     path: '',
-    component: ProductsPage,
+    component: ProductsListPage,
+    resolve: {
+      products: ProductsListResolver,
+    },
   },
 ];
 

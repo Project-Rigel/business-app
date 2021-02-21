@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
-import {
-  AngularFireAuthGuard,
-  redirectUnauthorizedTo,
-} from '@angular/fire/auth-guard';
+import { redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
@@ -17,7 +14,6 @@ const routes: Routes = [
   {
     path: 'tabs',
     component: TabsPage,
-    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectToLogin },
     children: [
       {
@@ -33,12 +29,14 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'agenda',
+        path: 'agenda-list',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../agenda/agenda.module').then(m => m.AgendaPageModule),
+              import('../agenda-list/agenda-list.module').then(
+                m => m.AgendaListModule,
+              ),
           },
         ],
       },
@@ -48,9 +46,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../profile/profile.module').then(
-                m => m.ProfilePageModule,
-              ),
+              import('../profile/profile.module').then(m => m.ProfileModule),
           },
         ],
       },
@@ -81,7 +77,7 @@ const routes: Routes = [
 
       {
         path: '',
-        redirectTo: 'agenda',
+        redirectTo: 'agenda-list',
         pathMatch: 'full',
       },
     ],

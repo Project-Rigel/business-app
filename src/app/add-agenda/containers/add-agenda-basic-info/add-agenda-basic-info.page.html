@@ -7,7 +7,7 @@
 
       <ion-col size="12" class="ion-align-self-center">
         <ion-avatar
-          (click)="selectImage($event)"
+          (click)="selectImage()"
           *ngIf="imageUrl"
           class="agenda-avatar"
           aria-label="Image Selector"
@@ -17,7 +17,7 @@
 
         <div
           *ngIf="!imageUrl"
-          (click)="selectImage($event)"
+          (click)="selectImage()"
           class="dot ion-margin-top image-margin"
         >
           <ion-icon

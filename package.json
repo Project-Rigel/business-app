@@ -63,7 +63,7 @@
     "@angular/compiler-cli": "~11.2.1",
     "@angular/language-service": "~11.2.1",
     "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/config-conventional": "^12.1.4",
     "@ionic/angular-toolkit": "^3.0.0",
     "@testing-library/angular": "^10.3.0",
     "@testing-library/dom": "^7.29.0",

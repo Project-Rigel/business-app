@@ -41,7 +41,7 @@
     "class-transformer": "^0.3.1",
     "cordova-browser": "^6.0.0",
     "cordova-ios-plugin-no-export-compliance": "0.0.6",
-    "cordova-plugin-firebase-authentication": "3.4.1",
+    "cordova-plugin-firebase-authentication": "5.0.0",
     "cordova-plugin-googleplus": "git+https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git",
     "cordova-plugin-telerik-imagepicker": "^2.3.3",
     "core-js": "^3.15.2",
